@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>JSCAD - JavaScript CAD</title>
+
+    <link rel="stylesheet" href="styles.css">
+  </head>
+
+  <body>
+    <div id='jscad'></div>
+
+    <form>
+      <label>Length</label>
+      <input type="number" id="length" />
+      <label>Width</label>
+      <input type="number" id="width" />
+      <label>Height</label>
+      <input type="number" id="height" />
+      <label>Wall Thickness</label>
+      <input type="number" id="wall" />
+      <label>Dust Proof</label>
+      <input type="checkbox" id="dustProof" />
+      <label>Water Proof</label>
+      <input type="checkbox" id="waterProof" />
+      <label>Show Lid</label>
+      <input type="checkbox" id="showLid" />
+      <label>Show Base</label>
+      <input type="checkbox" id="showBase" />
+    </form>
+
+    <button id="download">
+      <img src="download.svg" />
+    </button>
+
+    <div id="modal">
+      <div id="modal-content">
+        <span id="close">&times;</span>
+        <p id="modal-text"></p>
+      </div>
+    </div>
+    
+    <script language="javascript" src="https://unpkg.com/@jscad/modeling" id="MODELING"></script>
+    <script language="javascript" src="https://unpkg.com/@jscad/regl-renderer" id="RENDERING"></script>
+    <script language="javascript" src="params.js"></script>
+    <script language="javascript" src="model.js"></script>
+    <script language="javascript" src="render.js"></script>
+    <script language="javascript" src="download.js"></script>
+  </body>
+</html>

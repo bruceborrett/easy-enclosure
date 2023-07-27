@@ -1,0 +1,85 @@
+body{
+  height: 100%;
+  min-height: 100%;
+  min-width: 100%;
+  margin: 0px;
+  font-family: 'Open Sans', sans-serif;
+}
+
+#jscad{
+  width: 100%;
+  height: 100%;
+}
+
+form {
+  position: fixed;
+  top: 10;
+  right: 4;
+  padding: 8;
+}
+
+input {
+  display: block;
+  margin: 8;
+}
+
+label {
+  margin-left: 8;
+}
+
+button {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: block;
+  margin: 8;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+button img {
+  width: 48;
+  height: 48;
+}
+
+#modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  background: rgba(0,0,0,0.5);
+  display: none;
+}
+
+#modal.open {
+  display: block;
+}
+
+#modal-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 50%;
+  height: 50%;
+  padding: 0;
+  margin: 0;
+  background: #fff;
+  transform: translate(-50%, -50%);
+}
+
+#close {
+  position: absolute;
+  top: 0;
+  right: 8;
+  display: block;
+  padding: 8;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+}
