@@ -1,39 +1,52 @@
-const { booleans, colors, primitives, transforms } = jscadModeling
+const { booleans, colors, primitives, transforms, hulls } = jscadModeling
 
 const { intersect, subtract, union } = booleans
-const { colorize } = colors
-const { translate } = transforms
-const { cube, cuboid, line, sphere, star } = primitives
+const { hull } = hulls
+const { translate, scale } = transforms
+const { cube, cuboid, line, sphere, star, cylinder } = primitives
 
 const enclosure = (params) => {
-  const outer = cuboid({ 
-    size: [
-      params.length, 
-      params.width, 
-      params.height
-    ] 
-  });
 
-  const inner = cuboid({ 
-    size: [
-      params.length - params.wall, 
-      params.width - params.wall, 
-      params.height
-    ] 
-  });
+  const { length, width, height, wall } = params
 
-  const lid = cuboid({
-    size: [
-      params.length,
-      params.width,
-      params.wall
-    ]
-  });
+  const roundedCube = (l, w, h, r=8, s=100) => {
+    console.log('roundedCube', l, w, h, r, s)
+    const c = cylinder({
+      height: h,
+      radius: r,
+      segments: s
+    })
+  
+    return hull(
+      c,
+      translate([l, 0, 0], c),
+      translate([0, w, 0], c),
+      translate([l, w, 0], c),
+    )
+  }
 
-  const base = subtract(outer, translate([0, 0, params.wall], inner));
+  const roundedFrame = (l, w, h, r=8, s=100) => {
+    const outer = roundedCube(l, w, h, r, s)
+    const inner = roundedCube(l-(wall*2), w-(wall*2), h, r, s)
+    return subtract(outer, translate([wall, wall, 0], inner))
+  }
 
-  const lidPos = [(params.width / 2) + 5, 0, -(params.height/2)]
-  const basePos = [-((params.width / 2) + 5), 0, 0]
+  const hollowRoundCube = (l, w, h, r=8, s=100) => {
+    const outer = roundedCube(l, w, h, r, s)
+    const inner = roundedCube(l-(wall*2), w-(wall*2), h, r, s)
+    return subtract(outer, translate([wall, wall, wall], inner))
+  }
+
+
+  const lid = union(
+    roundedCube(length, width, wall),
+    translate([wall, wall, wall*2], roundedFrame(length-(wall*2), width-(wall*2), wall+5))
+  )
+
+  const base = hollowRoundCube(length, width, height)
+
+  const lidPos = [-length-30, -(width/2), -(height/2)]
+  const basePos = [0, -(width/2), 0]
 
   let result = []
   if (params.showLid) {
@@ -43,5 +56,5 @@ const enclosure = (params) => {
     result.push(translate(basePos, base))
   }
   
-  return result
+  return scale([3, 3, 3], union(result))
 }
