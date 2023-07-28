@@ -2,8 +2,10 @@ body{
   height: 100%;
   min-height: 100%;
   min-width: 100%;
-  margin: 0px;
+  margin: 0;
   font-family: 'Open Sans', sans-serif;
+  font-size: small;
+  color: #666666;
 }
 
 #jscad{
@@ -13,35 +15,39 @@ body{
 
 form {
   position: fixed;
-  top: 10;
-  right: 4;
-  padding: 8;
+  top: 10px;
+  right: 4px;
+  padding: 8px;
 }
 
 input {
   display: block;
-  margin: 8;
+  margin: 8px;
+  padding: 4px;
+  border: 1px solid #666666;
+  border-radius: 3px;
 }
 
 label {
-  margin-left: 8;
+  margin-left: 8px;
 }
 
-button {
+#download {
   position: fixed;
   top: 0;
   left: 0;
   display: block;
-  margin: 8;
+  margin: 8px;
   padding: 0;
   background: none;
   border: none;
+  outline: none;
   cursor: pointer;
 }
 
-button img {
-  width: 48;
-  height: 48;
+#download img {
+  width: 48px;
+  height: 48px;
 }
 
 #modal {
@@ -70,16 +76,29 @@ button img {
   margin: 0;
   background: #fff;
   transform: translate(-50%, -50%);
+  border-radius: 4px;
 }
 
 #close {
   position: absolute;
   top: 0;
-  right: 8;
+  right: 8px;
   display: block;
-  padding: 8;
+  padding: 8px;
   background: none;
   border: none;
   cursor: pointer;
   font-size: 24px;
+}
+
+#export {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #1a79cc;
+  border: none;
+  border-radius: 3px;
+  padding: 12px;
+  cursor: pointer;
 }
