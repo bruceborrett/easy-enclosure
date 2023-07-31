@@ -1,8 +1,9 @@
-const { booleans, colors, primitives, transforms, hulls } = jscadModeling
+const { booleans, colors, primitives, transforms, hulls, utils } = jscadModeling
 
-const { intersect, subtract, union } = booleans
 const { hull } = hulls
-const { translate, scale } = transforms
+const { degToRad } = utils
+const { intersect, subtract, union } = booleans
+const { translate, scale, rotate, rotateY, rotateX } = transforms
 const { cube, cuboid, line, sphere, star, cylinder } = primitives
 
 const enclosure = (params) => {
@@ -10,7 +11,6 @@ const enclosure = (params) => {
   const { length, width, height, wall } = params
 
   const roundedCube = (l, w, h, r=8, s=100) => {
-    console.log('roundedCube', l, w, h, r, s)
     const c = cylinder({
       height: h,
       radius: r,
@@ -37,15 +37,45 @@ const enclosure = (params) => {
     return subtract(outer, translate([wall, wall, wall], inner))
   }
 
+  const flange = () => {
+    const outer = hull(
+      cube({size: 10}),
+      translate([-5,0,0], cylinder({height: 10, radius: 5}))
+    )
+
+    const inner = hull(
+      cuboid({size: [6,6,8]}),
+      translate([-5,0,0], cylinder({height: 8, radius: 3}))
+    )
+
+    return subtract(
+      outer,
+      translate([0,0,2], inner),
+      translate([-8,0,10], rotateY(45, cube({size: 20}))),
+      translate([-5,0,0], cylinder({height: 10, radius: 2}))
+    )
+  }
+
+  const flanges = () => {
+    return union(
+      translate([-11, 16, -10], flange()),
+      translate([-11, length-16, -10], flange()),
+      translate([length+11, 16, -10], rotate([degToRad(180),degToRad(180),0], flange())),
+      translate([length+11, length-16, -10], rotate([degToRad(180),degToRad(180),0], flange()))
+    )
+  }
 
   const lid = union(
     roundedCube(length, width, wall),
     translate([wall, wall, wall*2], roundedFrame(length-(wall*2), width-(wall*2), wall+5))
   )
 
-  const base = hollowRoundCube(length, width, height)
+  const base = union(
+    hollowRoundCube(length, width, height),
+    flanges()
+  )
 
-  const lidPos = [-length-30, -(width/2), -(height/2)]
+  const lidPos = [-length-50, -(width/2), -(height/2)]
   const basePos = [0, -(width/2), 0]
 
   let result = []
