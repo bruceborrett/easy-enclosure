@@ -3,6 +3,7 @@ const params = {
   width: 100,
   height: 30,
   wall: 2,
+  cornerRadius: 8,
   dustProof: true,
   waterProof: true,
   showLid: true,

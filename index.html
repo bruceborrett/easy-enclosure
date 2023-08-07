@@ -5,6 +5,7 @@
 
     <title>Easy Enclosure</title>
 
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     <link rel="stylesheet" href="styles.css">
   </head>
 
@@ -31,21 +32,27 @@
     </form>
 
     <button id="download">
-      <img src="download.svg" />
+      <img src="assets/download.svg" />
     </button>
 
     <div id="modal">
       <div id="modal-content">
         <span id="close">&times;</span>
-        <p id="modal-text"></p>
+        <button id="export">EXPORT STL FILE</button>
       </div>
     </div>
     
     <script language="javascript" src="https://unpkg.com/@jscad/modeling" id="MODELING"></script>
     <script language="javascript" src="https://unpkg.com/@jscad/regl-renderer" id="RENDERING"></script>
-    <script language="javascript" src="params.js"></script>
-    <script language="javascript" src="model.js"></script>
-    <script language="javascript" src="render.js"></script>
-    <script language="javascript" src="download.js"></script>
+    
+    <script language="javascript" src="js/params.js"></script>
+    <script language="javascript" src="js/download.js"></script>
+    <script language="javascript" src="js/stl-serializer.js"></script>
+    <script language="javascript" src="js/enclosure/utils.js"></script>
+    <script language="javascript" src="js/enclosure/wallmount.js"></script>
+    <script language="javascript" src="js/enclosure/cablegland.js"></script>
+    <script language="javascript" src="js/enclosure/index.js"></script>
+    <script language="javascript" src="js/render.js"></script>
+
   </body>
 </html>

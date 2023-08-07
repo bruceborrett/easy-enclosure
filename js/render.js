@@ -8,14 +8,14 @@ const orbitControls = controls.orbit
 
 const containerElement = document.getElementById("jscad")
 
-const width = containerElement.clientWidth
-const height = containerElement.clientHeight
+const screenWidth = containerElement.clientWidth
+const screenHeight = containerElement.clientHeight
 
 const state = {}
 
 // prepare the camera
 state.camera = Object.assign({}, perspectiveCamera.defaults)
-perspectiveCamera.setProjection(state.camera, state.camera, { width, height })
+perspectiveCamera.setProjection(state.camera, state.camera, { width: screenWidth, height: screenHeight })
 perspectiveCamera.update(state.camera, state.camera)
 
 // prepare the controls
@@ -50,7 +50,8 @@ const axisOptions = {
   // zColor: [0, 0, 0, 1]
 }
 
-const entities = entitiesFromSolids({}, enclosure(params))
+const model = enclosure(params)
+const entities = entitiesFromSolids({}, model)
 
 // assemble the options for rendering
 const renderOptions = {
@@ -71,9 +72,9 @@ const renderOptions = {
 
 // update the entities when params change
 const updateEntities = () => {
-  console.log(params)
   renderOptions.entities = entitiesFromSolids({}, enclosure(params))
   updateView = true
+  zoomToFit = true
 }
 
 // the heart of rendering, as themes, controls, etc change
@@ -101,6 +102,14 @@ const doRotatePanZoom = () => {
     const updated = orbitControls.zoom({ controls:state.controls, camera:state.camera, speed: zoomSpeed }, zoomDelta)
     state.controls = { ...state.controls, ...updated.controls }
     zoomDelta = 0
+    updateView = true
+  }
+
+  if (zoomToFit) {
+    state.controls.zoomToFit.tightness = 1
+    const updated = orbitControls.zoomToFit({ controls: state.controls, camera: state.camera, entities: entities })
+    state.controls = { ...state.controls, ...updated.controls }
+    zoomToFit = false
     updateView = true
   }
 }
@@ -133,6 +142,7 @@ let rotateDelta = [0, 0]
 let panDelta = [0, 0]
 let zoomDelta = 0
 let pointerDown = false
+let zoomToFit = true
 
 const moveHandler = (ev) => {
   if(!pointerDown) return
