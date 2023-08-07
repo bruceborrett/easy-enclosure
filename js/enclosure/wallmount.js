@@ -19,9 +19,9 @@ const flange = () => {
 
 const flanges = () => {
   return union(
-    translate([-4, params.cornerRadius*2, -10], flange()),
-    translate([-4, params.width-params.cornerRadius, -10], flange()),
-    translate([params.length+4, params.cornerRadius*2, -10], mirrorX(flange())),
-    translate([params.length+4, params.width-params.cornerRadius, -10], mirrorX(flange()))
+    translate([-4, params.cornerRadius*2, -((params.height/2)-5)], flange()),
+    translate([-4, params.width-params.cornerRadius, -((params.height/2)-5)], flange()),
+    translate([params.length+4, params.cornerRadius*2, -((params.height/2)-5)], mirrorX(flange())),
+    translate([params.length+4, params.width-params.cornerRadius, -((params.height/2)-5)], mirrorX(flange()))
   )
 }
