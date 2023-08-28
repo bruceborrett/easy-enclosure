@@ -1,0 +1,50 @@
+import { booleans, colors, primitives, transforms } from '@jscad/modeling'
+import { Params } from '../lib/params'
+import { Vec } from '@jscad/modeling/src/operations/transforms'
+
+const { intersect, subtract, union } = booleans
+const { colorize } = colors
+const { translate } = transforms
+const { cube, cuboid, line, sphere, star } = primitives
+
+export const enclosure = (params: Params) => {
+  
+  const outer = cuboid({ 
+    size: [
+      params.length, 
+      params.width, 
+      params.height
+    ] 
+  });
+
+  const inner = cuboid({ 
+    size: [
+      params.length - params.wall, 
+      params.width - params.wall, 
+      params.height
+    ] 
+  });
+
+  const lid = cuboid({
+    size: [
+      params.length,
+      params.width,
+      params.wall
+    ]
+  });
+
+  const base = subtract(outer, translate([0, 0, params.wall], inner));
+
+  const lidPos = [(params.width / 2) + 5, 0, -(params.height/2)] as Vec
+  const basePos = [-((params.width / 2) + 5), 0, 0] as Vec
+
+  let result = []
+  if (params.showLid) {
+    result.push(translate(lidPos, lid))
+  }
+  if (params.showBase) {
+    result.push(translate(basePos, base))
+  }
+  
+  return union(result)
+}

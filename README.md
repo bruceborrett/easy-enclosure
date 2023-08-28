@@ -14,8 +14,7 @@ EasyEnclosure is an open-source 3D modeling software tailored specifically for d
 
 ## Technology Stack
 
-* 3D Modeling Library: JSCAD
-* User Interface: HTML/CSS/JavaScript
+Typescript, React, JSCad
 
 ## ToDo
 - [x] Basic square enclosure
@@ -27,3 +26,4 @@ EasyEnclosure is an open-source 3D modeling software tailored specifically for d
 - [ ] Cable glands
 - [ ] Waterproof seal
 - [ ] Screws
+- [ ] Import/export settings

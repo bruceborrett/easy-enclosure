@@ -1,0 +1,3 @@
+[submodule "OpenJSCAD.org"]
+	path = OpenJSCAD.org
+	url = https://github.com/bruceborrett/OpenJSCAD.org

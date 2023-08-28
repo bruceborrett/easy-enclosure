@@ -1,16 +1,20 @@
-body{
-  height: 100%;
-  min-height: 100%;
-  min-width: 100%;
+body {
+  height: 99vh;
+  min-height: 99vh;
+  min-width: 99vw;
   margin: 0;
   font-family: 'Open Sans', sans-serif;
-  font-size: small;
   color: #666666;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-#jscad{
-  width: 100%;
-  height: 100%;
+#jscad {
+  width: 99vw;
+  height: 99vh;
 }
 
 form {
@@ -18,6 +22,7 @@ form {
   top: 10px;
   right: 4px;
   padding: 8px;
+  z-index: 1;
 }
 
 input {
@@ -43,6 +48,7 @@ label {
   border: none;
   outline: none;
   cursor: pointer;
+  z-index: 1;
 }
 
 #download img {
@@ -60,6 +66,7 @@ label {
   margin: 0;
   background: rgba(0,0,0,0.5);
   display: none;
+  z-index: 9;
 }
 
 #modal.open {
@@ -96,7 +103,7 @@ label {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #1a79cc;
+  background: skyblue;
   border: none;
   border-radius: 3px;
   padding: 12px;

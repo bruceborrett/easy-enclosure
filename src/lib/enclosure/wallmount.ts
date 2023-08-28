@@ -1,4 +1,12 @@
-const flange = () => {
+import { translate } from "@jscad/modeling/src/operations/transforms"
+import { subtract, union } from "@jscad/modeling/src/operations/booleans"
+import { hull } from "@jscad/modeling/src/operations/hulls"
+import { cube, cuboid, cylinder } from "@jscad/modeling/src/primitives"
+import { rotateY, mirrorX } from "@jscad/modeling/src/operations/transforms"
+
+import { Params } from "../params"
+
+export const flange = () => {
   const outer = hull(
     cube({size: 10}),
     translate([-5,0,0], cylinder({height: 10, radius: 5}))
@@ -17,7 +25,7 @@ const flange = () => {
   )
 }
 
-const flanges = () => {
+export const flanges = (params: Params) => {
   return union(
     translate([-4, params.cornerRadius*2, -((params.height/2)-5)], flange()),
     translate([-4, params.width-params.cornerRadius, -((params.height/2)-5)], flange()),
