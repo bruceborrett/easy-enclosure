@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/easy-enclosure/static/css/main.8a71280a.css",
+    "main.js": "/easy-enclosure/static/js/main.16ed7166.js",
+    "static/js/787.e5b8f22d.chunk.js": "/easy-enclosure/static/js/787.e5b8f22d.chunk.js",
+    "index.html": "/easy-enclosure/index.html",
+    "main.8a71280a.css.map": "/easy-enclosure/static/css/main.8a71280a.css.map",
+    "main.16ed7166.js.map": "/easy-enclosure/static/js/main.16ed7166.js.map",
+    "787.e5b8f22d.chunk.js.map": "/easy-enclosure/static/js/787.e5b8f22d.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.8a71280a.css",
+    "static/js/main.16ed7166.js"
+  ]
+}
