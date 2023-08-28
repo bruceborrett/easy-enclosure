@@ -3,6 +3,9 @@ import React from 'react';
 import { JSCad } from './Jscad';
 import { ParamsForm } from './ParamForm';
 import { useParams } from '../lib/params';
+import { enclosure } from '../lib/enclosure';
+
+import { Exporter } from './Exporter';
 
 import '../styles.css';
 
@@ -10,22 +13,15 @@ function App() {
 
   const { params, setParams } = useParams()
 
+  const model = enclosure(params)
+
   return (
     <>
-      <JSCad params={params} />
+      <JSCad params={params} enclosure={model} />
 
       <ParamsForm params={params} setParams={setParams} />
 
-      <button id="download">
-        <img alt="Download" src="/download.svg" />
-      </button>
-
-      <div id="modal">
-        <div id="modal-content">
-          <span id="close">&times;</span>
-          <button id="export">Export STL File</button>
-        </div>
-      </div>
+      <Exporter enclosure={model} />
     </>
   )
 }

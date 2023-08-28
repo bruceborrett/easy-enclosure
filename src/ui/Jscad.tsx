@@ -1,12 +1,13 @@
 import { PointerEventHandler, WheelEventHandler, useEffect, useRef } from "react"
 import { prepareRender, entitiesFromSolids, drawCommands, cameras, controls } from "@jscad/regl-renderer"
 
-import { enclosure } from "../lib/enclosure"
 import { Params } from "../lib/params"
 import { Entity } from "@jscad/regl-renderer/types/geometry-utils-V2/entity"
+import { Geom3 } from "@jscad/modeling/src/geometries/types"
 
 interface Props {
   params: Params,
+  enclosure: Geom3
 }
 
 // prepare the camera
@@ -135,14 +136,14 @@ const setCamera = () => {
   })
 }
 
-export const JSCad = ({ params }: Props) => {
+export const JSCad = ({ params, enclosure }: Props) => {
 
   container = useRef<HTMLDivElement>(null);
   
   renderOptions = {
     camera: camera,
     drawCommands: drawCommands,
-    entities: entitiesFromSolids({}, enclosure(params))
+    entities: entitiesFromSolids({}, enclosure)
   }
   
   // Initial render
@@ -158,7 +159,7 @@ export const JSCad = ({ params }: Props) => {
 
   // Re-render on param change
   useEffect(() => {
-    renderOptions.entities = entitiesFromSolids({}, enclosure(params))
+    renderOptions.entities = entitiesFromSolids({}, enclosure)
     updateView = true
   }, [params])
 
