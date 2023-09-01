@@ -5,12 +5,12 @@ export type Params = {
   width: number,
   height: number,
   wall: number,
-  dustProof: boolean,
   waterProof: boolean,
   showLid: boolean,
   showBase: boolean,
   cornerRadius: number,
   cableGlands: number,
+  cableGlandWidth: number,
   wallMounts: boolean
 }
 
@@ -19,13 +19,13 @@ const defaults: Params = {
   width: 100,
   height: 30,
   wall: 2,
-  dustProof: true,
-  waterProof: true,
+  waterProof: false,
   showLid: true,
   showBase: true,
   cornerRadius: 8,
   cableGlands: 1,
-  wallMounts: true
+  cableGlandWidth: 10,
+  wallMounts: false
 }
 
 export const useParams = () => {
