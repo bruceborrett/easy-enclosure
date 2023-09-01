@@ -6,14 +6,15 @@ import { Params } from '../params'
 const { union } = booleans
 const { translate } = transforms
 
+const CLEARANCE = 0.04
+const SEALHEIGHT = 5
+
 export const lid = (params: Params) => {
+  const { length, width, wall, cornerRadius } = params
+
   return union(
-    roundedCube(params.length, params.width, params.wall, params.cornerRadius),
-    translate([
-      params.wall, 
-      params.wall, 
-      params.wall*2
-    ], 
-    roundedFrame(params.length-(params.wall*2), params.width-(params.wall*2), params.wall+5, params.wall, params.cornerRadius))
+    roundedCube(length, width, wall, cornerRadius),
+    translate([wall, wall, wall], 
+    roundedFrame((length-(wall*2))-CLEARANCE, (width-(wall*2))-CLEARANCE, SEALHEIGHT, wall, cornerRadius))
   )
 }

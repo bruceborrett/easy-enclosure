@@ -161,7 +161,7 @@ export const JSCad = ({ params, enclosure }: Props) => {
   useEffect(() => {
     renderOptions.entities = entitiesFromSolids({}, enclosure)
     updateView = true
-  }, [params])
+  }, [params, enclosure])
 
   return <div 
     id="jscad" 
