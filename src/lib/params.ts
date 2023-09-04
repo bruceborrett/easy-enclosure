@@ -23,7 +23,7 @@ const defaults: Params = {
   waterProof: true,
   showLid: true,
   showBase: true,
-  cornerRadius: 6,
+  cornerRadius: 4,
   cableGlands: 3,
   cableGlandWidth: 12.5,
   wallMounts: true,
