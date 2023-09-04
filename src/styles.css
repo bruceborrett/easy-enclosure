@@ -78,13 +78,17 @@ label {
   position: fixed;
   top: 50%;
   left: 50%;
-  width: 50%;
-  height: 50%;
+  width: 40%;
+  height: 30%;
   padding: 0;
   margin: 0;
   background: #fff;
   transform: translate(-50%, -50%);
   border-radius: 4px;
+  text-align: center;
+  padding-top: 40px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 #close {
@@ -101,7 +105,7 @@ label {
 
 #export {
   position: absolute;
-  top: 50%;
+  top: 65%;
   left: 50%;
   transform: translate(-50%, -50%);
   background: skyblue;

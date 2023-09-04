@@ -21,7 +21,7 @@ function App() {
 
       <ParamsForm params={params} setParams={setParams} />
 
-      <Exporter enclosure={model} />
+      <Exporter params={params} />
     </>
   )
 }
