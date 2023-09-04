@@ -17,10 +17,13 @@ export const ParamsForm = ({params, setParams}: Props) => {
       value = parseFloat(e.currentTarget.value)
     }
 
-    setParams({
-      ...params,
-      [id]: value
-    })
+    if (id === 'waterProof' && value === true) {
+      setParams({...params, 'screws': true, [id]: value})
+    } else if (id === 'screws' && value === false) {
+      setParams({...params, 'waterProof': false, [id]: value})
+    } else {
+      setParams({...params, [id]: value})
+    }
   }
   
   return (
@@ -36,17 +39,15 @@ export const ParamsForm = ({params, setParams}: Props) => {
       <label>Corner Radius</label>
       <input type="number" id="cornerRadius" value={params.cornerRadius} min={1} onChange={onChange} />
       <label>Holes</label>
-      <input type="number" id="cableGlands" value={params.cableGlands} onChange={onChange} />
+      <input type="number" id="cableGlands" value={params.cableGlands} min={0} onChange={onChange} />
       <label>Hole Width</label>
       <input type="number" id="cableGlandWidth" value={params.cableGlandWidth} onChange={onChange} />
-      <label>Show Lid</label>
-      <input type="checkbox" id="showLid" checked={params.showLid} onChange={onChange} />
-      <label>Show Base</label>
-      <input type="checkbox" id="showBase" checked={params.showBase} onChange={onChange} />
       <label>Wall Mounts</label>
       <input type="checkbox" id="wallMounts" checked={params.wallMounts} onChange={onChange} />
       <label>Waterproof</label>
       <input type="checkbox" id="waterProof" checked={params.waterProof} onChange={onChange} />
+      <label>Screws</label>
+      <input type="checkbox" id="screws" checked={params.screws} onChange={onChange} />
     </form>
   );
 };

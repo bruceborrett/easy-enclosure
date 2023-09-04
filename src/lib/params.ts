@@ -11,21 +11,23 @@ export type Params = {
   cornerRadius: number,
   cableGlands: number,
   cableGlandWidth: number,
-  wallMounts: boolean
+  wallMounts: boolean,
+  screws: boolean
 }
 
 const defaults: Params = {
   length: 100,
   width: 100,
   height: 30,
-  wall: 2,
-  waterProof: false,
+  wall: 1,
+  waterProof: true,
   showLid: true,
   showBase: true,
-  cornerRadius: 8,
-  cableGlands: 1,
-  cableGlandWidth: 10,
-  wallMounts: false
+  cornerRadius: 6,
+  cableGlands: 3,
+  cableGlandWidth: 12.5,
+  wallMounts: true,
+  screws: true
 }
 
 export const useParams = () => {

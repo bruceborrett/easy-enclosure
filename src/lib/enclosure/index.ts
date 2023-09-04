@@ -14,17 +14,17 @@ const { translate } = transforms
 const SPACING = 20
 
 export const enclosure = (params: Params) => {
-  const { length, width, height } = params
+  const { length, width, height, wall } = params
     
   let entities: Geom3[] = []
   let result: Geom3[] = []
 
-  if (params.showBase) {
-    entities.push(translate([0,0,(height/2)], base(params)))
+  if (params.showLid) {
+    entities.push(translate([0,0,(wall/2)], lid(params)))
   }
 
-  if (params.showLid) {
-    entities.push(lid(params))
+  if (params.showBase) {
+    entities.push(translate([0,0,(height/2)], base(params)))
   }
 
   if (params.waterProof) {
@@ -42,12 +42,10 @@ export const enclosure = (params: Params) => {
   }
 
   for (let i = 0; i < entities.length; i++) {
-    console.log(start)
     const pos = [start, -(width/2), 0] as Vec3
     result.push(translate(pos, entities[i]))
     start = start - (length+SPACING)
   }
-  console.log(result)
 
   return union(result)
 }
