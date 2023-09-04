@@ -7,7 +7,7 @@ EasyEnclosure is an open-source 3D modeling software tailored specifically for d
 **[Try it online now](https://bruceborrett.github.io/easy-enclosure/)**
 
 <a href="https://github.com/sponsors/bruceborrett" target="_blank"><img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86"></a>
-<a href="https://www.buymeacoffee.com/bruceborrett" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="20" width="88" style="border-radius:3px;"></a>
+<a href="https://www.buymeacoffee.com/bruceborrett" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="20" width="94" style="border-radius:3px;"></a>
 
 ## Key Features
 
