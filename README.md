@@ -32,10 +32,10 @@ If you find this software useful and would like to see further development pleas
 - [x] STL Export
 - [x] Holes
 - [x] Waterproof seal
-- [ ] Screws
+- [x] Screws
 - [ ] PCB Mounts
 - [ ] Din rail mounts
-- [ ] Export each entity seperately
+- [x] Export each entity seperately
 - [ ] Save settings to file
 - [ ] Pre-defined templates for common devices (Pi, Arduino etc)
 
