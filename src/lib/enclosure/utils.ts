@@ -1,7 +1,7 @@
-import { cube, cuboid, cylinder } from '@jscad/modeling/src/primitives'
-import { rotateX, rotateY, rotateZ, translate } from '@jscad/modeling/src/operations/transforms'
+import { cuboid, cylinder } from '@jscad/modeling/src/primitives'
+import { rotateZ, translate } from '@jscad/modeling/src/operations/transforms'
 import { hull } from '@jscad/modeling/src/operations/hulls'
-import { subtract, union } from '@jscad/modeling/src/operations/booleans'
+import { subtract } from '@jscad/modeling/src/operations/booleans'
 import { degToRad } from '@jscad/modeling/src/utils'
 
 export const roundedCube = (l: number, w: number, h: number, r=8, s=100) => {
