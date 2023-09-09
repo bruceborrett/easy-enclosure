@@ -5,6 +5,8 @@ import { base } from '../lib/enclosure/base'
 import { waterProofSeal } from '../lib/enclosure/waterproofseal'
 import { Params, useParams } from "../lib/params";
 import { Geom3 } from "@jscad/modeling/src/geometries/types";
+import { union } from "@jscad/modeling/src/operations/booleans";
+import { pcbMounts } from "../lib/enclosure/pcbmount";
 
 export const Exporter = () => {
   const [open, setOpen] = useState(false);
@@ -37,8 +39,18 @@ export const Exporter = () => {
     const tsStr = '' + y + m + d + h + mm + s
 
     _export('enclosure-lid-' + tsStr, lid(params.get() as Params))
-    _export('enclosure-base-' + tsStr, base(params.get() as Params))
-    _export('enclosure-waterproof-seal-' + tsStr, waterProofSeal(params.get() as Params))
+
+    if (params.pcbMounts.value > 0) {
+      _export('enclosure-base-' + tsStr, union(
+        base(params.get() as Params),
+        pcbMounts(params.get() as Params)
+      ))
+    } else {
+      _export('enclosure-base-' + tsStr, base(params.get() as Params))
+    }
+    
+    if (params.waterProof.value)
+      _export('enclosure-waterproof-seal-' + tsStr, waterProofSeal(params.get() as Params))
 
     setOpen(false)
   }
