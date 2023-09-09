@@ -26,7 +26,7 @@ export const cableGlandHoles = (params: Params) => {
 
   let result = []
   for (let i = 0; i < cableGlands; i++) {
-    result.push(translate([spacing * (i + 1), -wall*3, 0], cableGland(cableGlandWidth/2, wall*6)))
+    result.push(translate([spacing * (i + 1), -wall*3, wall*1.5], cableGland(cableGlandWidth/2, wall*6)))
   }
 
   return translate(pos, union(result))
