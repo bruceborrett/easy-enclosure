@@ -3,16 +3,14 @@ import { serialize } from '@jscad/stl-serializer'
 import { lid } from '../lib/enclosure/lid'
 import { base } from '../lib/enclosure/base'
 import { waterProofSeal } from '../lib/enclosure/waterproofseal'
-import { Params } from "../lib/params";
+import { Params, useParams } from "../lib/params";
 import { Geom3 } from "@jscad/modeling/src/geometries/types";
 
-type Props = {
-  params: Params
-}
-
-export const Exporter = ({params}: Props) => {
+export const Exporter = () => {
   const [open, setOpen] = useState(false);
   
+  const params = useParams()
+
   const _export = (name: string, geometry: Geom3) => {
     const rawData = serialize({binary: false}, geometry)
     const blob = new Blob([rawData], {type: 'application/octet-stream'})
@@ -38,9 +36,9 @@ export const Exporter = ({params}: Props) => {
     const s = ts.getSeconds()
     const tsStr = '' + y + m + d + h + mm + s
 
-    _export('enclosure-lid-' + tsStr, lid(params))
-    _export('enclosure-base-' + tsStr, base(params))
-    _export('enclosure-waterproof-seal-' + tsStr, waterProofSeal(params))
+    _export('enclosure-lid-' + tsStr, lid(params.get() as Params))
+    _export('enclosure-base-' + tsStr, base(params.get() as Params))
+    _export('enclosure-waterproof-seal-' + tsStr, waterProofSeal(params.get() as Params))
 
     setOpen(false)
   }

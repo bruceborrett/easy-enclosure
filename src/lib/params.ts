@@ -1,4 +1,4 @@
-import React from 'react';
+import { hookstate, useHookstate } from '@hookstate/core';
 
 export type Params = {
   length: number,
@@ -34,7 +34,8 @@ const defaults: Params = {
   screws: true,
 }
 
+const paramState = hookstate(defaults)
+
 export const useParams = () => {
-  const [params, setParams] = React.useState<Params>(defaults);
-  return { params, setParams }
+  return useHookstate(paramState)
 }

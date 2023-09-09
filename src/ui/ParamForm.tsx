@@ -1,53 +1,92 @@
-import { Params } from "../lib/params";
+import React from "react";
 
-interface Props {
-  params: Params,
-  setParams: (params: Params) => void,
-}
+import { useParams } from "../lib/params";
 
-export const ParamsForm = ({params, setParams}: Props) => {
+export const ParamsForm = () => {
+  const { length, width, height, wall, cornerRadius, cableGlands, cableGlandWidth, pcbMounts, pcbMountXY, wallMounts, waterProof, screws  } = useParams()
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const id = e.currentTarget.id as keyof typeof params
-
-    let value
-    if (e.currentTarget.type === 'checkbox') {
-      value = e.currentTarget.checked  
-    } else {
-      value = parseFloat(e.currentTarget.value)
-    }
-
-    if (id === 'waterProof' && value === true) {
-      setParams({...params, 'screws': true, [id]: value})
-    } else if (id === 'screws' && value === false) {
-      setParams({...params, 'waterProof': false, [id]: value})
-    } else {
-      setParams({...params, [id]: value})
-    }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, set: (v: number) => void) => {
+    e.currentTarget.value && set(parseFloat(e.currentTarget.value))
   }
-  
+
   return (
-    <form>
-      <label>Length</label>
-      <input type="number" id="length" value={params.length} min={1} onChange={onChange} />
-      <label>Width</label>
-      <input type="number" id="width" value={params.width} min={1} onChange={onChange} />
-      <label>Height</label>
-      <input type="number" id="height" value={params.height} min={1} onChange={onChange} />
-      <label>Wall Thickness</label>
-      <input type="number" id="wall" value={params.wall} min={1} onChange={onChange} />
-      <label>Corner Radius</label>
-      <input type="number" id="cornerRadius" value={params.cornerRadius} min={1} onChange={onChange} />
-      <label>Holes</label>
-      <input type="number" id="cableGlands" value={params.cableGlands} min={0} onChange={onChange} />
-      <label>Hole Width</label>
-      <input type="number" id="cableGlandWidth" value={params.cableGlandWidth} onChange={onChange} />
-      <label>Wall Mounts</label>
-      <input type="checkbox" id="wallMounts" checked={params.wallMounts} onChange={onChange} />
-      <label>Waterproof</label>
-      <input type="checkbox" id="waterProof" checked={params.waterProof} onChange={onChange} />
-      <label>Screws</label>
-      <input type="checkbox" id="screws" checked={params.screws} onChange={onChange} />
+    <form id="param-form">
+      <div className="input-group">
+        <label>Length</label>
+        <input type="number" id="length" value={length.value} min={1} onChange={(e) => handleChange(e, length.set)} />
+      </div>
+      <div className="input-group">
+        <label>Width</label>
+        <input type="number" id="width" value={width.value} min={1} onChange={(e) => handleChange(e, width.set)} />
+      </div>
+      <div className="input-group">
+        <label>Base Height</label>
+        <input type="number" id="height" value={height.value} min={1} onChange={(e) => handleChange(e, height.set)} />
+      </div>
+      <div className="input-group">
+        <label>Wall Thickness</label>
+        <input type="number" id="wall" value={wall.value} min={1} onChange={(e) => handleChange(e, wall.set)} />
+      </div>
+      <div className="input-group">
+        <label>Corner Radius</label>
+        <input type="number" id="cornerRadius" value={cornerRadius.value} min={1} onChange={(e) => handleChange(e, cornerRadius.set)} />
+      </div>
+      <hr />
+      <div className="input-group">
+        <label>Holes</label>
+        <input type="number" id="cableGlands" value={cableGlands.value} min={0} onChange={(e) => handleChange(e, cableGlands.set)} />
+      </div>
+      {cableGlands.value > 0 && 
+        (
+          <div className="input-group">
+            <label>Hole Diameter</label>
+            <input type="number" id="cableGlandWidth" value={cableGlandWidth.value} onChange={(e) => handleChange(e, cableGlandWidth.set)} />
+          </div>
+        )  
+      }
+      <hr />
+      <div className="input-group">
+        <label>PCB Mounts</label>
+        <input type="number" id="pcbMounts" value={pcbMounts.value} min={0} onChange={(e) => {
+          const value = parseFloat(e.currentTarget.value)
+          pcbMountXY.set(Array.from({ length: value }, () => [0, 0]))
+          pcbMounts.set(value)
+        }} />
+      </div>
+
+      {pcbMounts.value > 0 &&
+        pcbMountXY.map((_, i) => (
+          <div key={i}>
+            <div className="input-group">
+              <label>PCB Mount {i + 1} X</label>
+              <input type="number" id={`pcbMountsX${i}`} value={_[0].value} onChange={(e) => _[0].set(parseFloat(e.currentTarget.value))} />
+            </div>
+            <div className="input-group">
+              <label>PCB Mount {i + 1} Y</label>
+              <input type="number" id={`pcbMountsY${i}`} value={_[1].value} onChange={(e) => _[1].set(parseFloat(e.currentTarget.value))} />
+            </div>
+          </div>
+        ))
+      }
+      <hr />
+      <div className="input-group">
+        <label>Wall Mounts</label>
+        <input type="checkbox" id="wallMounts" checked={wallMounts.value} onChange={(e) => wallMounts.set(e.currentTarget.checked)} />
+      </div>
+      <div className="input-group">
+        <label>Waterproof</label>
+        <input type="checkbox" id="waterProof" checked={waterProof.value} onChange={(e) => {
+          waterProof.set(e.currentTarget.checked)
+          e.currentTarget.checked && screws.set(true)
+        }} />
+      </div>
+      <div className="input-group">
+        <label>Screws</label>
+        <input type="checkbox" id="screws" checked={screws.value} onChange={(e) => {
+          screws.set(e.currentTarget.checked)
+          !e.currentTarget.checked && waterProof.set(false)
+        }} />
+      </div>
     </form>
   );
 };

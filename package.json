@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://bruceborrett.github.io/easy-enclosure/",
   "dependencies": {
+    "@hookstate/core": "^4.0.1",
     "@jscad/modeling": "file:OpenJSCAD.org/packages/modeling",
     "@jscad/openjscad": "^1.6.1",
     "@jscad/regl-renderer": "file:OpenJSCAD.org/packages/utils/regl-renderer",
