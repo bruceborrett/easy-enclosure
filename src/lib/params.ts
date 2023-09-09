@@ -11,6 +11,8 @@ export type Params = {
   cornerRadius: number,
   cableGlands: number,
   cableGlandWidth: number,
+  pcbMounts: number,
+  pcbMountXY: [number, number][],
   wallMounts: boolean,
   screws: boolean
 }
@@ -26,8 +28,10 @@ const defaults: Params = {
   cornerRadius: 4,
   cableGlands: 3,
   cableGlandWidth: 12.5,
+  pcbMounts: 4,
+  pcbMountXY: [[30,30],[-30,30],[-30,-30],[30,-30]],  
   wallMounts: true,
-  screws: true
+  screws: true,
 }
 
 export const useParams = () => {
