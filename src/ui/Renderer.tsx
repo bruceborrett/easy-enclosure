@@ -176,7 +176,7 @@ export const Renderer = () => {
       pos = [SPACING/2, -width.value/2, -height.value/2]
     }
     _lid.current = translate(pos, lid(params.get() as Params))
-  }, [length, width, height, wall, cornerRadius, screws, waterProof])
+  }, [length, width, wall, cornerRadius, screws, waterProof])
 
   useEffect(() => {
     console.log('Build base')
@@ -195,7 +195,7 @@ export const Renderer = () => {
       const pos = [-length.value-(length.value/2)-SPACING, -width.value/2, -height.value/2] as Vec3
       _waterProofSeal.current = translate(pos, waterProofSeal(params.get() as Params))
     }
-  }, [length, width, height, wall, cornerRadius, waterProof])
+  }, [length, width, wall, cornerRadius, waterProof])
 
   useEffect(() => {
     console.log('Build pcbMounts')
