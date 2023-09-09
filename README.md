@@ -33,9 +33,9 @@ If you find this software useful and would like to see further development pleas
 - [x] Holes
 - [x] Waterproof seal
 - [x] Screws
-- [ ] PCB Mounts
-- [ ] Din rail mounts
+- [x] PCB Mounts
 - [x] Export each entity seperately
+- [ ] Din rail mounts
 - [ ] Save settings to file
 - [ ] Pre-defined templates for common devices (Pi, Arduino etc)
 
@@ -43,3 +43,9 @@ If you find this software useful and would like to see further development pleas
 * Enclosures intended for outdoor use should be printed with PETG filament
 * Waterproof seal should be printed with TPU filament
 * Supports are required for holes
+* Overall height = Base Height + wall thickness
+* Inner height = Base Height - wall thickness
+* Inner width = width - (wall thickness * 2)
+* Inner length = length - (wall thickness * 2)
+* Screws take up extra space in corners, keep this in mind when deciding length and width
+* PCB mount X and Y is derived from center of base
