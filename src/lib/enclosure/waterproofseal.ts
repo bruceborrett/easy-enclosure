@@ -11,11 +11,11 @@ export const waterProofSealCutout = (params: Params) => {
   const { length, width, height, wall, cornerRadius } = params
   return translate(
     [wall,wall,(height/2)-wall],
-    cloverFrame(length-(wall*2), width-(wall*2), (wall*2)+LIDSEALHEIGHT+CLEARANCE, wall, cornerRadius)
+    cloverFrame(width-(wall*2), length-(wall*2), (wall*2)+LIDSEALHEIGHT+CLEARANCE, wall, cornerRadius)
   )
 }
 
 export const waterProofSeal = (params: Params) => {
   const { length, width, wall, cornerRadius } = params
-  return cloverFrame((length-(wall*2))-CLEARANCE, (width-(wall*2))-CLEARANCE, wall, wall-CLEARANCE, cornerRadius)
+  return cloverFrame((width-(wall*2))-CLEARANCE, (length-(wall*2))-CLEARANCE, wall, wall-CLEARANCE, cornerRadius)
 }

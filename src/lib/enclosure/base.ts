@@ -23,12 +23,12 @@ export const base = (params: Params) => {
 
   if (params.screws) {
     body.push(subtract(
-      roundedCube(length, width, height, cornerRadius),
-      translate([_wall,_wall,_wall], clover(length-(_wall*2), width-(_wall*2), height, _wall, cornerRadius))
+      roundedCube(width, length, height, cornerRadius),
+      translate([_wall,_wall,_wall], clover(width-(_wall*2), length-(_wall*2), height, _wall, cornerRadius))
     ))
     subtracts.push(screws(params))
   } else {
-    body.push(hollowRoundCube(length, width, height, _wall, cornerRadius))
+    body.push(hollowRoundCube(width, length, height, _wall, cornerRadius))
   }
   
   if (params.wallMounts) {

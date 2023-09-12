@@ -17,13 +17,13 @@ export const lid = (params: Params) => {
   const entities = []
   const subtracts = []
 
-  entities.push(roundedCube(length, width, wall, cornerRadius))
+  entities.push(roundedCube(width, length, wall, cornerRadius))
 
   if (params.screws) {
-    entities.push(translate([wall, wall, (wall/2)+(SEALHEIGHT/2)], cloverFrame((length-(wall*2))-CLEARANCE, (width-(wall*2))-CLEARANCE, SEALHEIGHT, wall, cornerRadius)))
+    entities.push(translate([wall, wall, (wall/2)+(SEALHEIGHT/2)], cloverFrame((width-(wall*2))-CLEARANCE, (length-(wall*2))-CLEARANCE, SEALHEIGHT, wall, cornerRadius)))
     subtracts.push(screws(params))
   } else {
-    entities.push(translate([wall, wall, (wall/2)+(SEALHEIGHT/2)], roundedFrame((length-(wall*2))-CLEARANCE, (width-(wall*2))-CLEARANCE, SEALHEIGHT, wall, cornerRadius)))
+    entities.push(translate([wall, wall, (wall/2)+(SEALHEIGHT/2)], roundedFrame((width-(wall*2))-CLEARANCE, (length-(wall*2))-CLEARANCE, SEALHEIGHT, wall, cornerRadius)))
   }
 
   if (subtracts.length > 0) {

@@ -34,17 +34,17 @@ export const enclosure = (params: Params) => {
   let start
 
   if (entities.length === 1) {
-    start = -(length/2)
+    start = -(width/2)
   } else if (entities.length === 2) {
     start = SPACING/2
   } else {
-    start = ((length/2)+SPACING)
+    start = ((width/2)+SPACING)
   }
 
   for (let i = 0; i < entities.length; i++) {
-    const pos = [start, -(width/2), 0] as Vec3
+    const pos = [start, -(length/2), 0] as Vec3
     result.push(translate(pos, entities[i]))
-    start = start - (length+SPACING)
+    start = start - (width+SPACING)
   }
 
   return union(result)

@@ -17,11 +17,11 @@ export const cableGlandHoles = (params: Params) => {
   let pos: Vec3
 
   if (screws) {
-    spacing = (length-(cornerRadius*2)) / (cableGlands + 1)
-    pos = [cornerRadius, width, 0]
+    spacing = (width-(cornerRadius*2)) / (cableGlands + 1)
+    pos = [cornerRadius, length, 0]
   } else {
-    spacing = length / (cableGlands + 1)
-    pos = [0, width, 0]
+    spacing = width / (cableGlands + 1)
+    pos = [0, length, 0]
   }
 
   let result = []

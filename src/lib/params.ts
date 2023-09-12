@@ -18,7 +18,7 @@ export type Params = {
 }
 
 const defaults: Params = {
-  length: 100,
+  length: 80,
   width: 100,
   height: 30,
   wall: 1,
@@ -29,7 +29,7 @@ const defaults: Params = {
   cableGlands: 3,
   cableGlandWidth: 12.5,
   pcbMounts: 4,
-  pcbMountXY: [[30,30],[-30,30],[-30,-30],[30,-30]],  
+  pcbMountXY: [[30,24],[-30,24],[-30,-24],[30,-24]],  
   wallMounts: true,
   screws: true,
 }

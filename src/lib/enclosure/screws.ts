@@ -8,8 +8,8 @@ export const screws = (params: Params) => {
   const { length, width, height, wall, cornerRadius } = params
   return union(
     translate([cornerRadius+wall, cornerRadius+wall, 0], cylinder({radius: 2, height: height})),
-    translate([length-cornerRadius-wall, cornerRadius+wall, 0], cylinder({radius: 2, height: height})),
-    translate([cornerRadius+wall, width-cornerRadius-wall, 0], cylinder({radius: 2, height: height})),
-    translate([length-cornerRadius-wall, width-cornerRadius-wall, 0], cylinder({radius: 2, height: height})),
+    translate([width-cornerRadius-wall, cornerRadius+wall, 0], cylinder({radius: 2, height: height})),
+    translate([cornerRadius+wall, length-cornerRadius-wall, 0], cylinder({radius: 2, height: height})),
+    translate([width-cornerRadius-wall, length-cornerRadius-wall, 0], cylinder({radius: 2, height: height})),
   )
 }

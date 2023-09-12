@@ -22,7 +22,7 @@ export const pcbMounts = (params: Params) => {
     const [x, y] = params.pcbMountXY[i]
     const z = -(height/2) + wall + HEIGHT
     mounts.push(
-      translate([(length/2)-x, (width/2)-y, z], pcbMount())
+      translate([(width/2)-x, (length/2)-y, z], pcbMount())
     )
   }
 

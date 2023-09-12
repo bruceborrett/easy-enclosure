@@ -171,9 +171,9 @@ export const Renderer = () => {
     console.log('Build lid')
     let pos: Vec3
     if (waterProof.value) {
-      pos = [(length.value/2)+SPACING, -width.value/2, -height.value/2]
+      pos = [(width.value/2)+SPACING, -length.value/2, -height.value/2]
     } else {
-      pos = [SPACING/2, -width.value/2, -height.value/2]
+      pos = [SPACING/2, -length.value/2, -height.value/2]
     }
     _lid.current = translate(pos, lid(params.get() as Params))
   }, [length, width, wall, cornerRadius, screws, waterProof])
@@ -182,9 +182,9 @@ export const Renderer = () => {
     console.log('Build base')
     let pos: Vec3
     if (waterProof.value) {
-      pos = [-length.value/2, -width.value/2, 0]
+      pos = [-width.value/2, -length.value/2, 0]
     } else {
-      pos = [-(length.value+(SPACING/2)), -width.value/2, 0]
+      pos = [-(width.value+(SPACING/2)), -length.value/2, 0]
     }
     _base.current = translate(pos, base(params.get() as Params))
   }, [length, width, height, wall, cornerRadius, cableGlands, wallMounts, screws, waterProof])
@@ -192,7 +192,7 @@ export const Renderer = () => {
   useEffect(() => {
     console.log('Build waterProofSeal')
     if (params.waterProof) {
-      const pos = [-length.value-(length.value/2)-SPACING, -width.value/2, -height.value/2] as Vec3
+      const pos = [-width.value-(width.value/2)-SPACING, -length.value/2, -height.value/2] as Vec3
       _waterProofSeal.current = translate(pos, waterProofSeal(params.get() as Params))
     }
   }, [length, width, wall, cornerRadius, waterProof])
@@ -202,9 +202,9 @@ export const Renderer = () => {
     if (params.pcbMounts.value > 0) {
       let pos: Vec3
       if (waterProof.value) {
-        pos = [-length.value/2, -width.value/2, 0]
+        pos = [-width.value/2, -length.value/2, 0]
       } else {
-        pos = [-(length.value+(SPACING/2)), -width.value/2, 0]
+        pos = [-(width.value+(SPACING/2)), -length.value/2, 0]
       }
       _pcbMounts.current = translate(pos, pcbMounts(params.get() as Params))
     }
@@ -246,20 +246,6 @@ export const Renderer = () => {
     }
     setCamera()
     updateAndRender()
-    // return () => {
-    //   console.log('Unload')
-    //   if (animationFrame.current) {
-    //     console.log('Cancel animation frame', animationFrame)
-    //     cancelAnimationFrame(animationFrame.current)
-    //   }
-    //   unload.current = true
-    //   renderer.current = null
-    //   entities.current = []
-    //   result.current = []
-    //   model.current = null
-    //   renderOptions.current = null
-    //   container.current = null
-    // }
   }, [model, renderOptions, renderer, container]);
 
   // Re-render on param change
