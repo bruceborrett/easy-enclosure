@@ -57,7 +57,7 @@ export const Renderer = () => {
 
   const params = useParams()
 
-  const { length, width, height, wall, cornerRadius, cableGlands, screws, waterProof, wallMounts, pcbMountXY } = params
+  const { length, width, height, wall, cornerRadius, cableGlands, screws, waterProof, wallMounts, pcbMountXY, cableGlandWidth } = params
 
   let entities = useRef<Entities>({ lid: null, base: null, waterProofSeal: null, pcbMounts: null })
 
@@ -187,7 +187,7 @@ export const Renderer = () => {
       pos = [-(width.value+(SPACING/2)), -length.value/2, 0]
     }
     _base.current = translate(pos, base(params.get() as Params))
-  }, [length, width, height, wall, cornerRadius, cableGlands, wallMounts, screws, waterProof])
+  }, [length, width, height, wall, cornerRadius, cableGlands, cableGlandWidth, wallMounts, screws, waterProof])
 
   useEffect(() => {
     console.log('Build waterProofSeal')
@@ -252,7 +252,6 @@ export const Renderer = () => {
   useEffect(() => {
     if (!model.current || !renderOptions.current || !renderer.current || !container.current) return
     console.log('Re-render')
-    // model.current = enclosure(params)
     console.log(model.current)
     renderOptions.current.entities = entitiesFromSolids({}, model.current)
     updateView = true
