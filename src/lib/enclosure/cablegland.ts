@@ -1,34 +1,58 @@
-import { rotateX, translate } from '@jscad/modeling/src/operations/transforms';
+import { rotateX, rotate, translate } from '@jscad/modeling/src/operations/transforms';
 import { degToRad } from '@jscad/modeling/src/utils';
 import { cylinder } from '@jscad/modeling/src/primitives';
 import { union } from '@jscad/modeling/src/operations/booleans';
 
 import { Params } from '../params';
-import { Vec3 } from '@jscad/modeling/src/maths/vec3';
-
-const cableGland = (r: number, h: number) => {
-  return rotateX(degToRad(90), cylinder({radius: r, height: h}))
-}
+import { Geom3 } from '@jscad/modeling/src/geometries/types';
+import { Vec3 } from '@jscad/modeling/src/maths/types';
 
 export const cableGlandHoles = (params: Params) => {
-  const { length, width, height, wall, floor, screws, cornerRadius, cableGlands, cableGlandWidth } = params
+  const { length, width, height, wall, floor, insertThickness, cableGlandSpecs } = params
 
-  let spacing
-  let pos: Vec3
+  let result: Geom3[] = []
+  for (let wallNum = 0; wallNum <= 3; wallNum++) {
+    const holes = cableGlandSpecs.filter((spec) => {
+      if (spec[0] === wallNum) {
+        return cylinder({radius: spec[1]/2, height: wall*6})
+      } else {
+        return false
+      }
+    })
 
-  if (screws) {
-    spacing = (width-(cornerRadius*2)) / (cableGlands + 1)
-    pos = [cornerRadius, length, 0]
-  } else {
-    spacing = width / (cableGlands + 1)
-    pos = [0, length, 0]
+    holes.forEach((hole, i) => {
+      let x: number
+      let y: number
+      let rot: Vec3
+      let spacing: number
+
+      const z = -(height/2) + hole[1] + floor
+
+      if (wallNum === 0) {
+        spacing = width / (holes.length + 1)
+        y = length
+        x = spacing * (i + 1)
+        rot = [degToRad(90),0,0]
+      } else if (wallNum === 1) {
+        spacing = length / (holes.length + 1)
+        x = insertThickness + (wall*2)
+        y = spacing * (i + 1)
+        rot = [0,degToRad(90),0]
+      } else if (wallNum === 2) {
+        spacing = width / (holes.length + 1)
+        y = insertThickness + (wall*2)
+        x = spacing * (i + 1)
+        rot = [degToRad(90),0,0]
+      } else {
+        spacing = length / (holes.length + 1)
+        x = width
+        y = spacing * (i + 1)
+        rot = [0,degToRad(90),0]
+      }
+
+      result.push(translate([x, y, z], rotate(rot, cylinder({radius: hole[1]/2, height: insertThickness + (wall*2) + 5}))))
+    })
   }
 
-  let result = []
-  let z = -(height/2) + floor + cableGlandWidth
-  for (let i = 0; i < cableGlands; i++) {
-    result.push(translate([spacing * (i + 1), -wall*3, z], cableGland(cableGlandWidth/2, wall*6)))
-  }
-
-  return translate(pos, union(result))
+  return union(result)
 }

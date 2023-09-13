@@ -49,7 +49,7 @@ export const Renderer = () => {
   const params = useParams()
 
   const { length, width, height, wall, floor, roof, cornerRadius, cableGlands, 
-    screws, waterProof, wallMounts, pcbMountXY, cableGlandWidth, 
+    screws, waterProof, wallMounts, pcbMountXY, cableGlandSpecs, 
     screwDiameter, insertThickness, sealThickness, insertHeight } = params
 
   const container = useRef<HTMLDivElement | null>(null);
@@ -179,7 +179,7 @@ export const Renderer = () => {
       pos = [-(width.value+(SPACING/2)), -length.value/2, 0]
     }
     _base.current = translate(pos, base(params.get() as Params))
-  }, [length, width, height, wall, floor, cornerRadius, cableGlands, cableGlandWidth, wallMounts, 
+  }, [length, width, height, wall, floor, cornerRadius, cableGlands, cableGlandSpecs, wallMounts, 
     screws, waterProof, screwDiameter, insertThickness, insertHeight, sealThickness])
 
   // Waterproof seal
@@ -203,6 +203,7 @@ export const Renderer = () => {
     }
   }, [pcbMounts, pcbMountXY, waterProof, wall, floor, height])
 
+  // Combine solids
   useEffect(() => {
     let result: Geom3[] = []
 
@@ -214,6 +215,7 @@ export const Renderer = () => {
     model.current = union(result)
   }, [_lid.current, _base.current, _waterProofSeal.current, _pcbMounts.current]) 
   
+  // Convert solids to entities
   useEffect(() => {
     if (!model.current) return
 
