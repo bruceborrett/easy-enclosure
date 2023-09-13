@@ -44,22 +44,13 @@ type RenderOptions = {
   entities: Entity[],
 }
 
-type Entities = {
-  lid: Geom3 | null,
-  base: Geom3 | null,
-  waterProofSeal: Geom3 | null,
-  pcbMounts: Geom3 | null,
-}
-
 export const Renderer = () => {
-
-  console.log('Renderer')
 
   const params = useParams()
 
-  const { length, width, height, wall, cornerRadius, cableGlands, screws, waterProof, wallMounts, pcbMountXY, cableGlandWidth } = params
-
-  let entities = useRef<Entities>({ lid: null, base: null, waterProofSeal: null, pcbMounts: null })
+  const { length, width, height, wall, floor, roof, cornerRadius, cableGlands, 
+    screws, waterProof, wallMounts, pcbMountXY, cableGlandWidth, 
+    screwDiameter, insertThickness, sealThickness, insertHeight } = params
 
   const container = useRef<HTMLDivElement | null>(null);
   const _lid = useRef<Geom3 | null>(null)
@@ -167,19 +158,20 @@ export const Renderer = () => {
     })
   }
 
+  // Lid
   useEffect(() => {
-    console.log('Build lid')
     let pos: Vec3
     if (waterProof.value) {
-      pos = [(width.value/2)+SPACING, -length.value/2, -height.value/2]
+      pos = [(width.value/2)+SPACING, -length.value/2, (-height.value/2)+(roof.value/2)]
     } else {
-      pos = [SPACING/2, -length.value/2, -height.value/2]
+      pos = [SPACING/2, -length.value/2, (-height.value/2)+(roof.value/2)]
     }
     _lid.current = translate(pos, lid(params.get() as Params))
-  }, [length, width, wall, cornerRadius, screws, waterProof])
+  }, [length, width, roof, wall, cornerRadius, screws, waterProof, screwDiameter, 
+    insertThickness, insertHeight])
 
+  // Base
   useEffect(() => {
-    console.log('Build base')
     let pos: Vec3
     if (waterProof.value) {
       pos = [-width.value/2, -length.value/2, 0]
@@ -187,18 +179,19 @@ export const Renderer = () => {
       pos = [-(width.value+(SPACING/2)), -length.value/2, 0]
     }
     _base.current = translate(pos, base(params.get() as Params))
-  }, [length, width, height, wall, cornerRadius, cableGlands, cableGlandWidth, wallMounts, screws, waterProof])
+  }, [length, width, height, wall, floor, cornerRadius, cableGlands, cableGlandWidth, wallMounts, 
+    screws, waterProof, screwDiameter, insertThickness, insertHeight, sealThickness])
 
+  // Waterproof seal
   useEffect(() => {
-    console.log('Build waterProofSeal')
     if (params.waterProof) {
-      const pos = [-width.value-(width.value/2)-SPACING, -length.value/2, -height.value/2] as Vec3
+      const pos = [-width.value-(width.value/2)-SPACING, -length.value/2, -(height.value/2)+(sealThickness.value/2)] as Vec3
       _waterProofSeal.current = translate(pos, waterProofSeal(params.get() as Params))
     }
-  }, [length, width, wall, cornerRadius, waterProof])
+  }, [length, width, wall, cornerRadius, waterProof, sealThickness])
 
+  // PCB mounts
   useEffect(() => {
-    console.log('Build pcbMounts')
     if (params.pcbMounts.value > 0) {
       let pos: Vec3
       if (waterProof.value) {
@@ -208,10 +201,9 @@ export const Renderer = () => {
       }
       _pcbMounts.current = translate(pos, pcbMounts(params.get() as Params))
     }
-  }, [pcbMounts, pcbMountXY, waterProof, wall, height])
+  }, [pcbMounts, pcbMountXY, waterProof, wall, floor, height])
 
   useEffect(() => {
-    console.log('Update model')
     let result: Geom3[] = []
 
     if (_lid.current) result.push(_lid.current)
@@ -225,8 +217,6 @@ export const Renderer = () => {
   useEffect(() => {
     if (!model.current) return
 
-    console.log('Update renderOptions')
-
     renderOptions.current = {
       camera: camera,
       drawCommands: drawCommands,
@@ -236,9 +226,7 @@ export const Renderer = () => {
 
   // Initial render
   useEffect(() => {
-    console.log(model, renderOptions, renderer, container)
     if (!container.current || renderer.current) return
-    console.log('Initial render')
     if (container.current && !renderer.current) {
       renderer.current = prepareRender({
         glOptions: { container: container.current },
@@ -251,8 +239,6 @@ export const Renderer = () => {
   // Re-render on param change
   useEffect(() => {
     if (!model.current || !renderOptions.current || !renderer.current || !container.current) return
-    console.log('Re-render')
-    console.log(model.current)
     renderOptions.current.entities = entitiesFromSolids({}, model.current)
     updateView = true
   }, [model.current])

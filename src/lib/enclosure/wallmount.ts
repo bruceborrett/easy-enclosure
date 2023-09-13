@@ -28,9 +28,9 @@ export const flange = () => {
 export const flanges = (params: Params) => {
   const { length, width, height, cornerRadius } = params
   return union(
-    translate([-4, cornerRadius*2, -((height/2)-5)], flange()),
-    translate([-4, length-(cornerRadius*2), -((height/2)-5)], flange()),
-    translate([width+4, cornerRadius*2, -((height/2)-5)], mirrorX(flange())),
-    translate([width+4, length-(cornerRadius*2), -((height/2)-5)], mirrorX(flange()))
+    translate([-(cornerRadius), cornerRadius*2.5, -((height/2)-5)], flange()),
+    translate([-cornerRadius, length-(cornerRadius*2.5), -((height/2)-5)], flange()),
+    translate([width+cornerRadius, cornerRadius*2.5, -((height/2)-5)], mirrorX(flange())),
+    translate([width+cornerRadius, length-(cornerRadius*2.5), -((height/2)-5)], mirrorX(flange()))
   )
 }

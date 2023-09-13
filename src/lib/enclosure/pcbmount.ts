@@ -14,17 +14,17 @@ export const pcbMount = () => {
 }
 
 export const pcbMounts = (params: Params) => {
-  const { pcbMounts, length, width, height, wall } = params;
+  const { pcbMounts, length, width, height, wall, floor } = params;
   
   const mounts = []
 
   for (let i = 0; i < pcbMounts; i++) {
     const [x, y] = params.pcbMountXY[i]
-    const z = -(height/2) + wall + HEIGHT
+    const z = -(height/2) + (HEIGHT/2) + floor
     mounts.push(
       translate([(width/2)-x, (length/2)-y, z], pcbMount())
     )
   }
 
-  return translate([0,0,wall], union(mounts))
+  return union(mounts)
 }

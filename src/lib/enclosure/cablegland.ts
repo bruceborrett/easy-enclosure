@@ -11,7 +11,7 @@ const cableGland = (r: number, h: number) => {
 }
 
 export const cableGlandHoles = (params: Params) => {
-  const { length, width, wall, screws, cornerRadius, cableGlands, cableGlandWidth } = params
+  const { length, width, height, wall, floor, screws, cornerRadius, cableGlands, cableGlandWidth } = params
 
   let spacing
   let pos: Vec3
@@ -25,8 +25,9 @@ export const cableGlandHoles = (params: Params) => {
   }
 
   let result = []
+  let z = -(height/2) + floor + cableGlandWidth
   for (let i = 0; i < cableGlands; i++) {
-    result.push(translate([spacing * (i + 1), -wall*3, wall*1.5], cableGland(cableGlandWidth/2, wall*6)))
+    result.push(translate([spacing * (i + 1), -wall*3, z], cableGland(cableGlandWidth/2, wall*6)))
   }
 
   return translate(pos, union(result))

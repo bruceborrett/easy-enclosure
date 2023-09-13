@@ -3,7 +3,9 @@ import React from "react";
 import { useParams } from "../lib/params";
 
 export const ParamsForm = () => {
-  const { length, width, height, wall, cornerRadius, cableGlands, cableGlandWidth, pcbMounts, pcbMountXY, wallMounts, waterProof, screws  } = useParams()
+  const { length, width, height, floor, roof, wall, cornerRadius, 
+    cableGlands, cableGlandWidth, pcbMounts, pcbMountScrewDiameter, pcbMountXY, wallMounts, 
+    waterProof, screws, screwDiameter, sealThickness, insertThickness, insertHeight  } = useParams()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, set: (v: number) => void) => {
     e.currentTarget.value && set(parseFloat(e.currentTarget.value))
@@ -24,8 +26,24 @@ export const ParamsForm = () => {
         <input type="number" id="height" value={height.value} min={1} onChange={(e) => handleChange(e, height.set)} />
       </div>
       <div className="input-group">
+        <label>Floor Thickness</label>
+        <input type="number" id="wall" value={floor.value} min={1} onChange={(e) => handleChange(e, floor.set)} />
+      </div>
+      <div className="input-group">
+        <label>Roof Thickness</label>
+        <input type="number" id="wall" value={roof.value} min={1} onChange={(e) => handleChange(e, roof.set)} />
+      </div>
+      <div className="input-group">
         <label>Wall Thickness</label>
         <input type="number" id="wall" value={wall.value} min={1} onChange={(e) => handleChange(e, wall.set)} />
+      </div>
+      <div className="input-group">
+        <label>Insert Thickness</label>
+        <input type="number" id="insertThickness" value={insertThickness.value} onChange={(e) => handleChange(e, insertThickness.set)} />
+      </div>
+      <div className="input-group">
+        <label>Insert Height</label>
+        <input type="number" id="insertHeight" value={insertHeight.value} onChange={(e) => handleChange(e, insertHeight.set)} />
       </div>
       <div className="input-group">
         <label>Corner Radius</label>
@@ -53,6 +71,15 @@ export const ParamsForm = () => {
           pcbMounts.set(value)
         }} />
       </div>
+      {
+        pcbMounts.value > 0 &&
+        (
+          <div className="input-group">
+            <label>PCB Mount Screw Diameter</label>
+            <input type="number" id="pcbMountScrewDiameter" value={pcbMountScrewDiameter.value} onChange={(e) => handleChange(e, pcbMountScrewDiameter.set)} />
+          </div>
+        )
+      }
 
       {pcbMounts.value > 0 &&
         pcbMountXY.map((_, i) => (
@@ -70,22 +97,42 @@ export const ParamsForm = () => {
       }
       <hr />
       <div className="input-group">
-        <label>Wall Mounts</label>
-        <input type="checkbox" id="wallMounts" checked={wallMounts.value} onChange={(e) => wallMounts.set(e.currentTarget.checked)} />
-      </div>
-      <div className="input-group">
         <label>Waterproof</label>
         <input type="checkbox" id="waterProof" checked={waterProof.value} onChange={(e) => {
           waterProof.set(e.currentTarget.checked)
           e.currentTarget.checked && screws.set(true)
         }} />
       </div>
+      {
+        waterProof.value &&
+        (
+          <div className="input-group">
+            <label>Seal Thickness</label>
+            <input type="number" id="sealThickness" value={sealThickness.value} onChange={(e) => handleChange(e, sealThickness.set)} />
+          </div>
+        )
+      }
+      <hr />
       <div className="input-group">
         <label>Screws</label>
         <input type="checkbox" id="screws" checked={screws.value} onChange={(e) => {
           screws.set(e.currentTarget.checked)
           !e.currentTarget.checked && waterProof.set(false)
         }} />
+      </div>
+      {
+        screws.value &&
+        (
+          <div className="input-group">
+            <label>Screw Diameter</label>
+            <input type="number" id="screwDiameter" value={screwDiameter.value} onChange={(e) => handleChange(e, screwDiameter.set)} />
+          </div>
+        )
+      }
+      <hr />
+      <div className="input-group">
+        <label>Wall Mounts</label>
+        <input type="checkbox" id="wallMounts" checked={wallMounts.value} onChange={(e) => wallMounts.set(e.currentTarget.checked)} />
       </div>
     </form>
   );

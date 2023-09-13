@@ -9,21 +9,20 @@ const { union } = booleans
 const { translate } = transforms
 
 const CLEARANCE = 0.04
-const SEALHEIGHT = 5
 
 export const lid = (params: Params) => {
-  const { length, width, wall, cornerRadius } = params
+  const { length, width, wall, roof, cornerRadius, insertThickness, insertHeight } = params
 
   const entities = []
   const subtracts = []
 
-  entities.push(roundedCube(width, length, wall, cornerRadius))
+  entities.push(roundedCube(width, length, roof, cornerRadius))
 
   if (params.screws) {
-    entities.push(translate([wall, wall, (wall/2)+(SEALHEIGHT/2)], cloverFrame((width-(wall*2))-CLEARANCE, (length-(wall*2))-CLEARANCE, SEALHEIGHT, wall, cornerRadius)))
+    entities.push(translate([wall, wall, (roof/2)+(insertHeight/2)], cloverFrame((width-(wall*2))-CLEARANCE, (length-(wall*2))-CLEARANCE, insertHeight, insertThickness, cornerRadius)))
     subtracts.push(screws(params))
   } else {
-    entities.push(translate([wall, wall, (wall/2)+(SEALHEIGHT/2)], roundedFrame((width-(wall*2))-CLEARANCE, (length-(wall*2))-CLEARANCE, SEALHEIGHT, wall, cornerRadius)))
+    entities.push(translate([wall, wall, (roof/2)+(insertHeight/2)], roundedFrame((width-(wall*2))-CLEARANCE, (length-(wall*2))-CLEARANCE, insertHeight, insertThickness, cornerRadius)))
   }
 
   if (subtracts.length > 0) {

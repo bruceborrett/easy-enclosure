@@ -5,17 +5,16 @@ import { cloverFrame } from './utils'
 import { translate } from '@jscad/modeling/src/operations/transforms'
 
 const CLEARANCE = 0.04
-const LIDSEALHEIGHT = 5
 
 export const waterProofSealCutout = (params: Params) => {
-  const { length, width, height, wall, cornerRadius } = params
+  const { length, width, height, wall, cornerRadius, insertThickness, insertHeight, sealThickness } = params
   return translate(
     [wall,wall,(height/2)-wall],
-    cloverFrame(width-(wall*2), length-(wall*2), (wall*2)+LIDSEALHEIGHT+CLEARANCE, wall, cornerRadius)
+    cloverFrame(width-(wall*2), length-(wall*2), (wall*2)+insertHeight+sealThickness+CLEARANCE, insertThickness, cornerRadius)
   )
 }
 
 export const waterProofSeal = (params: Params) => {
-  const { length, width, wall, cornerRadius } = params
-  return cloverFrame((width-(wall*2))-CLEARANCE, (length-(wall*2))-CLEARANCE, wall, wall-CLEARANCE, cornerRadius)
+  const { length, width, wall, cornerRadius, sealThickness, insertThickness } = params
+  return cloverFrame((width-(wall*2))-CLEARANCE, (length-(wall*2))-CLEARANCE, sealThickness, insertThickness-CLEARANCE, cornerRadius)
 }

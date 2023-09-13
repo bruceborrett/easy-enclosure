@@ -11,20 +11,20 @@ import { translate } from '@jscad/modeling/src/operations/transforms'
 const { subtract, union } = booleans
 
 export const base = (params: Params) => {
-  const { length, width, height, wall, cornerRadius } = params
+  const { length, width, height, wall, floor, cornerRadius, insertThickness } = params
 
   const body = [] 
   const subtracts = []
 
   let _wall = wall
   if (params.waterProof) {
-    _wall = wall * 3
+    _wall = (wall * 2) + insertThickness
   }
 
   if (params.screws) {
     body.push(subtract(
       roundedCube(width, length, height, cornerRadius),
-      translate([_wall,_wall,_wall], clover(width-(_wall*2), length-(_wall*2), height, _wall, cornerRadius))
+      translate([_wall,_wall,floor], clover(width-(_wall*2), length-(_wall*2), height, _wall, cornerRadius))
     ))
     subtracts.push(screws(params))
   } else {
