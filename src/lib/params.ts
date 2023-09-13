@@ -33,7 +33,7 @@ const defaults: Params = {
   roof: 2,
   wall: 1,
   waterProof: true,
-  sealThickness: 1,
+  sealThickness: 2,
   insertThickness: 2,
   insertHeight: 4,
   showLid: true,
