@@ -2,10 +2,17 @@ import React from "react";
 
 import { useParams } from "../lib/params";
 
-const NumberInput = ({label, value, onChange}: {label: string, value: number, onChange: (e: React.ChangeEvent<HTMLInputElement| HTMLSelectElement>) => void}) => (
+const NumberInput = ({label, value, min=1, onChange}: {label: string, value: number, min?: number, onChange: (e: React.ChangeEvent<HTMLInputElement| HTMLSelectElement>) => void}) => (
   <div className="input-group">
     <label>{label}</label>
-    <input type="number" min={1} value={value} onChange={onChange} />
+    <input type="number" min={min} value={value} onChange={onChange} />
+  </div>
+)
+
+const CheckBox = ({label, value, onChange}: {label: string, value: boolean, onChange: (e: React.ChangeEvent<HTMLInputElement| HTMLSelectElement>) => void}) => (
+  <div className="input-group">
+    <label>{label}</label>
+    <input type="checkbox" checked={value} onChange={onChange} />
   </div>
 )
 
@@ -22,47 +29,20 @@ export const ParamsForm = () => {
   return (
     <form id="param-form">
       <NumberInput label="Height" value={length.value} onChange={(e) => handleChange(e, length.set)} />
-      <div className="input-group">
-        <label>Width</label>
-        <input type="number" value={width.value} min={1} onChange={(e) => handleChange(e, width.set)} />
-      </div>
-      <div className="input-group">
-        <label>Base Height</label>
-        <input type="number" value={height.value} min={1} onChange={(e) => handleChange(e, height.set)} />
-      </div>
-      <div className="input-group">
-        <label>Floor Thickness</label>
-        <input type="number" value={floor.value} min={1} onChange={(e) => handleChange(e, floor.set)} />
-      </div>
-      <div className="input-group">
-        <label>Wall Thickness</label>
-        <input type="number" value={wall.value} min={1} onChange={(e) => handleChange(e, wall.set)} />
-      </div>
-      <div className="input-group">
-        <label>Lid Thickness</label>
-        <input type="number" value={roof.value} min={1} onChange={(e) => handleChange(e, roof.set)} />
-      </div>
-      <div className="input-group">
-        <label>Insert Thickness</label>
-        <input type="number" value={insertThickness.value} onChange={(e) => handleChange(e, insertThickness.set)} />
-      </div>
-      <div className="input-group">
-        <label>Insert Height</label>
-        <input type="number" value={insertHeight.value} onChange={(e) => handleChange(e, insertHeight.set)} />
-      </div>
-      <div className="input-group">
-        <label>Corner Radius</label>
-        <input type="number" value={cornerRadius.value} min={1} onChange={(e) => handleChange(e, cornerRadius.set)} />
-      </div>
+      <NumberInput label="Width" value={width.value} onChange={(e) => handleChange(e, width.set)} />
+      <NumberInput label="Height" value={height.value} onChange={(e) => handleChange(e, height.set)} />
+      <NumberInput label="Floor Thickness" value={floor.value} onChange={(e) => handleChange(e, floor.set)} />
+      <NumberInput label="Wall Thickness" value={wall.value} onChange={(e) => handleChange(e, wall.set)} />
+      <NumberInput label="Lid Thickness" value={roof.value} onChange={(e) => handleChange(e, roof.set)} />
+      <NumberInput label="Insert Thickness" value={insertThickness.value} onChange={(e) => handleChange(e, insertThickness.set)} />
+      <NumberInput label="Insert Height" value={insertHeight.value} onChange={(e) => handleChange(e, insertHeight.set)} />
+      <NumberInput label="Corner Radius" value={cornerRadius.value} onChange={(e) => handleChange(e, cornerRadius.set)} />
       <hr />
-      <div className="input-group">
-        <label>Holes</label>
-        <input type="number" value={cableGlands.value} min={0} onChange={(e) => {
-          const value = parseFloat(e.currentTarget.value)
-          cableGlandSpecs.set(Array.from({ length: value }, () => [0, 12.5]))
-          cableGlands.set(value)        
-        }} />
-      </div>
+      <NumberInput label="Holes" value={cableGlands.value} min={0} onChange={(e) => {
+        const value = parseFloat(e.currentTarget.value)
+        cableGlandSpecs.set(Array.from({ length: value }, () => [0, 12.5]))
+        cableGlands.set(value)        
+      }} />
       {cableGlands.value > 0 && 
         cableGlandSpecs.map((_, i) => (
           <div key={i}>
@@ -75,43 +55,26 @@ export const ParamsForm = () => {
                 <option value={3}>Left</option>
               </select>
             </div>          
-            <div className="input-group">
-              <label>Hole {i+1} Diameter</label>
-              <input type="number" value={_[1].value} onChange={(e) => handleChange(e, _[1].set)} />
-            </div>
+            <NumberInput label={`Hole ${i+1} Diameter`} value={_[1].value} onChange={(e) => handleChange(e, _[1].set)} />
           </div>
         ))
       }
       <hr />
-      <div className="input-group">
-        <label>PCB Mounts</label>
-        <input type="number" id="pcbMounts" value={pcbMounts.value} min={0} onChange={(e) => {
-          const value = parseFloat(e.currentTarget.value)
-          pcbMountXY.set(Array.from({ length: value }, () => [0, 0]))
-          pcbMounts.set(value)
-        }} />
-      </div>
+      <NumberInput label="PCB Mounts" value={pcbMounts.value} min={0} onChange={(e) => {
+        const value = parseFloat(e.currentTarget.value)
+        pcbMountXY.set(Array.from({ length: value }, () => [0, 0]))
+        pcbMounts.set(value)
+      }} />
       {
         pcbMounts.value > 0 &&
-        (
-          <div className="input-group">
-            <label>Screw Diameter</label>
-            <input type="number" id="pcbMountScrewDiameter" value={pcbMountScrewDiameter.value} onChange={(e) => handleChange(e, pcbMountScrewDiameter.set)} />
-          </div>
-        )
+          <NumberInput label="Screw Diameter" value={pcbMountScrewDiameter.value} onChange={(e) => handleChange(e, pcbMountScrewDiameter.set)} />
       }
 
       {pcbMounts.value > 0 &&
         pcbMountXY.map((_, i) => (
           <div key={i}>
-            <div className="input-group">
-              <label>PCB Mount {i + 1} X</label>
-              <input type="number" id={`pcbMountsX${i}`} value={_[0].value} onChange={(e) => handleChange(e, _[0].set)} />
-            </div>
-            <div className="input-group">
-              <label>PCB Mount {i + 1} Y</label>
-              <input type="number" id={`pcbMountsY${i}`} value={_[1].value} onChange={(e) => handleChange(e, _[1].set)} />
-            </div>
+            <NumberInput label={`PCB Mount ${i + 1} X`} value={_[0].value} onChange={(e) => handleChange(e, _[0].set)} />
+            <NumberInput label={`PCB Mount ${i + 1} Y`} value={_[1].value} onChange={(e) => handleChange(e, _[1].set)} />
           </div>
         ))
       }
@@ -125,12 +88,7 @@ export const ParamsForm = () => {
       </div>
       {
         waterProof.value &&
-        (
-          <div className="input-group">
-            <label>Seal Thickness</label>
-            <input type="number" id="sealThickness" value={sealThickness.value} onChange={(e) => handleChange(e, sealThickness.set)} />
-          </div>
-        )
+          <NumberInput label="Seal Thickness" value={sealThickness.value} onChange={(e) => handleChange(e, sealThickness.set)} />
       }
       <hr />
       <div className="input-group">
@@ -142,12 +100,7 @@ export const ParamsForm = () => {
       </div>
       {
         screws.value &&
-        (
-          <div className="input-group">
-            <label>Screw Diameter</label>
-            <input type="number" id="screwDiameter" value={screwDiameter.value} onChange={(e) => handleChange(e, screwDiameter.set)} />
-          </div>
-        )
+          <NumberInput label="Screw Diameter" value={screwDiameter.value} onChange={(e) => handleChange(e, screwDiameter.set)} />
       }
       <hr />
       <div className="input-group">
@@ -156,12 +109,7 @@ export const ParamsForm = () => {
       </div>
       {
         wallMounts.value &&
-        (
-          <div className="input-group">
-            <label>Screw Diameter</label>
-            <input type="number" id="wallMountScrewDiameter" value={wallMountScrewDiameter.value} onChange={(e) => handleChange(e, wallMountScrewDiameter.set)} />
-          </div>
-        )
+          <NumberInput label="Screw Diameter" value={wallMountScrewDiameter.value} onChange={(e) => handleChange(e, wallMountScrewDiameter.set)} />
       }
     </form>
   );
