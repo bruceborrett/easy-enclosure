@@ -42,10 +42,10 @@ const defaults: Params = {
   cableGlands: 4,
   cableGlandSpecs: [[0,12.5], [1,12.5], [2,12.5], [3,12.5]],
   pcbMounts: 4,
-  pcbMountScrewDiameter: 2.98,
+  pcbMountScrewDiameter: 1.98,
   pcbMountXY: [[30,24],[-30,24],[-30,-24],[30,-24]],  
   wallMounts: true,
-  wallMountScrewDiameter: 2.98,
+  wallMountScrewDiameter: 3.98,
   screws: true,
   screwDiameter: 2.98,
 }

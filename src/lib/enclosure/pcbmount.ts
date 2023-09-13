@@ -6,15 +6,15 @@ import { subtract, union } from "@jscad/modeling/src/operations/booleans";
 const HEIGHT = 5
 const RADIUS = 3
 
-export const pcbMount = () => {
+export const pcbMount = (diameter: number) => {
   return subtract(
-    cylinder({height: HEIGHT, radius: 5, segments: 20}),
-    cylinder({height: HEIGHT, radius: 1.5, segments: 20})
+    cylinder({height: HEIGHT, radius: (diameter/2)+3, segments: 20}),
+    cylinder({height: HEIGHT, radius: diameter/2, segments: 20})
   )
 }
 
 export const pcbMounts = (params: Params) => {
-  const { pcbMounts, length, width, height, wall, floor } = params;
+  const { pcbMounts, length, width, height, wall, floor, pcbMountScrewDiameter } = params;
   
   const mounts = []
 
@@ -22,7 +22,7 @@ export const pcbMounts = (params: Params) => {
     const [x, y] = params.pcbMountXY[i]
     const z = -(height/2) + (HEIGHT/2) + floor
     mounts.push(
-      translate([(width/2)-x, (length/2)-y, z], pcbMount())
+      translate([(width/2)-x, (length/2)-y, z], pcbMount(pcbMountScrewDiameter))
     )
   }
 

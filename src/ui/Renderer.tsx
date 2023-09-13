@@ -49,8 +49,8 @@ export const Renderer = () => {
   const params = useParams()
 
   const { length, width, height, wall, floor, roof, cornerRadius, cableGlands, 
-    screws, waterProof, wallMounts, pcbMountXY, cableGlandSpecs, 
-    screwDiameter, insertThickness, sealThickness, insertHeight } = params
+    screws, waterProof, wallMounts, pcbMountXY, cableGlandSpecs, pcbMountScrewDiameter, 
+    screwDiameter, insertThickness, sealThickness, insertHeight, wallMountScrewDiameter } = params
 
   const container = useRef<HTMLDivElement | null>(null);
   const _lid = useRef<Geom3 | null>(null)
@@ -180,7 +180,7 @@ export const Renderer = () => {
     }
     _base.current = translate(pos, base(params.get() as Params))
   }, [length, width, height, wall, floor, cornerRadius, cableGlands, cableGlandSpecs, wallMounts, 
-    screws, waterProof, screwDiameter, insertThickness, insertHeight, sealThickness])
+    screws, waterProof, screwDiameter, insertThickness, insertHeight, sealThickness, wallMountScrewDiameter])
 
   // Waterproof seal
   useEffect(() => {
@@ -201,7 +201,7 @@ export const Renderer = () => {
       }
       _pcbMounts.current = translate(pos, pcbMounts(params.get() as Params))
     }
-  }, [pcbMounts, pcbMountXY, waterProof, wall, floor, height])
+  }, [pcbMounts, pcbMountXY, waterProof, wall, floor, height, pcbMountScrewDiameter])
 
   // Combine solids
   useEffect(() => {
