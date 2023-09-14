@@ -28,7 +28,7 @@ export const ParamsForm = () => {
 
   return (
     <form id="param-form">
-      <NumberInput label="Height" value={length.value} onChange={(e) => handleChange(e, length.set)} />
+      <NumberInput label="Length" value={length.value} onChange={(e) => handleChange(e, length.set)} />
       <NumberInput label="Width" value={width.value} onChange={(e) => handleChange(e, width.set)} />
       <NumberInput label="Height" value={height.value} onChange={(e) => handleChange(e, height.set)} />
       <NumberInput label="Floor Thickness" value={floor.value} onChange={(e) => handleChange(e, floor.set)} />
