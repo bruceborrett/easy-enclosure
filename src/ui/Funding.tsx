@@ -1,3 +1,5 @@
+import GitHubButton from 'react-github-btn'
+
 export const Funding = () => {
   return (
     <div className="funding">
@@ -7,6 +9,9 @@ export const Funding = () => {
       <a href="https://www.buymeacoffee.com/bruceborrett" target="_blank" rel="noreferrer">
         <img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="50" width="217" style={{borderRadius: "4px"}} />
       </a>
+      <GitHubButton href="https://github.com/bruceborrett/easy-enclosure" data-size="large" data-show-count="true" aria-label="Star bruceborrett/easy-enclosure on GitHub">
+        Star
+      </GitHubButton>
     </div>
   )
 }
