@@ -2,7 +2,7 @@ import React from "react";
 
 import { useParams } from "../lib/params";
 
-const NumberInput = ({label, value, min=1, onChange}: {label: string, value: number, min?: number, onChange: (e: React.ChangeEvent<HTMLInputElement| HTMLSelectElement>) => void}) => (
+const NumberInput = ({label, value, min=undefined, onChange}: {label: string, value: number, min?: number, onChange: (e: React.ChangeEvent<HTMLInputElement| HTMLSelectElement>) => void}) => (
   <div className="input-group">
     <label>{label}</label>
     <input type="number" min={min} value={value} onChange={onChange} />
@@ -28,15 +28,15 @@ export const ParamsForm = () => {
 
   return (
     <form id="param-form">
-      <NumberInput label="Length" value={length.value} onChange={(e) => handleChange(e, length.set)} />
-      <NumberInput label="Width" value={width.value} onChange={(e) => handleChange(e, width.set)} />
-      <NumberInput label="Height" value={height.value} onChange={(e) => handleChange(e, height.set)} />
-      <NumberInput label="Floor Thickness" value={floor.value} onChange={(e) => handleChange(e, floor.set)} />
-      <NumberInput label="Wall Thickness" value={wall.value} onChange={(e) => handleChange(e, wall.set)} />
-      <NumberInput label="Lid Thickness" value={roof.value} onChange={(e) => handleChange(e, roof.set)} />
-      <NumberInput label="Insert Thickness" value={insertThickness.value} onChange={(e) => handleChange(e, insertThickness.set)} />
-      <NumberInput label="Insert Height" value={insertHeight.value} onChange={(e) => handleChange(e, insertHeight.set)} />
-      <NumberInput label="Corner Radius" value={cornerRadius.value} onChange={(e) => handleChange(e, cornerRadius.set)} />
+      <NumberInput label="Length" value={length.value} min={1} onChange={(e) => handleChange(e, length.set)} />
+      <NumberInput label="Width" value={width.value} min={1} onChange={(e) => handleChange(e, width.set)} />
+      <NumberInput label="Height" value={height.value} min={1} onChange={(e) => handleChange(e, height.set)} />
+      <NumberInput label="Floor Thickness" value={floor.value} min={1} onChange={(e) => handleChange(e, floor.set)} />
+      <NumberInput label="Wall Thickness" value={wall.value} min={1} onChange={(e) => handleChange(e, wall.set)} />
+      <NumberInput label="Lid Thickness" value={roof.value} min={1} onChange={(e) => handleChange(e, roof.set)} />
+      <NumberInput label="Insert Thickness" value={insertThickness.value} min={1} onChange={(e) => handleChange(e, insertThickness.set)} />
+      <NumberInput label="Insert Height" value={insertHeight.value} min={1} onChange={(e) => handleChange(e, insertHeight.set)} />
+      <NumberInput label="Corner Radius" value={cornerRadius.value} min={1} onChange={(e) => handleChange(e, cornerRadius.set)} />
       <hr />
       <NumberInput label="Holes" value={cableGlands.value} min={0} onChange={(e) => {
         const value = parseFloat(e.currentTarget.value)
@@ -67,7 +67,7 @@ export const ParamsForm = () => {
       }} />
       {
         pcbMounts.value > 0 &&
-          <NumberInput label="Screw Diameter" value={pcbMountScrewDiameter.value} onChange={(e) => handleChange(e, pcbMountScrewDiameter.set)} />
+          <NumberInput label="Screw Diameter" value={pcbMountScrewDiameter.value} min={0} onChange={(e) => handleChange(e, pcbMountScrewDiameter.set)} />
       }
 
       {pcbMounts.value > 0 &&
@@ -88,7 +88,7 @@ export const ParamsForm = () => {
       </div>
       {
         waterProof.value &&
-          <NumberInput label="Seal Thickness" value={sealThickness.value} onChange={(e) => handleChange(e, sealThickness.set)} />
+          <NumberInput label="Seal Thickness" value={sealThickness.value} min={1} onChange={(e) => handleChange(e, sealThickness.set)} />
       }
       <hr />
       <div className="input-group">
@@ -100,16 +100,16 @@ export const ParamsForm = () => {
       </div>
       {
         screws.value &&
-          <NumberInput label="Screw Diameter" value={screwDiameter.value} onChange={(e) => handleChange(e, screwDiameter.set)} />
+          <NumberInput label="Screw Diameter" value={screwDiameter.value} min={1} onChange={(e) => handleChange(e, screwDiameter.set)} />
       }
       <hr />
       <div className="input-group">
         <label>Wall Mounts</label>
-        <input type="checkbox" id="wallMounts" checked={wallMounts.value} onChange={(e) => wallMounts.set(e.currentTarget.checked)} />
+        <input type="checkbox" id="wallMounts" checked={wallMounts.value} min={1} onChange={(e) => wallMounts.set(e.currentTarget.checked)} />
       </div>
       {
         wallMounts.value &&
-          <NumberInput label="Screw Diameter" value={wallMountScrewDiameter.value} onChange={(e) => handleChange(e, wallMountScrewDiameter.set)} />
+          <NumberInput label="Screw Diameter" value={wallMountScrewDiameter.value} min={1} onChange={(e) => handleChange(e, wallMountScrewDiameter.set)} />
       }
     </form>
   );
