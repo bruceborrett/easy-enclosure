@@ -5,6 +5,7 @@ import { ParamsForm } from './ParamForm';
 import { Exporter } from './Exporter';
 
 import '../styles.css';
+import { Funding } from './Funding';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Renderer />
       <ParamsForm />
       <Exporter />
+      <Funding />
     </>
   )
 }
