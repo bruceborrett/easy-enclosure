@@ -75,23 +75,24 @@ hr {
   border-bottom: 1px solid #666666;
 }
 
-#download {
+
+#tools {
   position: fixed;
   top: 0;
   left: 0;
-  display: block;
+  margin: 8px;
+  padding: 0;
+  z-index: 1;
+}
+
+#tools .tool-button {
+  display: inline-block;
   margin: 8px;
   padding: 0;
   background: none;
   border: none;
   outline: none;
   cursor: pointer;
-  z-index: 1;
-}
-
-#download img {
-  width: 48px;
-  height: 48px;
 }
 
 #modal {
@@ -180,4 +181,8 @@ hr {
 .funding img {
   height: 28px;
   width: 120px;
+}
+
+.hidden {
+  display: none;
 }

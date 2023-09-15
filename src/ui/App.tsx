@@ -2,17 +2,17 @@ import React from 'react';
 
 import { Renderer } from './Renderer';
 import { ParamsForm } from './ParamForm';
-import { Exporter } from './Exporter';
+import { Tools } from './Tools';
+import { Funding } from './Funding';
 
 import '../styles.css';
-import { Funding } from './Funding';
 
 function App() {
   return (
     <>
       <Renderer />
       <ParamsForm />
-      <Exporter />
+      <Tools />
       <Funding />
     </>
   )
