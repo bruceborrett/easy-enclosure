@@ -19,10 +19,10 @@ export const lid = (params: Params) => {
   entities.push(roundedCube(width, length, roof, cornerRadius))
 
   if (params.screws) {
-    entities.push(translate([wall, wall, (roof/2)+(insertHeight/2)], cloverFrame((width-(wall*2))-CLEARANCE, (length-(wall*2))-CLEARANCE, insertHeight, insertThickness, cornerRadius)))
+    entities.push(translate([wall, wall, roof], cloverFrame((width-(wall*2))-CLEARANCE, (length-(wall*2))-CLEARANCE, insertHeight, insertThickness, cornerRadius)))
     subtracts.push(screws(params))
   } else {
-    entities.push(translate([wall, wall, (roof/2)+(insertHeight/2)], roundedFrame((width-(wall*2))-CLEARANCE, (length-(wall*2))-CLEARANCE, insertHeight, insertThickness, cornerRadius)))
+    entities.push(translate([wall, wall, roof], roundedFrame((width-(wall*2))-CLEARANCE, (length-(wall*2))-CLEARANCE, insertHeight, insertThickness, cornerRadius)))
   }
 
   if (subtracts.length > 0) {

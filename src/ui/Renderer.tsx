@@ -162,9 +162,9 @@ export const Renderer = () => {
   useEffect(() => {
     let pos: Vec3
     if (waterProof.value) {
-      pos = [(width.value/2)+SPACING, -length.value/2, (-height.value/2)+(roof.value/2)]
+      pos = [(width.value/2)+SPACING, -length.value/2, 0]
     } else {
-      pos = [SPACING/2, -length.value/2, (-height.value/2)+(roof.value/2)]
+      pos = [SPACING/2, -length.value/2, 0]
     }
     _lid.current = translate(pos, lid(params.get() as Params))
   }, [length, width, roof, wall, cornerRadius, screws, waterProof, screwDiameter, 
@@ -185,7 +185,7 @@ export const Renderer = () => {
   // Waterproof seal
   useEffect(() => {
     if (params.waterProof) {
-      const pos = [-width.value-(width.value/2)-SPACING, -length.value/2, -(height.value/2)+(sealThickness.value/2)] as Vec3
+      const pos = [-width.value-(width.value/2)-SPACING, -length.value/2, 0] as Vec3
       _waterProofSeal.current = translate(pos, waterProofSeal(params.get() as Params))
     }
   }, [length, width, wall, cornerRadius, waterProof, sealThickness])

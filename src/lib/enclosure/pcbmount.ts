@@ -20,7 +20,7 @@ export const pcbMounts = (params: Params) => {
 
   for (let i = 0; i < pcbMounts; i++) {
     const [x, y] = params.pcbMountXY[i]
-    const z = -(height/2) + (HEIGHT/2) + floor
+    const z = (HEIGHT/2) + floor
     mounts.push(
       translate([(width/2)-x, (length/2)-y, z], pcbMount(pcbMountScrewDiameter))
     )

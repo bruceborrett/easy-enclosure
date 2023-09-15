@@ -27,7 +27,7 @@ export const flange = (diameter: number) => {
 
 export const flanges = (params: Params) => {
   const { length, width, height, cornerRadius, wallMountScrewDiameter } = params
-  const z = -(height/2) + ((wallMountScrewDiameter+8)/2)
+  const z = ((wallMountScrewDiameter+8)/2)
   const cornerSpacing = cornerRadius + ((wallMountScrewDiameter+8)/2)
   return union(
     translate([-(cornerRadius), cornerSpacing, z], flange(wallMountScrewDiameter)),

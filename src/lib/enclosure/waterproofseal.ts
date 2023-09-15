@@ -9,8 +9,8 @@ const CLEARANCE = 0.04
 export const waterProofSealCutout = (params: Params) => {
   const { length, width, height, wall, cornerRadius, insertThickness, insertHeight, sealThickness } = params
   return translate(
-    [wall,wall,(height/2)-wall],
-    cloverFrame(width-(wall*2), length-(wall*2), (wall*2)+insertHeight+sealThickness+CLEARANCE, insertThickness, cornerRadius)
+    [wall,wall,height-(insertHeight+sealThickness)],
+    cloverFrame(width-(wall*2), length-(wall*2), insertHeight+sealThickness, insertThickness, cornerRadius)
   )
 }
 

@@ -8,7 +8,8 @@ export const roundedCube = (l: number, w: number, h: number, r=8, s=100) => {
   const c = cylinder({
     height: h,
     radius: r,
-    segments: s
+    segments: s,
+    center: [0,0,h/2]
   })
 
   return hull(
@@ -49,14 +50,14 @@ export const clover = (l: number, w: number, h: number, t: number, r=8, s=100) =
   )
   const rounded = subtract(
     cornersRemoved,
-    translate([0, r*2, 0], rotateZ(degToRad(0), roundedCorner(r, h, s))),
-    translate([r*2, 0, 0], rotateZ(degToRad(0), roundedCorner(r, h, s))),
-    translate([l, r*2, 0], rotateZ(degToRad(90), roundedCorner(r, h, s))),
-    translate([l-(r*2), 0, 0], rotateZ(degToRad(90), roundedCorner(r, h, s))),
-    translate([l, w-(r*2), 0], rotateZ(degToRad(180), roundedCorner(r, h, s))),
-    translate([l-(r*2), w, 0], rotateZ(degToRad(180), roundedCorner(r, h, s))),
-    translate([0, w-(r*2), 0], rotateZ(degToRad(270), roundedCorner(r, h, s))),
-    translate([r*2, w, 0], rotateZ(degToRad(270), roundedCorner(r, h, s))),
+    translate([0, r*2, 0], rotateZ(degToRad(0), roundedCorner(r, h*2, s))),
+    translate([r*2, 0, 0], rotateZ(degToRad(0), roundedCorner(r, h*2, s))),
+    translate([l, r*2, 0], rotateZ(degToRad(90), roundedCorner(r, h*2, s))),
+    translate([l-(r*2), 0, 0], rotateZ(degToRad(90), roundedCorner(r, h*2, s))),
+    translate([l, w-(r*2), 0], rotateZ(degToRad(180), roundedCorner(r, h*2, s))),
+    translate([l-(r*2), w, 0], rotateZ(degToRad(180), roundedCorner(r, h*2, s))),
+    translate([0, w-(r*2), 0], rotateZ(degToRad(270), roundedCorner(r, h*2, s))),
+    translate([r*2, w, 0], rotateZ(degToRad(270), roundedCorner(r, h*2, s))),
   )
   return rounded
 }
