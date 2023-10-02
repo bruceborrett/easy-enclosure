@@ -11,7 +11,7 @@ import { translate } from '@jscad/modeling/src/operations/transforms'
 const { subtract, union } = booleans
 
 export const base = (params: Params) => {
-  const { length, width, height, wall, floor, cornerRadius, insertThickness, insertClearance } = params
+  const { length, width, height, wall, floor, cornerRadius, insertThickness, insertClearance, screwDiameter } = params
 
   const body = [] 
   const subtracts = []
@@ -24,7 +24,15 @@ export const base = (params: Params) => {
   if (params.screws) {
     body.push(subtract(
       roundedCube(width, length, height, cornerRadius),
-      translate([_wall,_wall,floor], clover(width-(_wall*2), length-(_wall*2), height, _wall, cornerRadius))
+      translate([
+        _wall,_wall,floor
+      ], 
+      clover(
+        width-(_wall*2), 
+        length-(_wall*2), 
+        height, 
+        (cornerRadius+wall)/2
+      ))
     ))
     subtracts.push(screws(params))
   } else {

@@ -28,7 +28,7 @@ export const lid = (params: Params) => {
         length-(wall*2)-(insertClearance*2), 
         insertHeight, 
         insertThickness, 
-        cornerRadius
+        (cornerRadius+wall)/2
       ))
     )
     subtracts.push(screws(params))

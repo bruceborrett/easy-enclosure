@@ -40,14 +40,14 @@ const roundedCorner = (r: number, h: number, s=100) => {
   )
 }
 
-export const clover = (l: number, w: number, h: number, t: number, r=8, s=100) => {
+export const clover = (l: number, w: number, h: number, r=8, s=100) => {
   const cornersRemoved = subtract(
     roundedCube(l, w, h, r, s),
     translate([0, 0, 0], roundedCube(r, r, h, r, s)),
     translate([l-r, 0, 0], roundedCube(r, r, h, r, s)),
     translate([0, w-r, 0], roundedCube(r, r, h, r, s)),
     translate([l-r, w-r, 0], roundedCube(r, r, h, r, s)),
-  )
+    )
   const rounded = subtract(
     cornersRemoved,
     translate([0, r*2, 0], rotateZ(degToRad(0), roundedCorner(r, h*2, s))),
@@ -63,8 +63,8 @@ export const clover = (l: number, w: number, h: number, t: number, r=8, s=100) =
 }
 
 export const cloverFrame = (l: number, w: number, h: number, t: number, r=8, s=100) => {
-  const outer = clover(l, w, h, t, r, s)
-  const inner = clover(l-(t*2), w-(t*2), h, t, r, s)
+  const outer = clover(l, w, h, r, s)
+  const inner = clover(l-(t*2), w-(t*2), h, r, s)
   return subtract(outer, translate([t, t, 0], inner))
 }
 
