@@ -8,7 +8,7 @@ import { Geom3 } from '@jscad/modeling/src/geometries/types';
 import { Vec3 } from '@jscad/modeling/src/maths/types';
 
 export const cableGlandHoles = (params: Params) => {
-  const { length, width, wall, floor, insertThickness, cableGlandSpecs } = params
+  const { length, width, wall, floor, insertThickness, insertClearance, cableGlandSpecs } = params
 
   let result: Geom3[] = []
   for (let wallNum = 0; wallNum <= 3; wallNum++) {
@@ -28,7 +28,7 @@ export const cableGlandHoles = (params: Params) => {
 
       const z = hole[1] + floor
 
-      const totalWallThickness = insertThickness + (wall*2)
+      const totalWallThickness = insertThickness  + (insertClearance*2) + (wall*2)
 
       if (wallNum === 0) {
         spacing = width / (holes.length + 1)
