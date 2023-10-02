@@ -5,7 +5,7 @@ import { cloverFrame } from './utils'
 import { translate } from '@jscad/modeling/src/operations/transforms'
 
 export const waterProofSealCutout = (params: Params) => {
-  const { length, width, height, wall, screwDiameter, insertThickness, insertHeight, 
+  const { length, width, height, wall, insertThickness, insertHeight, 
     sealThickness, insertClearance, cornerRadius } = params
   return translate(
     [

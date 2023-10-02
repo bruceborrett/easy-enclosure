@@ -11,7 +11,7 @@ import { translate } from '@jscad/modeling/src/operations/transforms'
 const { subtract, union } = booleans
 
 export const base = (params: Params) => {
-  const { length, width, height, wall, floor, cornerRadius, insertThickness, insertClearance, screwDiameter } = params
+  const { length, width, height, wall, floor, cornerRadius, insertThickness, insertClearance } = params
 
   const body = [] 
   const subtracts = []
