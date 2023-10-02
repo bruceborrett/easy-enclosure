@@ -1,13 +1,18 @@
-import React from "react";
-
 import { useParams } from "../lib/params";
 
-const NumberInput = ({label, value, min=undefined, onChange}: {label: string, value: number, min?: number, onChange: (e: React.ChangeEvent<HTMLInputElement| HTMLSelectElement>) => void}) => (
-  <div className="input-group">
-    <label>{label}</label>
-    <input type="number" min={min} value={value} onChange={onChange} />
-  </div>
-)
+const NumberInput = ({label, value, min=undefined, onChange}: {label: string, value: number, min?: number, onChange: (e: React.ChangeEvent<HTMLInputElement| HTMLSelectElement>) => void}) => {
+  const handleKeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if(e.code === 'Enter') {
+      e.currentTarget.blur()
+    }
+  }
+  return (
+    <div className="input-group">
+      <label>{label}</label>
+      <input type="number" min={min} defaultValue={value} step="any" onBlur={onChange} onKeyDown={handleKeydown} />
+    </div>
+  )
+}
 
 const CheckBox = ({label, value, onChange}: {label: string, value: boolean, onChange: (e: React.ChangeEvent<HTMLInputElement| HTMLSelectElement>) => void}) => (
   <div className="input-group">
@@ -26,8 +31,14 @@ export const ParamsForm = () => {
     e.currentTarget.value && set(parseFloat(e.currentTarget.value))
   }
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    console.log(e)
+    e.preventDefault()
+    document.body.click()
+  }
+
   return (
-    <form id="param-form">
+    <form id="param-form" onSubmit={handleSubmit}>
       <NumberInput label="Length" value={length.value} min={1} onChange={(e) => handleChange(e, length.set)} />
       <NumberInput label="Width" value={width.value} min={1} onChange={(e) => handleChange(e, width.set)} />
       <NumberInput label="Height" value={height.value} min={1} onChange={(e) => handleChange(e, height.set)} />
@@ -111,6 +122,7 @@ export const ParamsForm = () => {
         wallMounts.value &&
           <NumberInput label="Screw Diameter" value={wallMountScrewDiameter.value} min={1} onChange={(e) => handleChange(e, wallMountScrewDiameter.set)} />
       }
+      <button type="submit" className="hidden">Submit</button>
     </form>
   );
 };
