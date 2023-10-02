@@ -190,7 +190,7 @@ export const Renderer = () => {
       const pos = [-width.value-(width.value/2)-SPACING, -length.value/2, 0] as Vec3
       _waterProofSeal.current = translate(pos, waterProofSeal(params.get() as Params))
     }
-  }, [length, width, wall, cornerRadius, waterProof, sealThickness, insertClearance])
+  }, [length, width, wall, cornerRadius, waterProof, sealThickness, insertClearance, insertThickness])
 
   // PCB mounts
   useEffect(() => {
