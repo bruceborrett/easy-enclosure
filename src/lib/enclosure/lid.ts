@@ -8,10 +8,8 @@ import { subtract } from '@jscad/modeling/src/operations/booleans'
 const { union } = booleans
 const { translate } = transforms
 
-const CLEARANCE = 0.04
-
 export const lid = (params: Params) => {
-  const { length, width, wall, roof, cornerRadius, insertThickness, insertHeight } = params
+  const { length, width, wall, roof, cornerRadius, insertThickness, insertHeight, insertClearance } = params
 
   const entities = []
   const subtracts = []
@@ -19,10 +17,36 @@ export const lid = (params: Params) => {
   entities.push(roundedCube(width, length, roof, cornerRadius))
 
   if (params.screws) {
-    entities.push(translate([wall, wall, roof], cloverFrame((width-(wall*2))-CLEARANCE, (length-(wall*2))-CLEARANCE, insertHeight, insertThickness, cornerRadius)))
+    entities.push(
+      translate([
+        wall+insertClearance, 
+        wall+insertClearance, 
+        roof
+      ], 
+      cloverFrame(
+        width-(wall*2)-(insertClearance*2), 
+        length-(wall*2)-(insertClearance*2), 
+        insertHeight, 
+        insertThickness, 
+        cornerRadius
+      ))
+    )
     subtracts.push(screws(params))
   } else {
-    entities.push(translate([wall, wall, roof], roundedFrame((width-(wall*2))-CLEARANCE, (length-(wall*2))-CLEARANCE, insertHeight, insertThickness, cornerRadius)))
+    entities.push(
+      translate([
+        wall+insertClearance, 
+        wall+insertClearance, 
+        roof
+      ], 
+      roundedFrame(
+        width-(wall*2)-(insertClearance*2), 
+        length-(wall*2)-(insertClearance*2), 
+        insertHeight, 
+        insertThickness, 
+        cornerRadius
+      ))
+    )
   }
 
   if (subtracts.length > 0) {

@@ -50,7 +50,8 @@ export const Renderer = () => {
 
   const { length, width, height, wall, floor, roof, cornerRadius, cableGlands, 
     screws, waterProof, wallMounts, pcbMountXY, cableGlandSpecs, pcbMountScrewDiameter, 
-    screwDiameter, insertThickness, sealThickness, insertHeight, wallMountScrewDiameter } = params
+    screwDiameter, insertThickness, sealThickness, insertHeight, wallMountScrewDiameter,
+    insertClearance } = params
 
   const container = useRef<HTMLDivElement | null>(null);
   const _lid = useRef<Geom3 | null>(null)
@@ -168,7 +169,7 @@ export const Renderer = () => {
     }
     _lid.current = translate(pos, lid(params.get() as Params))
   }, [length, width, roof, wall, cornerRadius, screws, waterProof, screwDiameter, 
-    insertThickness, insertHeight])
+    insertThickness, insertHeight, insertClearance])
 
   // Base
   useEffect(() => {
@@ -180,7 +181,8 @@ export const Renderer = () => {
     }
     _base.current = translate(pos, base(params.get() as Params))
   }, [length, width, height, wall, floor, cornerRadius, cableGlands, cableGlandSpecs, wallMounts, 
-    screws, waterProof, screwDiameter, insertThickness, insertHeight, sealThickness, wallMountScrewDiameter])
+    screws, waterProof, screwDiameter, insertThickness, insertHeight, sealThickness, 
+    wallMountScrewDiameter, insertClearance])
 
   // Waterproof seal
   useEffect(() => {
@@ -188,7 +190,7 @@ export const Renderer = () => {
       const pos = [-width.value-(width.value/2)-SPACING, -length.value/2, 0] as Vec3
       _waterProofSeal.current = translate(pos, waterProofSeal(params.get() as Params))
     }
-  }, [length, width, wall, cornerRadius, waterProof, sealThickness])
+  }, [length, width, wall, cornerRadius, waterProof, sealThickness, insertClearance])
 
   // PCB mounts
   useEffect(() => {

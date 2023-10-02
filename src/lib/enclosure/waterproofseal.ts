@@ -4,17 +4,26 @@ import { cloverFrame } from './utils'
 
 import { translate } from '@jscad/modeling/src/operations/transforms'
 
-const CLEARANCE = 0.04
-
 export const waterProofSealCutout = (params: Params) => {
-  const { length, width, height, wall, cornerRadius, insertThickness, insertHeight, sealThickness } = params
+  const { length, width, height, wall, cornerRadius, insertThickness, insertHeight, 
+    sealThickness, insertClearance } = params
   return translate(
-    [wall,wall,height-(insertHeight+sealThickness)],
-    cloverFrame(width-(wall*2), length-(wall*2), insertHeight+sealThickness, insertThickness, cornerRadius)
+    [
+      wall, 
+      wall, 
+      height-(insertHeight+sealThickness)
+    ],
+    cloverFrame(
+      width-(wall*2), 
+      length-(wall*2), 
+      insertHeight+sealThickness+insertClearance, 
+      insertThickness+(insertClearance*2), 
+      cornerRadius
+    )
   )
 }
 
 export const waterProofSeal = (params: Params) => {
-  const { length, width, wall, cornerRadius, sealThickness, insertThickness } = params
-  return cloverFrame((width-(wall*2))-CLEARANCE, (length-(wall*2))-CLEARANCE, sealThickness, insertThickness-CLEARANCE, cornerRadius)
+  const { length, width, wall, cornerRadius, sealThickness, insertThickness, insertClearance } = params
+  return cloverFrame(width-(wall*2)-(insertClearance*2), length-(wall*2)-(insertClearance*2), sealThickness, insertThickness, cornerRadius)
 }

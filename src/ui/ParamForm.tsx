@@ -24,7 +24,7 @@ const CheckBox = ({label, value, onChange}: {label: string, value: boolean, onCh
 export const ParamsForm = () => {
   const { length, width, height, floor, roof, wall, cornerRadius, wallMountScrewDiameter, 
     cableGlands, cableGlandSpecs, pcbMounts, pcbMountScrewDiameter, pcbMountXY, wallMounts, 
-    waterProof, screws, screwDiameter, sealThickness, insertThickness, insertHeight  } = useParams()
+    waterProof, screws, screwDiameter, sealThickness, insertThickness, insertHeight, insertClearance  } = useParams()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement| HTMLSelectElement>, set: (v: number) => void) => {
     console.log(e.currentTarget.value)
@@ -47,6 +47,7 @@ export const ParamsForm = () => {
       <NumberInput label="Lid Thickness" value={roof.value} min={1} onChange={(e) => handleChange(e, roof.set)} />
       <NumberInput label="Insert Thickness" value={insertThickness.value} min={1} onChange={(e) => handleChange(e, insertThickness.set)} />
       <NumberInput label="Insert Height" value={insertHeight.value} min={1} onChange={(e) => handleChange(e, insertHeight.set)} />
+      <NumberInput label="Insert Clearance" value={insertClearance.value} min={1} onChange={(e) => handleChange(e, insertClearance.set)} />
       <NumberInput label="Corner Radius" value={cornerRadius.value} min={1} onChange={(e) => handleChange(e, cornerRadius.set)} />
       <hr />
       <NumberInput label="Holes" value={cableGlands.value} min={0} onChange={(e) => {

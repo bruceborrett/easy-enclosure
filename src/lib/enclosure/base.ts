@@ -11,14 +11,14 @@ import { translate } from '@jscad/modeling/src/operations/transforms'
 const { subtract, union } = booleans
 
 export const base = (params: Params) => {
-  const { length, width, height, wall, floor, cornerRadius, insertThickness } = params
+  const { length, width, height, wall, floor, cornerRadius, insertThickness, insertClearance } = params
 
   const body = [] 
   const subtracts = []
 
   let _wall = wall
   if (params.waterProof) {
-    _wall = (wall * 2) + insertThickness
+    _wall = (wall * 2) + (insertClearance * 2) + insertThickness
   }
 
   if (params.screws) {
