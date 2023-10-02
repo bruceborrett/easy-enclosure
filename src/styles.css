@@ -186,3 +186,28 @@ hr {
 .hidden {
   display: none;
 }
+
+.accordian-header {
+  color: #444;
+  cursor: pointer;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.accordian-header p {
+  padding: 4px;
+}
+
+.accordian-body {
+  display: none;
+}
+
+.accordian-icon {
+  float: right;
+  margin-right: 12px;
+}
+
+.active .accordian-body {
+  display: block;
+}
