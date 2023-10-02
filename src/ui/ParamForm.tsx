@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { useParams } from "../lib/params";
 
-const NumberInput = ({label, value, min=undefined, onChange}: {label: string, value: number, min?: number, onChange: (e: React.ChangeEvent<HTMLInputElement| HTMLSelectElement>) => void}) => {
+const NumberInput = ({label, value, min=undefined, onChange}: {label: string, value: number, min?: number, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void}) => {
   const handleKeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if(e.code === 'Enter') {
       e.currentTarget.blur()
@@ -16,10 +16,10 @@ const NumberInput = ({label, value, min=undefined, onChange}: {label: string, va
   )
 }
 
-const CheckBox = ({label, value, onChange}: {label: string, value: boolean, onChange: (e: React.ChangeEvent<HTMLInputElement| HTMLSelectElement>) => void}) => (
+const CheckBox = ({label, checked, onChange}: {label: string, checked: boolean, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void}) => (
   <div className="input-group">
     <label>{label}</label>
-    <input type="checkbox" checked={value} onChange={onChange} />
+    <input type="checkbox" checked={checked} onChange={onChange} />
   </div>
 )
 
@@ -124,13 +124,10 @@ export const ParamsForm = () => {
       </Accordian>
 
       <Accordian title="Waterproofing" active={activeTab === 5} onClick={() => setActiveTab(5)}>
-        <div className="input-group">
-          <label>Waterproof</label>
-          <input type="checkbox" id="waterProof" checked={waterProof.value} onChange={(e) => {
-            waterProof.set(e.currentTarget.checked)
-            e.currentTarget.checked && screws.set(true)
-          }} />
-        </div>
+        <CheckBox label="Waterproof" checked={waterProof.value} onChange={(e) => {
+          waterProof.set(e.currentTarget.checked)
+          e.currentTarget.checked && screws.set(true)
+        }} />
         {
           waterProof.value &&
             <NumberInput label="Seal Thickness" value={sealThickness.value} min={1} onChange={(e) => handleChange(e, sealThickness.set)} />
@@ -138,13 +135,10 @@ export const ParamsForm = () => {
       </Accordian>
 
       <Accordian title="Lid Screws" active={activeTab === 6} onClick={() => setActiveTab(6)}>
-        <div className="input-group">
-          <label>Lid Screws</label>
-          <input type="checkbox" id="screws" checked={screws.value} onChange={(e) => {
-            screws.set(e.currentTarget.checked)
-            !e.currentTarget.checked && waterProof.set(false)
-          }} />
-        </div>
+        <CheckBox label="Lid Screws" checked={screws.value} onChange={(e) => {
+          screws.set(e.currentTarget.checked)
+          !e.currentTarget.checked && waterProof.set(false)
+        }} />
         {
           screws.value &&
             <NumberInput label="Screw Diameter" value={screwDiameter.value} min={1} onChange={(e) => handleChange(e, screwDiameter.set)} />
@@ -152,10 +146,7 @@ export const ParamsForm = () => {
       </Accordian>
 
       <Accordian title="Wall Mounts" active={activeTab === 7} onClick={() => setActiveTab(7)}>
-        <div className="input-group">
-          <label>Wall Mounts</label>
-          <input type="checkbox" id="wallMounts" checked={wallMounts.value} min={1} onChange={(e) => wallMounts.set(e.currentTarget.checked)} />
-        </div>
+        <CheckBox label="Wall Mounts" checked={wallMounts.value} onChange={(e) => wallMounts.set(e.currentTarget.checked)} />
         {
           wallMounts.value &&
             <NumberInput label="Screw Diameter" value={wallMountScrewDiameter.value} min={1} onChange={(e) => handleChange(e, wallMountScrewDiameter.set)} />
