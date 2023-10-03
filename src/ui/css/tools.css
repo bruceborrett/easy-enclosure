@@ -1,0 +1,43 @@
+#tools {
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin: 8px;
+  padding: 0;
+  z-index: 1;
+}
+
+#tools .tool-button {
+  display: inline-block;
+  margin: 8px;
+  padding: 0;
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+#close {
+  position: absolute;
+  top: 0;
+  right: 8px;
+  display: block;
+  padding: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+#export {
+  position: absolute;
+  top: 65%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #4E9EFF;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 12px;
+  cursor: pointer;
+}

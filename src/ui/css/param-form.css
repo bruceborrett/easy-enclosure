@@ -1,0 +1,116 @@
+form {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 260px;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  overflow-y: scroll;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+form::-webkit-scrollbar {
+  display: none;
+}
+
+select {
+  display: block;
+  margin-top: 2px;
+  padding-left: 8px;
+  border: 1px solid #666666;
+  border-radius: 3px;
+  width: 108px;
+  height: 28px;
+  background-color: #fff;
+}
+
+input {
+  display: block;
+  margin-top: 2px;
+  padding-left: 8px;
+  border: 1px solid #666666;
+  border-radius: 3px;
+  width: 96px;
+  height: 24px;
+}
+
+input[type="checkbox"] {
+  float: left;
+  margin-right: 8px;
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  border: none;
+  border-radius: 0;
+}
+
+label {
+  font-size: 12px;
+}
+
+.input-group {
+  display: inline-block;
+  padding-right: 8px;
+  padding-left: 8px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  margin-right: 10px;
+  width: 100px;
+}
+
+.accordian {
+  height: 32px;
+  overflow: hidden;
+  transition: all 1s ease;
+}
+
+.active.accordian {
+  height: auto;
+}
+
+.accordian-header {
+  color: #444;
+  cursor: pointer;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.accordian-header p {
+  padding: 4px;
+}
+
+.accordian-icon {
+  float: right;
+  margin-right: 12px;
+}
+
+.hole-params {
+  padding-left: 8px;
+  font-size: 12px;
+}
+
+.remove-hole {
+  margin-left: 8px;
+  background-color: coral;
+  border: none;
+  border-radius: 3px;
+  padding: 9px;
+  cursor: pointer;
+  font-size: 10px;
+  width: 108px;
+}
+
+.add-hole {
+  border: none;
+  background-color: #7eb2dd;
+  margin-top: 24px;
+  margin-left: 16px;
+  border-radius: 3px;
+  padding: 9px;
+  cursor: pointer;
+  font-size: 10px;
+  width: 234px;
+}

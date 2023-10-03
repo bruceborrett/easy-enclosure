@@ -1,0 +1,18 @@
+.funding {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 32px;
+  padding: 8px;
+  margin: 0;
+}
+
+.funding a {
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.funding img {
+  height: 28px;
+  width: 120px;
+}

@@ -1,0 +1,22 @@
+body {
+  height: 99vh;
+  min-height: 99vh;
+  min-width: 99vw;
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  color: #666666;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#jscad {
+  width: 99vw;
+  height: 99vh;
+}
+
+.hidden {
+  display: none;
+}

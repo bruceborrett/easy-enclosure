@@ -5,7 +5,11 @@ import { ParamsForm } from './ParamForm';
 import { Tools } from './Tools';
 import { Funding } from './Funding';
 
-import '../styles.css';
+import '../ui/css/main.css';
+import '../ui/css/modal.css'
+import '../ui/css/tools.css'
+import '../ui/css/funding.css'
+import '../ui/css/param-form.css'
 
 function App() {
   return (
