@@ -2,7 +2,13 @@ import { useState } from "react";
 
 import { useParams } from "../lib/params";
 
-const NumberInput = ({label, value, min=undefined, onChange}: {label: string, value: number, min?: number, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void}) => {
+import { none } from '@hookstate/core'
+
+const NumberInput = ({
+  label, value, min=undefined, step=1, onChange
+}: {
+  label: string, value: number, min?: number, step?: number, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+}) => {
   const handleKeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if(e.code === 'Enter') {
       e.currentTarget.blur()
@@ -11,7 +17,7 @@ const NumberInput = ({label, value, min=undefined, onChange}: {label: string, va
   return (
     <div className="input-group">
       <label>{label}</label>
-      <input type="number" min={min} defaultValue={value} step="any" onBlur={onChange} onKeyDown={handleKeydown} />
+      <input type="number" min={min} defaultValue={value} step={step} onBlur={onChange} onKeyDown={handleKeydown} />
     </div>
   )
 }
@@ -26,15 +32,13 @@ const CheckBox = ({label, checked, onChange}: {label: string, checked: boolean, 
 const Accordian = ({children, title, active, onClick}: {children: React.ReactNode, title: string, active: boolean, onClick: () => void}) => {
   return (
     <div className={`accordian ${active ? 'active' : ''}`}>
-      <div className="accordian-header" onClick={onClick}>
-        <p>
+        <p className="accordian-header" onClick={onClick}>
           {title}
           <span className="accordian-icon">
             {`${active ? '-' : '+'}`}
           </span>
         </p>
-      </div>
-      <div className="accordian-body">
+      <div>
         {children}
       </div>
     </div>
@@ -43,18 +47,22 @@ const Accordian = ({children, title, active, onClick}: {children: React.ReactNod
 
 export const ParamsForm = () => {
   const { length, width, height, floor, roof, wall, cornerRadius, wallMountScrewDiameter, 
-    cableGlands, cableGlandSpecs, pcbMounts, pcbMountScrewDiameter, pcbMountXY, wallMounts, 
+    cableGlands, pcbMounts, pcbMountScrewDiameter, pcbMountXY, wallMounts, 
     waterProof, screws, screwDiameter, sealThickness, insertThickness, insertHeight, insertClearance  } = useParams()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement| HTMLSelectElement>, set: (v: number) => void) => {
-    console.log(e.currentTarget.value)
     e.currentTarget.value && set(parseFloat(e.currentTarget.value))
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    console.log(e)
     e.preventDefault()
     document.body.click()
+  }
+
+  const addHole = () => {
+    cableGlands[cableGlands.length].set({
+      shape: 'circle', surface: 0, diameter: 12.5, y: width.value/2, x: 6
+    })
   }
 
   const [activeTab, setActiveTab] = useState(1)
@@ -73,33 +81,41 @@ export const ParamsForm = () => {
       </Accordian>
 
       <Accordian title="Lid Insert" active={activeTab === 2} onClick={() => setActiveTab(2)}>
-        <NumberInput label="Insert Thickness" value={insertThickness.value} min={1} onChange={(e) => handleChange(e, insertThickness.set)} />
-        <NumberInput label="Insert Height" value={insertHeight.value} min={1} onChange={(e) => handleChange(e, insertHeight.set)} />
-        <NumberInput label="Insert Clearance" value={insertClearance.value} min={1} onChange={(e) => handleChange(e, insertClearance.set)} />
+        <NumberInput label="Insert Thickness" value={insertThickness.value} min={1} step={0.01} onChange={(e) => handleChange(e, insertThickness.set)} />
+        <NumberInput label="Insert Height" value={insertHeight.value} min={1} step={0.01} onChange={(e) => handleChange(e, insertHeight.set)} />
+        <NumberInput label="Insert Clearance" value={insertClearance.value} min={0.01} step={0.01} onChange={(e) => handleChange(e, insertClearance.set)} />
       </Accordian>
 
-      <Accordian title="Cable Glands" active={activeTab === 3} onClick={() => setActiveTab(3)}>
-        <NumberInput label="Holes" value={cableGlands.value} min={0} onChange={(e) => {
-          const value = parseFloat(e.currentTarget.value)
-          cableGlandSpecs.set(Array.from({ length: value }, () => [0, 12.5]))
-          cableGlands.set(value)        
-        }} />
-        {cableGlands.value > 0 && 
-          cableGlandSpecs.map((_, i) => (
-            <div key={i}>
+      <Accordian title="Holes" active={activeTab === 3} onClick={() => setActiveTab(3)}>
+        {cableGlands.map((cg, i) => (
+            <div key={i} className="hole-params">
+              <p><b>Hole {i+1}</b></p>
               <div className="input-group">
-                <label>Hole {i+1} Wall</label>
-                <select value={_[0].value} onChange={(e) => handleChange(e, _[0].set)}>
+                <label>Shape</label>
+                <select value={cg.shape.value} onChange={(e) => cg.shape.set(e.target.value as 'circle' | 'square')}>
+                  <option value="circle">Circle</option>
+                  <option value="square">Square</option>
+                </select>
+              </div>          
+              <div className="input-group">
+                <label>Surface</label>
+                <select value={cg.surface.value} onChange={(e) => handleChange(e, cg.surface.set)}>
                   <option value={0}>Front</option>
                   <option value={1}>Right</option>
                   <option value={2}>Back</option>
                   <option value={3}>Left</option>
+                  <option value={4}>Top</option>
+                  <option value={5}>Bottom</option>
                 </select>
-              </div>          
-              <NumberInput label={`Hole ${i+1} Diameter`} value={_[1].value} onChange={(e) => handleChange(e, _[1].set)} />
+              </div> 
+              <NumberInput label="X" value={cg.x.value} onChange={(e) => handleChange(e, cg.x.set)} />
+              <NumberInput label="Y" value={cg.y.value} onChange={(e) => handleChange(e, cg.y.set)} />
+              <NumberInput label="Diameter" value={cg.diameter.value} onChange={(e) => handleChange(e, cg.diameter.set)} />
+              <button className="remove-hole" onClick={() => cableGlands[i].set(none)}>REMOVE</button>
             </div>
           ))
         }
+        <button className="add-hole" onClick={addHole}>ADD NEW HOLE</button>
       </Accordian>
 
       <Accordian title="PCB Mounts" active={activeTab === 4} onClick={() => setActiveTab(4)}>
@@ -110,7 +126,7 @@ export const ParamsForm = () => {
         }} />
         {
           pcbMounts.value > 0 &&
-            <NumberInput label="Screw Diameter" value={pcbMountScrewDiameter.value} min={0} onChange={(e) => handleChange(e, pcbMountScrewDiameter.set)} />
+            <NumberInput label="Screw Diameter" value={pcbMountScrewDiameter.value} min={0} step={0.01} onChange={(e) => handleChange(e, pcbMountScrewDiameter.set)} />
         }
 
         {pcbMounts.value > 0 &&
@@ -130,7 +146,7 @@ export const ParamsForm = () => {
         }} />
         {
           waterProof.value &&
-            <NumberInput label="Seal Thickness" value={sealThickness.value} min={1} onChange={(e) => handleChange(e, sealThickness.set)} />
+            <NumberInput label="Seal Thickness" value={sealThickness.value} min={1} step={0.01} onChange={(e) => handleChange(e, sealThickness.set)} />
         }
       </Accordian>
 
@@ -141,7 +157,7 @@ export const ParamsForm = () => {
         }} />
         {
           screws.value &&
-            <NumberInput label="Screw Diameter" value={screwDiameter.value} min={1} onChange={(e) => handleChange(e, screwDiameter.set)} />
+            <NumberInput label="Screw Diameter" value={screwDiameter.value} min={1} step={0.01} onChange={(e) => handleChange(e, screwDiameter.set)} />
         }
       </Accordian>
 
@@ -149,7 +165,7 @@ export const ParamsForm = () => {
         <CheckBox label="Wall Mounts" checked={wallMounts.value} onChange={(e) => wallMounts.set(e.currentTarget.checked)} />
         {
           wallMounts.value &&
-            <NumberInput label="Screw Diameter" value={wallMountScrewDiameter.value} min={1} onChange={(e) => handleChange(e, wallMountScrewDiameter.set)} />
+            <NumberInput label="Screw Diameter" value={wallMountScrewDiameter.value} min={1} step={0.01} onChange={(e) => handleChange(e, wallMountScrewDiameter.set)} />
         }
       </Accordian>
 

@@ -1,5 +1,13 @@
 import { hookstate, useHookstate } from '@hookstate/core';
 
+type CableGland = {
+  shape: 'circle' | 'square',
+  surface: number,
+  diameter: number,
+  x: number,
+  y: number,
+}
+
 export type Params = {
   length: number,
   width: number,
@@ -15,8 +23,7 @@ export type Params = {
   showLid: boolean,
   showBase: boolean,
   cornerRadius: number,
-  cableGlands: number,
-  cableGlandSpecs: [number, number][],
+  cableGlands: CableGland[],
   pcbMounts: number,
   pcbMountScrewDiameter: number,
   pcbMountXY: [number, number][],
@@ -41,8 +48,36 @@ const defaults: Params = {
   showLid: true,
   showBase: true,
   cornerRadius: 3,
-  cableGlands: 4,
-  cableGlandSpecs: [[0,12.5], [1,12.5], [2,12.5], [3,12.5]],
+  cableGlands: [
+    {
+      shape: 'circle',
+      surface: 0,
+      diameter: 12.5,
+      x: 6,
+      y: 50,
+    },
+    {
+      shape: 'circle',
+      surface: 1,
+      diameter: 12.5,
+      x: 6,
+      y: 40,
+    },
+    {
+      shape: 'square',
+      surface: 2,
+      diameter: 12.5,
+      x: 6,
+      y: 50,
+    },
+    {
+      shape: 'circle',
+      surface: 3,
+      diameter: 12.5,
+      x: 6,
+      y: 40,
+    }
+  ],
   pcbMounts: 4,
   pcbMountScrewDiameter: 1.98,
   pcbMountXY: [[30,24],[-30,24],[-30,-24],[30,-24]],  

@@ -49,7 +49,7 @@ export const Renderer = () => {
   const params = useParams()
 
   const { length, width, height, wall, floor, roof, cornerRadius, cableGlands, 
-    screws, waterProof, wallMounts, pcbMountXY, cableGlandSpecs, pcbMountScrewDiameter, 
+    screws, waterProof, wallMounts, pcbMountXY, pcbMountScrewDiameter, 
     screwDiameter, insertThickness, sealThickness, insertHeight, wallMountScrewDiameter,
     insertClearance } = params
 
@@ -180,7 +180,7 @@ export const Renderer = () => {
       pos = [-(width.value+(SPACING/2)), -length.value/2, 0]
     }
     _base.current = translate(pos, base(params.get() as Params))
-  }, [length, width, height, wall, floor, cornerRadius, cableGlands, cableGlandSpecs, wallMounts, 
+  }, [length, width, height, wall, floor, cornerRadius, cableGlands, wallMounts, 
     screws, waterProof, screwDiameter, insertThickness, insertHeight, sealThickness, 
     wallMountScrewDiameter, insertClearance])
 

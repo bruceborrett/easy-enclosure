@@ -47,7 +47,7 @@ export const base = (params: Params) => {
     subtracts.push(waterProofSealCutout(params))
   }
 
-  if (params.cableGlands > 0) {
+  if (params.cableGlands.length > 0) {
     subtracts.push(cableGlandHoles(params))
   }
 
