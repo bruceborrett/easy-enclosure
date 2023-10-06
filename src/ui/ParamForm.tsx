@@ -64,12 +64,20 @@ export const ParamsForm = () => {
     })
   }
 
-  const [activeTab, setActiveTab] = useState(1)
+  const [activeTab, setActiveTab] = useState<number | null>(null)
+
+  const _setActiveTab = (i: number) => {
+    if(activeTab === i) {
+      setActiveTab(null)
+    } else {
+      setActiveTab(i)
+    }
+  }
 
   return (
     <form id="param-form" onSubmit={handleSubmit}>
 
-      <Accordian title="General" active={activeTab === 1} onClick={() => setActiveTab(1)}>
+      <Accordian title="General" active={activeTab === 1} onClick={() => _setActiveTab(1)}>
         <NumberInput label="Length" value={length.value} min={1} onChange={(e) => handleChange(e, length.set)} />
         <NumberInput label="Width" value={width.value} min={1} onChange={(e) => handleChange(e, width.set)} />
         <NumberInput label="Height" value={height.value} min={1} onChange={(e) => handleChange(e, height.set)} />
@@ -79,13 +87,13 @@ export const ParamsForm = () => {
         <NumberInput label="Corner Radius" value={cornerRadius.value} min={1} onChange={(e) => handleChange(e, cornerRadius.set)} />
       </Accordian>
 
-      <Accordian title="Lid Insert" active={activeTab === 2} onClick={() => setActiveTab(2)}>
+      <Accordian title="Lid Insert" active={activeTab === 2} onClick={() => _setActiveTab(2)}>
         <NumberInput label="Insert Thickness" value={insertThickness.value} min={1} step={0.01} onChange={(e) => handleChange(e, insertThickness.set)} />
         <NumberInput label="Insert Height" value={insertHeight.value} min={1} step={0.01} onChange={(e) => handleChange(e, insertHeight.set)} />
         <NumberInput label="Insert Clearance" value={insertClearance.value} min={0.01} step={0.01} onChange={(e) => handleChange(e, insertClearance.set)} />
       </Accordian>
 
-      <Accordian title="Holes" active={activeTab === 3} onClick={() => setActiveTab(3)}>
+      <Accordian title="Holes" active={activeTab === 3} onClick={() => _setActiveTab(3)}>
         {cableGlands.map((cg, i) => (
             <div key={i} className="hole-params">
               <button className="remove-hole" onClick={() => cableGlands[i].set(none)}>
@@ -119,7 +127,7 @@ export const ParamsForm = () => {
         <button className="add-hole" onClick={addHole}>ADD NEW HOLE</button>
       </Accordian>
 
-      <Accordian title="PCB Mounts" active={activeTab === 4} onClick={() => setActiveTab(4)}>
+      <Accordian title="PCB Mounts" active={activeTab === 4} onClick={() => _setActiveTab(4)}>
         <NumberInput label="PCB Mounts" value={pcbMounts.value} min={0} onChange={(e) => {
           const value = parseFloat(e.currentTarget.value)
           pcbMountXY.set(Array.from({ length: value }, () => [0, 0]))
@@ -140,7 +148,7 @@ export const ParamsForm = () => {
         }
       </Accordian>
 
-      <Accordian title="Waterproofing" active={activeTab === 5} onClick={() => setActiveTab(5)}>
+      <Accordian title="Waterproofing" active={activeTab === 5} onClick={() => _setActiveTab(5)}>
         <CheckBox label="Waterproof" checked={waterProof.value} onChange={(e) => {
           waterProof.set(e.currentTarget.checked)
           e.currentTarget.checked && screws.set(true)
@@ -151,7 +159,7 @@ export const ParamsForm = () => {
         }
       </Accordian>
 
-      <Accordian title="Lid Screws" active={activeTab === 6} onClick={() => setActiveTab(6)}>
+      <Accordian title="Lid Screws" active={activeTab === 6} onClick={() => _setActiveTab(6)}>
         <CheckBox label="Lid Screws" checked={screws.value} onChange={(e) => {
           screws.set(e.currentTarget.checked)
           !e.currentTarget.checked && waterProof.set(false)
@@ -162,7 +170,7 @@ export const ParamsForm = () => {
         }
       </Accordian>
 
-      <Accordian title="Wall Mounts" active={activeTab === 7} onClick={() => setActiveTab(7)}>
+      <Accordian title="Wall Mounts" active={activeTab === 7} onClick={() => _setActiveTab(7)}>
         <CheckBox label="Wall Mounts" checked={wallMounts.value} onChange={(e) => wallMounts.set(e.currentTarget.checked)} />
         {
           wallMounts.value &&
