@@ -4,6 +4,7 @@ import { cloverFrame, roundedCube, roundedFrame } from './utils'
 import { Params } from '../params'
 import { screws } from './screws'
 import { subtract } from '@jscad/modeling/src/operations/booleans'
+import { holes } from './holes'
 
 const { union } = booleans
 const { translate } = transforms
@@ -47,6 +48,12 @@ export const lid = (params: Params) => {
         cornerRadius
       ))
     )
+  }
+
+  const holeCount = params.holes.filter((v, i) => {return v.surface === 'top'}).length
+
+  if (holeCount > 0) {
+    subtracts.push(holes(params, ['top']))
   }
 
   if (subtracts.length > 0) {

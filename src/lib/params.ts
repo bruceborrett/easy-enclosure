@@ -1,9 +1,38 @@
 import { hookstate, useHookstate } from '@hookstate/core';
+import { Surface } from './enclosure';
 
-type CableGland = {
-  shape: 'circle' | 'square',
-  surface: number,
+// The following types do not work due to this issue in the Hookstate library - https://github.com/avkonst/hookstate/issues/369
+// Once that issue is resolved, we can use the following types instead of the Hole type below.
+
+// interface BaseHole {
+//   surface: number,
+//   x: number,
+//   y: number,
+// }
+
+// interface CircleHole extends BaseHole {
+//   shape: 'circle',
+//   diameter: number,
+// }
+
+// interface SquareHole extends BaseHole {
+//   shape: 'square',
+//   width: number,
+// }
+// interface RectangleHole extends BaseHole {
+//   shape: 'rectangle',
+//   length: number,
+//   width: number,
+// }
+
+// type Hole = CircleHole | SquareHole | RectangleHole
+
+type Hole = {
+  shape: 'circle' | 'square' | 'rectangle',
   diameter: number,
+  width: number,
+  length: number,
+  surface: Surface,
   x: number,
   y: number,
 }
@@ -23,7 +52,7 @@ export type Params = {
   showLid: boolean,
   showBase: boolean,
   cornerRadius: number,
-  cableGlands: CableGland[],
+  holes: Hole[],
   pcbMounts: number,
   pcbMountScrewDiameter: number,
   pcbMountXY: [number, number][],
@@ -48,36 +77,53 @@ const defaults: Params = {
   showLid: true,
   showBase: true,
   cornerRadius: 3,
-  cableGlands: [
+  holes: [
     {
       shape: 'circle',
-      surface: 0,
+      surface: 'front',
       diameter: 12.5,
+      width: 0,
+      length: 0,
       x: 6,
       y: 50,
     },
     {
-      shape: 'circle',
-      surface: 1,
-      diameter: 12.5,
+      shape: 'square',
+      surface: 'left',
+      diameter: 0,
+      width: 12,
+      length: 0,
+      x: 6,
+      y: 40,
+    },
+    {
+      shape: 'rectangle',
+      surface: 'back',
+      width: 40,
+      length: 6,
+      diameter: 0,
+      x: 10,
+      y: 50,
+    },
+    {
+      shape: 'square',
+      surface: 'right',
+      width: 12.5,
+      length: 0,
+      diameter: 0,
       x: 6,
       y: 40,
     },
     {
       shape: 'square',
-      surface: 2,
-      diameter: 12.5,
-      x: 6,
-      y: 50,
+      surface: 'top',
+      width: 30,
+      length: 0,
+      diameter: 0,
+      x: 35,
+      y: 25,
     },
-    {
-      shape: 'circle',
-      surface: 3,
-      diameter: 12.5,
-      x: 6,
-      y: 40,
-    }
-  ],
+],
   pcbMounts: 4,
   pcbMountScrewDiameter: 1.98,
   pcbMountXY: [[30,24],[-30,24],[-30,-24],[30,-24]],  

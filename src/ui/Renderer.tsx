@@ -48,7 +48,7 @@ export const Renderer = () => {
 
   const params = useParams()
 
-  const { length, width, height, wall, floor, roof, cornerRadius, cableGlands, 
+  const { length, width, height, wall, floor, roof, cornerRadius, holes, 
     screws, waterProof, wallMounts, pcbMountXY, pcbMountScrewDiameter, 
     screwDiameter, insertThickness, sealThickness, insertHeight, wallMountScrewDiameter,
     insertClearance } = params
@@ -169,7 +169,7 @@ export const Renderer = () => {
     }
     _lid.current = translate(pos, lid(params.get() as Params))
   }, [length, width, roof, wall, cornerRadius, screws, waterProof, screwDiameter, 
-    insertThickness, insertHeight, insertClearance])
+    insertThickness, insertHeight, insertClearance, holes])
 
   // Base
   useEffect(() => {
@@ -180,7 +180,7 @@ export const Renderer = () => {
       pos = [-(width.value+(SPACING/2)), -length.value/2, 0]
     }
     _base.current = translate(pos, base(params.get() as Params))
-  }, [length, width, height, wall, floor, cornerRadius, cableGlands, wallMounts, 
+  }, [length, width, height, wall, floor, cornerRadius, holes, wallMounts, 
     screws, waterProof, screwDiameter, insertThickness, insertHeight, sealThickness, 
     wallMountScrewDiameter, insertClearance])
 

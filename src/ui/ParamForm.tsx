@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams } from "../lib/params";
 import { none } from '@hookstate/core'
 import { BiTrash, BiPlus, BiMinus } from 'react-icons/bi'
+import { Surface } from "../lib/enclosure";
 
 const NumberInput = ({
   label, value, min=undefined, step=1, onChange
@@ -46,8 +47,9 @@ const Accordian = ({children, title, active, onClick}: {children: React.ReactNod
 
 export const ParamsForm = () => {
   const { length, width, height, floor, roof, wall, cornerRadius, wallMountScrewDiameter, 
-    cableGlands, pcbMounts, pcbMountScrewDiameter, pcbMountXY, wallMounts, 
-    waterProof, screws, screwDiameter, sealThickness, insertThickness, insertHeight, insertClearance  } = useParams()
+    holes, pcbMounts, pcbMountScrewDiameter, pcbMountXY, wallMounts, 
+    waterProof, screws, screwDiameter, sealThickness, insertThickness, insertHeight, 
+    insertClearance  } = useParams()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement| HTMLSelectElement>, set: (v: number) => void) => {
     e.currentTarget.value && set(parseFloat(e.currentTarget.value))
@@ -59,8 +61,14 @@ export const ParamsForm = () => {
   }
 
   const addHole = () => {
-    cableGlands[cableGlands.length].set({
-      shape: 'circle', surface: 0, diameter: 12.5, y: width.value/2, x: 6
+    holes[holes.length].set({
+      shape: 'circle', 
+      surface: 'front', 
+      diameter: 12.5, 
+      width: 0, 
+      length: 0, 
+      y: width.value/2, 
+      x: 6
     })
   }
 
@@ -94,33 +102,43 @@ export const ParamsForm = () => {
       </Accordian>
 
       <Accordian title="Holes" active={activeTab === 3} onClick={() => _setActiveTab(3)}>
-        {cableGlands.map((cg, i) => (
+        {holes.map((hole, i) => (
             <div key={i} className="hole-params">
-              <button className="remove-hole" onClick={() => cableGlands[i].set(none)}>
+              <button className="remove-hole" onClick={() => holes[i].set(none)}>
                 <BiTrash title="Remove Hole" size="16" color="#ff7f50" />
               </button>
               <p><b>Hole {i+1}</b></p>
               <div className="input-group">
                 <label>Shape</label>
-                <select value={cg.shape.value} onChange={(e) => cg.shape.set(e.target.value as 'circle' | 'square')}>
+                <select value={hole.shape.value} onChange={(e) => hole.shape.set(e.target.value as 'circle' | 'square')}>
                   <option value="circle">Circle</option>
                   <option value="square">Square</option>
+                  <option value="rectangle">Rectangle</option>
                 </select>
               </div>          
               <div className="input-group">
                 <label>Surface</label>
-                <select value={cg.surface.value} onChange={(e) => handleChange(e, cg.surface.set)}>
-                  <option value={0}>Front</option>
-                  <option value={1}>Right</option>
-                  <option value={2}>Back</option>
-                  <option value={3}>Left</option>
-                  <option value={4}>Top</option>
-                  <option value={5}>Bottom</option>
+                <select value={hole.surface.value} onChange={(e) => hole.surface.set(e.target.value as Surface)}>
+                  <option value={'front'}>Front</option>
+                  <option value={'right'}>Right</option>
+                  <option value={'back'}>Back</option>
+                  <option value={'left'}>Left</option>
+                  <option value={'top'}>Top</option>
+                  <option value={'bottom'}>Bottom</option>
                 </select>
               </div> 
-              <NumberInput label="X" value={cg.x.value} onChange={(e) => handleChange(e, cg.x.set)} />
-              <NumberInput label="Y" value={cg.y.value} onChange={(e) => handleChange(e, cg.y.set)} />
-              <NumberInput label="Diameter" value={cg.diameter.value} onChange={(e) => handleChange(e, cg.diameter.set)} />
+              <NumberInput label="X" value={hole.x.value} onChange={(e) => handleChange(e, hole.x.set)} />
+              <NumberInput label="Y" value={hole.y.value} onChange={(e) => handleChange(e, hole.y.set)} />
+              {(hole.shape.value === 'rectangle' || hole.shape.value === 'square') &&
+                <NumberInput label="Width" value={hole.width.value} onChange={(e) => handleChange(e, hole.width.set)} />
+              }
+              {hole.shape.value === 'rectangle' &&
+                <NumberInput label="Length" value={hole.length.value} onChange={(e) => handleChange(e, hole.length.set)} />
+              }
+              {hole.shape.value === 'circle' &&
+                <NumberInput label="Diameter" value={hole.diameter.value} onChange={(e) => handleChange(e, hole.diameter.set)} />
+              }
+              {/* <NumberInput label="Diameter" value={hole.diameter.value} onChange={(e) => handleChange(e, hole.diameter.set)} /> */}
             </div>
           ))
         }

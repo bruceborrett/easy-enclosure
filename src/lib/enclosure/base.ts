@@ -1,7 +1,7 @@
 import { booleans } from '@jscad/modeling'
 import { Params } from '../params'
 
-import { cableGlandHoles } from './cablegland'
+import { holes } from './holes'
 import { flanges } from './wallmount'
 import { clover, hollowRoundCube, roundedCube } from './utils'
 import { waterProofSealCutout } from './waterproofseal'
@@ -47,8 +47,8 @@ export const base = (params: Params) => {
     subtracts.push(waterProofSealCutout(params))
   }
 
-  if (params.cableGlands.length > 0) {
-    subtracts.push(cableGlandHoles(params))
+  if (params.holes.length > 0) {
+    subtracts.push(holes(params))
   }
 
   if (subtracts.length > 0) {
