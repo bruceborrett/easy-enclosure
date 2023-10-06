@@ -44,6 +44,7 @@ Pull requests are also welcome!
 - [ ] Pre-defined templates for common devices (Pi, Arduino etc)
 
 ## Notes
+* All measurements are in millimeters
 * Enclosures intended for outdoor use should be printed with PETG filament
 * Waterproof seal should be printed with TPU filament
 * Supports are required for holes
