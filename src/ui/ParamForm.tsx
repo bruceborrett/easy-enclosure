@@ -1,8 +1,7 @@
 import { useState } from "react";
-
 import { useParams } from "../lib/params";
-
 import { none } from '@hookstate/core'
+import { BiTrash, BiPlus, BiMinus } from 'react-icons/bi'
 
 const NumberInput = ({
   label, value, min=undefined, step=1, onChange
@@ -35,10 +34,10 @@ const Accordian = ({children, title, active, onClick}: {children: React.ReactNod
         <p className="accordian-header" onClick={onClick}>
           {title}
           <span className="accordian-icon">
-            {`${active ? '-' : '+'}`}
+            {active ? <BiMinus /> : <BiPlus />}
           </span>
         </p>
-      <div>
+      <div className="accordian-body">
         {children}
       </div>
     </div>
@@ -89,6 +88,9 @@ export const ParamsForm = () => {
       <Accordian title="Holes" active={activeTab === 3} onClick={() => setActiveTab(3)}>
         {cableGlands.map((cg, i) => (
             <div key={i} className="hole-params">
+              <button className="remove-hole" onClick={() => cableGlands[i].set(none)}>
+                <BiTrash title="Remove Hole" size="16" color="#ff7f50" />
+              </button>
               <p><b>Hole {i+1}</b></p>
               <div className="input-group">
                 <label>Shape</label>
@@ -111,7 +113,6 @@ export const ParamsForm = () => {
               <NumberInput label="X" value={cg.x.value} onChange={(e) => handleChange(e, cg.x.set)} />
               <NumberInput label="Y" value={cg.y.value} onChange={(e) => handleChange(e, cg.y.set)} />
               <NumberInput label="Diameter" value={cg.diameter.value} onChange={(e) => handleChange(e, cg.diameter.set)} />
-              <button className="remove-hole" onClick={() => cableGlands[i].set(none)}>REMOVE</button>
             </div>
           ))
         }
