@@ -1,6 +1,6 @@
 import { rotate, translate } from '@jscad/modeling/src/operations/transforms';
 import { degToRad } from '@jscad/modeling/src/utils';
-import { cube, cuboid, cylinder } from '@jscad/modeling/src/primitives';
+import { cuboid, cylinder } from '@jscad/modeling/src/primitives';
 import { union } from '@jscad/modeling/src/operations/booleans';
 
 import { Params } from '../params';
@@ -35,26 +35,26 @@ export const holes = (
       if (surface === 'front') {
         y = length - (totalWallThickness/2)
         x = (width/2) - hole.y
-        z = (height/2) - hole.x
+        z = (height/2) + hole.x
         rot = [degToRad(90),0,0]
       } else if (surface === 'right') {
         x = totalWallThickness / 2
         y = (length/2) - hole.y
-        z = (height/2) - hole.x
+        z = (height/2) + hole.x
         rot = [0,degToRad(90),0]
       } else if (surface === 'back') {
         y = totalWallThickness / 2
         x = (width/2) - hole.y
-        z = (height/2) - hole.x
+        z = (height/2) + hole.x
         rot = [degToRad(90),0,0]
       } else if (surface === 'left') {
         x = width - (totalWallThickness/2)
         y = (length/2) - hole.y
-        z = (height/2) - hole.x
+        z = (height/2) + hole.x
         rot = [0,degToRad(90),0]
       } else if (surface === 'bottom' || surface === 'top') {
-        y = (length/2) - hole.y
-        x = (width/2) - hole.x
+        y = (length/2) - hole.x
+        x = (width/2) - hole.y
         z = 0
         rot = [0,0,0]
       } else {
