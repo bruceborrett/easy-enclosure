@@ -1,30 +1,29 @@
 import { translate } from "@jscad/modeling/src/operations/transforms";
-import { Params } from "../params";
+import { Params, PCBMount } from "../params";
 import { cylinder } from "@jscad/modeling/src/primitives";
 import { subtract, union } from "@jscad/modeling/src/operations/booleans";
+import { Geom3 } from "@jscad/modeling/src/geometries/types";
 
-const HEIGHT = 5
-const RADIUS = 3
-
-export const pcbMount = (diameter: number) => {
+export const pcbMount = (mountParams: PCBMount) => {
   return subtract(
-    cylinder({height: HEIGHT, radius: (diameter/2)+3, segments: 20}),
-    cylinder({height: HEIGHT, radius: diameter/2, segments: 20})
+    cylinder({
+      height: mountParams.height, radius: mountParams.outerDiameter / 2, segments: 20
+    }),
+    cylinder({
+      height: mountParams.height, radius: mountParams.screwDiameter / 2, segments: 20
+    })
   )
 }
 
 export const pcbMounts = (params: Params) => {
-  const { pcbMounts, length, width, height, wall, floor, pcbMountScrewDiameter } = params;
+  const { pcbMounts, length, width, floor } = params
   
-  const mounts = []
+  const mounts: Geom3[] = []
 
-  for (let i = 0; i < pcbMounts; i++) {
-    const [x, y] = params.pcbMountXY[i]
-    const z = (HEIGHT/2) + floor
-    mounts.push(
-      translate([(width/2)-x, (length/2)-y, z], pcbMount(pcbMountScrewDiameter))
-    )
-  }
+  pcbMounts.forEach((mount) => {
+    const z = (mount.height/2) + floor
+    mounts.push(translate([(width/2)-mount.x, (length/2)-mount.y, z], pcbMount(mount)))
+  })
 
   return union(mounts)
 }

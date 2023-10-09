@@ -47,7 +47,7 @@ const Accordian = ({children, title, active, onClick}: {children: React.ReactNod
 
 export const ParamsForm = () => {
   const { length, width, height, floor, roof, wall, cornerRadius, wallMountScrewDiameter, 
-    holes, pcbMounts, pcbMountScrewDiameter, pcbMountXY, wallMounts, 
+    holes, pcbMounts, wallMounts, 
     waterProof, screws, screwDiameter, sealThickness, insertThickness, insertHeight, 
     insertClearance  } = useParams()
 
@@ -69,6 +69,16 @@ export const ParamsForm = () => {
       length: 10, 
       y: width.value/2, 
       x: 6
+    })
+  }
+
+  const addPcbMount = () => {
+    pcbMounts[pcbMounts.length].set({
+      x: 0,
+      y: 0,
+      height: 5,
+      outerDiameter: 6,
+      screwDiameter: 2
     })
   }
 
@@ -103,8 +113,8 @@ export const ParamsForm = () => {
 
       <Accordian title="Holes" active={activeTab === 3} onClick={() => _setActiveTab(3)}>
         {holes.map((hole, i) => (
-            <div key={`${hole.shape.value}${hole.surface.value}${i}`} className="hole-params">
-              <button className="remove-hole" onClick={() => holes[i].set(none)}>
+            <div key={`${hole.shape.value}${hole.surface.value}${i}`} className="sub-params">
+              <button className="remove-btn" onClick={() => holes[i].set(none)}>
                 <BiTrash title="Remove Hole" size="16" color="#ff7f50" />
               </button>
               <p><b>Hole {i+1}</b></p>
@@ -141,28 +151,24 @@ export const ParamsForm = () => {
             </div>
           ))
         }
-        <button className="add-hole" onClick={addHole}>ADD NEW HOLE</button>
+        <button className="add-btn" onClick={addHole}>ADD NEW HOLE</button>
       </Accordian>
 
       <Accordian title="PCB Mounts" active={activeTab === 4} onClick={() => _setActiveTab(4)}>
-        <NumberInput label="PCB Mounts" value={pcbMounts.value} min={0} onChange={(e) => {
-          const value = parseFloat(e.currentTarget.value)
-          pcbMountXY.set(Array.from({ length: value }, () => [0, 0]))
-          pcbMounts.set(value)
-        }} />
-        {
-          pcbMounts.value > 0 &&
-            <NumberInput label="Screw Diameter" value={pcbMountScrewDiameter.value} min={0} step={0.01} onChange={(e) => handleChange(e, pcbMountScrewDiameter.set)} />
-        }
-
-        {pcbMounts.value > 0 &&
-          pcbMountXY.map((_, i) => (
-            <div key={i}>
-              <NumberInput label={`PCB Mount ${i + 1} X`} value={_[0].value} onChange={(e) => handleChange(e, _[0].set)} />
-              <NumberInput label={`PCB Mount ${i + 1} Y`} value={_[1].value} onChange={(e) => handleChange(e, _[1].set)} />
-            </div>
-          ))
-        }
+        {pcbMounts.map((mount, i) => (
+          <div key={`${mount.x.value}${mount.y.value}${i}`} className="sub-params">
+            <button className="remove-btn" onClick={() => pcbMounts[i].set(none)}>
+              <BiTrash title="Remove Mount" size="16" color="#ff7f50" />
+            </button>
+            <p><b>Mount {i+1}</b></p>
+            <NumberInput label="X" value={mount.x.value} onChange={(e) => handleChange(e, mount.x.set)} />
+            <NumberInput label="Y" value={mount.y.value} onChange={(e) => handleChange(e, mount.y.set)} />
+            <NumberInput label="Height" value={mount.height.value} onChange={(e) => handleChange(e, mount.height.set)} />
+            <NumberInput label="Outer Diameter" value={mount.outerDiameter.value} onChange={(e) => handleChange(e, mount.outerDiameter.set)} />
+            <NumberInput label="Screw Diameter" value={mount.screwDiameter.value} onChange={(e) => handleChange(e, mount.screwDiameter.set)} />
+          </div>
+        ))}
+        <button className="add-btn" onClick={addPcbMount}>ADD NEW MOUNT</button>
       </Accordian>
 
       <Accordian title="Waterproofing" active={activeTab === 5} onClick={() => _setActiveTab(5)}>

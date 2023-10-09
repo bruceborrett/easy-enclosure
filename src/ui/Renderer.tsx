@@ -49,9 +49,9 @@ export const Renderer = () => {
   const params = useParams()
 
   const { length, width, height, wall, floor, roof, cornerRadius, holes, 
-    screws, waterProof, wallMounts, pcbMountXY, pcbMountScrewDiameter, 
-    screwDiameter, insertThickness, sealThickness, insertHeight, wallMountScrewDiameter,
-    insertClearance } = params
+    screws, waterProof, wallMounts, screwDiameter, insertThickness,
+    sealThickness, insertHeight, wallMountScrewDiameter, insertClearance,
+    pcbMounts: pcbMountParams } = params
 
   const container = useRef<HTMLDivElement | null>(null);
   const _lid = useRef<Geom3 | null>(null)
@@ -194,7 +194,7 @@ export const Renderer = () => {
 
   // PCB mounts
   useEffect(() => {
-    if (params.pcbMounts.value > 0) {
+    if (pcbMountParams.value.length > 0) {
       let pos: Vec3
       if (waterProof.value) {
         pos = [-width.value/2, -length.value/2, 0]
@@ -203,7 +203,7 @@ export const Renderer = () => {
       }
       _pcbMounts.current = translate(pos, pcbMounts(params.get() as Params))
     }
-  }, [pcbMounts, pcbMountXY, waterProof, wall, floor, height, pcbMountScrewDiameter])
+  }, [pcbMountParams, waterProof, wall, floor, height])
 
   // Combine solids
   useEffect(() => {
@@ -212,7 +212,7 @@ export const Renderer = () => {
     if (_lid.current) result.push(_lid.current)
     if (_base.current) result.push(_base.current)
     if (_waterProofSeal.current && waterProof.value) result.push(_waterProofSeal.current)
-    if (_pcbMounts.current && params.pcbMounts.value > 0) result.push(_pcbMounts.current)
+    if (_pcbMounts.current && pcbMountParams.value.length > 0) result.push(_pcbMounts.current)
 
     model.current = union(result)
   }, [_lid.current, _base.current, _waterProofSeal.current, _pcbMounts.current]) 

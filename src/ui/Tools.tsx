@@ -40,7 +40,7 @@ export const Tools = () => {
 
     _export('enclosure-lid-' + tsStr, lid(params.get() as Params))
 
-    if (params.pcbMounts.value > 0) {
+    if (params.pcbMounts.value.length > 0) {
       _export('enclosure-base-' + tsStr, union(
         base(params.get() as Params),
         pcbMounts(params.get() as Params)

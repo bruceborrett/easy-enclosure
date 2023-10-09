@@ -27,7 +27,7 @@ import { Surface } from './enclosure';
 
 // type Hole = CircleHole | SquareHole | RectangleHole
 
-type Hole = {
+export type Hole = {
   shape: 'circle' | 'square' | 'rectangle',
   diameter: number,
   width: number,
@@ -35,6 +35,14 @@ type Hole = {
   surface: Surface,
   x: number,
   y: number,
+}
+
+export type PCBMount = {
+  x: number,
+  y: number,
+  height: number,
+  outerDiameter: number,
+  screwDiameter: number,
 }
 
 export type Params = {
@@ -53,9 +61,7 @@ export type Params = {
   showBase: boolean,
   cornerRadius: number,
   holes: Hole[],
-  pcbMounts: number,
-  pcbMountScrewDiameter: number,
-  pcbMountXY: [number, number][],
+  pcbMounts: PCBMount[],
   wallMounts: boolean,
   wallMountScrewDiameter: number,
   screws: boolean,
@@ -123,10 +129,34 @@ const defaults: Params = {
       x: 0,
       y: 0,
     },
-],
-  pcbMounts: 4,
-  pcbMountScrewDiameter: 1.98,
-  pcbMountXY: [[30,24],[-30,24],[-30,-24],[30,-24]],  
+  ],
+  pcbMounts: [
+    {
+      x: 30,
+      y: 24,
+      height: 5,
+      outerDiameter: 6,
+      screwDiameter: 2,
+    }, {
+      x: -30,
+      y: 24,
+      height: 5,
+      outerDiameter: 6,
+      screwDiameter: 2,
+    }, {
+      x: -30,
+      y: -24,
+      height: 5,
+      outerDiameter: 6,
+      screwDiameter: 2,
+    }, {
+      x: 30,
+      y: -24,
+      height: 5,
+      outerDiameter: 6,
+      screwDiameter: 2,
+    }
+  ],
   wallMounts: true,
   wallMountScrewDiameter: 3.98,
   screws: true,

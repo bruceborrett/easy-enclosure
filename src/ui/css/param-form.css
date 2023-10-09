@@ -93,7 +93,7 @@ label {
   text-align: center;
 }
 
-.hole-params {
+.sub-params {
   padding-left: 8px;
   font-size: 12px;
   border: 1px solid #acacac;
@@ -103,7 +103,7 @@ label {
   padding-bottom: 8px;
 }
 
-.remove-hole {
+.remove-btn {
   float: right;
   margin-left: 8px;
   background: none;
@@ -113,7 +113,7 @@ label {
   cursor: pointer;
 }
 
-.add-hole {
+.add-btn {
   display: block;
   border: none;
   background-color: #7eb2dd;
