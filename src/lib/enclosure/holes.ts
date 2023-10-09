@@ -8,8 +8,11 @@ import { Geom3 } from '@jscad/modeling/src/geometries/types';
 import { Vec3 } from '@jscad/modeling/src/maths/types';
 import { Surface, SURFACES } from '.';
 
-export const holes = (params: Params, surfacesFilter: Surface[] = ['bottom', 'left', 'right', 'back', 'front']) => {
-  const { length, width, wall, floor, insertThickness, insertClearance, holes: holeParams } = params
+export const holes = (
+  params: Params, surfacesFilter: Surface[] = ['bottom', 'left', 'right', 'back', 'front']
+) => {
+  const { length, width, height, wall,
+    insertThickness, insertClearance, holes: holeParams } = params
  
   let result: Geom3[] = []
   SURFACES.forEach((surface) => {
@@ -26,51 +29,32 @@ export const holes = (params: Params, surfacesFilter: Surface[] = ['bottom', 'le
       let y: number
       let z: number
       let rot: Vec3
-      // let spacing: number
-      let center: number
 
       const totalWallThickness = insertThickness  + (insertClearance*2) + (wall*2)
 
-      if (hole.shape === 'circle') {
-        center = hole.diameter/2
-      } else if (hole.shape === 'square') {
-        center = hole.width/2
-      } else {
-        center = hole.length/2
-      }
-
       if (surface === 'front') {
-        // spacing = width / (holes.length + 1)
         y = length - (totalWallThickness/2)
-        // x = spacing * (i + 1)
-        x = hole.y
-        z = center + floor + hole.x
+        x = (width/2) - hole.y
+        z = (height/2) - hole.x
         rot = [degToRad(90),0,0]
       } else if (surface === 'right') {
-        // spacing = length / (holes.length + 1)
         x = totalWallThickness / 2
-        // y = spacing * (i + 1)
-        y = hole.y
-        z = center + floor + hole.x
+        y = (length/2) - hole.y
+        z = (height/2) - hole.x
         rot = [0,degToRad(90),0]
       } else if (surface === 'back') {
-        // spacing = width / (holes.length + 1)
         y = totalWallThickness / 2
-        // x = spacing * (i + 1)
-        x = hole.y
-        z = center + floor + hole.x
+        x = (width/2) - hole.y
+        z = (height/2) - hole.x
         rot = [degToRad(90),0,0]
       } else if (surface === 'left') {
-        // spacing = length / (holes.length + 1)
         x = width - (totalWallThickness/2)
-        // y = spacing * (i + 1)
-        y = hole.y
-        z = center + floor + hole.x
+        y = (length/2) - hole.y
+        z = (height/2) - hole.x
         rot = [0,degToRad(90),0]
       } else if (surface === 'bottom' || surface === 'top') {
-        // spacing = width / (holes.length + 1)
-        y = center + hole.y
-        x = center + hole.x
+        y = (length/2) - hole.y
+        x = (width/2) - hole.x
         z = 0
         rot = [0,0,0]
       } else {
@@ -78,11 +62,18 @@ export const holes = (params: Params, surfacesFilter: Surface[] = ['bottom', 'le
       }
 
       if (hole.shape === 'square') {
-        result.push(translate([x, y, z], cube({size: hole.width})))
+        result.push(translate([x, y, z], rotate(rot, cuboid({
+          size: [hole.width, hole.width, totalWallThickness],
+        }))))
       } else if (hole.shape === 'rectangle') {
-        result.push(translate([x, y, z], cuboid({size: [hole.width, totalWallThickness, hole.length]})))
+        result.push(translate([x, y, z], rotate(rot, cuboid({
+          size: [hole.width, hole.length, totalWallThickness],
+        }))))
       } else if (hole.shape === 'circle') {
-        result.push(translate([x, y, z], rotate(rot, cylinder({radius: hole.diameter/2, height: totalWallThickness}))))
+        result.push(translate([x, y, z], rotate(rot, cylinder({
+          radius: hole.diameter / 2,
+          height: totalWallThickness
+        }))))
       }
     })
   })

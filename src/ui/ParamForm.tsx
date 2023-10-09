@@ -65,8 +65,8 @@ export const ParamsForm = () => {
       shape: 'circle', 
       surface: 'front', 
       diameter: 12.5, 
-      width: 0, 
-      length: 0, 
+      width: 10, 
+      length: 10, 
       y: width.value/2, 
       x: 6
     })
@@ -103,7 +103,7 @@ export const ParamsForm = () => {
 
       <Accordian title="Holes" active={activeTab === 3} onClick={() => _setActiveTab(3)}>
         {holes.map((hole, i) => (
-            <div key={i} className="hole-params">
+            <div key={`${hole.shape.value}${hole.surface.value}${i}`} className="hole-params">
               <button className="remove-hole" onClick={() => holes[i].set(none)}>
                 <BiTrash title="Remove Hole" size="16" color="#ff7f50" />
               </button>
@@ -130,15 +130,14 @@ export const ParamsForm = () => {
               <NumberInput label="X" value={hole.x.value} onChange={(e) => handleChange(e, hole.x.set)} />
               <NumberInput label="Y" value={hole.y.value} onChange={(e) => handleChange(e, hole.y.set)} />
               {(hole.shape.value === 'rectangle' || hole.shape.value === 'square') &&
-                <NumberInput label="Width" value={hole.width.value} onChange={(e) => handleChange(e, hole.width.set)} />
+              <NumberInput label="Width" value={hole.width.value} step={0.1} onChange={(e) => handleChange(e, hole.width.set)} />
               }
               {hole.shape.value === 'rectangle' &&
-                <NumberInput label="Length" value={hole.length.value} onChange={(e) => handleChange(e, hole.length.set)} />
+                <NumberInput label="Length" value={hole.length.value} step={0.1} onChange={(e) => handleChange(e, hole.length.set)} />
               }
               {hole.shape.value === 'circle' &&
-                <NumberInput label="Diameter" value={hole.diameter.value} onChange={(e) => handleChange(e, hole.diameter.set)} />
+                <NumberInput label="Diameter" value={hole.diameter.value} step={0.1} onChange={(e) => handleChange(e, hole.diameter.set)} />
               }
-              {/* <NumberInput label="Diameter" value={hole.diameter.value} onChange={(e) => handleChange(e, hole.diameter.set)} /> */}
             </div>
           ))
         }
