@@ -41,7 +41,11 @@ export const holes = (
         x = totalWallThickness / 2
         y = (length/2) - hole.y
         z = (height/2) + hole.x
-        rot = [0,degToRad(90),0]
+        if (hole.shape === 'circle') {
+          rot = [0, degToRad(90), 0]
+        } else {
+          rot = [degToRad(90), 0, degToRad(90)]
+        }
       } else if (surface === 'back') {
         y = totalWallThickness / 2
         x = (width/2) - hole.y
@@ -51,7 +55,11 @@ export const holes = (
         x = width - (totalWallThickness/2)
         y = (length/2) - hole.y
         z = (height/2) + hole.x
-        rot = [0,degToRad(90),0]
+        if (hole.shape === 'circle') {
+          rot = [0, degToRad(90), 0]
+        } else {
+          rot = [degToRad(90), 0, degToRad(90)]
+        }
       } else if (surface === 'bottom' || surface === 'top') {
         y = (length/2) - hole.x
         x = (width/2) - hole.y
