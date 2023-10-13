@@ -47,7 +47,9 @@ export const base = (params: Params) => {
     subtracts.push(waterProofSealCutout(params))
   }
 
-  if (params.holes.length > 0) {
+  const holeCount = params.holes.filter((v, i) => {return ['front', 'back', 'left', 'right', 'bottom'].includes(v.surface)}).length
+
+  if (holeCount > 0) {
     subtracts.push(holes(params))
   }
 
