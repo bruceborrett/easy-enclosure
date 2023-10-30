@@ -15,7 +15,7 @@ const NumberInput = ({
     }
   }
   return (
-    <div className="input-group">
+    <div className="input-group" key={value}>
       <label>{label}</label>
       <input type="number" min={min} defaultValue={value} step={step} onBlur={onChange} onKeyDown={handleKeydown} />
     </div>
