@@ -18,6 +18,7 @@
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "file-saver": "^2.0.5",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-github-btn": "^1.4.0",
@@ -60,6 +61,7 @@
     ]
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.200",
     "gh-pages": "^5.0.0"
   }
 }
