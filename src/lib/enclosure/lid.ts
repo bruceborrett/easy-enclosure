@@ -32,7 +32,7 @@ export const lid = (params: Params) => {
         (cornerRadius+wall)/2
       ))
     )
-    let screwOffset = (baseLidScrewDiameter/2) + (cornerRadius/4) + wall;
+    let screwOffset = (baseLidScrewDiameter/2) + (cornerRadius/4) + (wall/2);
     subtracts.push(screws(length, width, roof*2, screwOffset, lidScrewDiameter))
   } else {
     entities.push(

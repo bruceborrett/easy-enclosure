@@ -18,7 +18,7 @@ export const waterProofSealCutout = (params: Params) => {
       length-(wall*2), 
       insertHeight+sealThickness+insertClearance, 
       insertThickness+(insertClearance*2), 
-      (baseLidScrewDiameter/2) + (cornerRadius/4) + wall
+      (baseLidScrewDiameter/2) + (cornerRadius/4) + (wall/2)
     )
   )
 }

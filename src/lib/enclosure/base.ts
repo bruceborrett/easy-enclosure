@@ -31,10 +31,10 @@ export const base = (params: Params) => {
         width-(_wall*2), 
         length-(_wall*2), 
         height, 
-        (baseLidScrewDiameter/2) + (cornerRadius/4) + wall,
+        (baseLidScrewDiameter/2) + (cornerRadius/4) + (wall/2),
       ))
     ))
-    let screwOffset = (baseLidScrewDiameter/2) + (cornerRadius/4) + wall;
+    let screwOffset = (baseLidScrewDiameter/2) + (cornerRadius/4) + (wall/2);
     subtracts.push(screws(length, width, height, screwOffset, baseLidScrewDiameter))
   } else {
     body.push(hollowRoundCube(width, length, height, _wall, cornerRadius))
