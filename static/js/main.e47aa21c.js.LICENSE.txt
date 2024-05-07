@@ -1,10 +1,8 @@
 /*!
- * github-buttons v2.27.0
- * (c) 2023 なつき
+ * github-buttons v2.28.0
+ * (c) 2024 なつき
  * @license BSD-2-Clause
  */
-
-/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
 
 /**
  * @license
