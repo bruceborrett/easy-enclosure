@@ -47,8 +47,8 @@ const Accordian = ({children, title, active, onClick}: {children: React.ReactNod
 
 export const ParamsForm = () => {
   const { length, width, height, floor, roof, wall, cornerRadius, wallMountScrewDiameter, 
-    holes, pcbMounts, wallMounts, 
-    waterProof, screws, screwDiameter, sealThickness, insertThickness, insertHeight, 
+    holes, pcbMounts, wallMounts, waterProof, lidScrews, lidScrewDiameter,
+    baseLidScrewDiameter, sealThickness, insertThickness, insertHeight, 
     insertClearance  } = useParams()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement| HTMLSelectElement>, set: (v: number) => void) => {
@@ -174,7 +174,7 @@ export const ParamsForm = () => {
       <Accordian title="Waterproofing" active={activeTab === 5} onClick={() => _setActiveTab(5)}>
         <CheckBox label="Waterproof" checked={waterProof.value} onChange={(e) => {
           waterProof.set(e.currentTarget.checked)
-          e.currentTarget.checked && screws.set(true)
+          e.currentTarget.checked && lidScrews.set(true)
         }} />
         {
           waterProof.value &&
@@ -183,13 +183,17 @@ export const ParamsForm = () => {
       </Accordian>
 
       <Accordian title="Lid Screws" active={activeTab === 6} onClick={() => _setActiveTab(6)}>
-        <CheckBox label="Lid Screws" checked={screws.value} onChange={(e) => {
-          screws.set(e.currentTarget.checked)
+        <CheckBox label="Include Lid Screws" checked={lidScrews.value} onChange={(e) => {
+          lidScrews.set(e.currentTarget.checked)
           !e.currentTarget.checked && waterProof.set(false)
         }} />
+        <br/>
         {
-          screws.value &&
-            <NumberInput label="Screw Diameter" value={screwDiameter.value} min={1} step={0.01} onChange={(e) => handleChange(e, screwDiameter.set)} />
+          lidScrews.value && 
+            <>
+              <NumberInput label="Lid Hole Diameter" value={lidScrewDiameter.value} min={1} step={0.01} onChange={(e) => handleChange(e, lidScrewDiameter.set)} />
+              <NumberInput label="Base Hole Diameter" value={baseLidScrewDiameter.value} min={1} step={0.01} onChange={(e) => handleChange(e, baseLidScrewDiameter.set)} />
+            </>
         }
       </Accordian>
 

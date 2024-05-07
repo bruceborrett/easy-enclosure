@@ -40,8 +40,8 @@ const rotateSpeed = 0.002
 const panSpeed = 1
 const zoomSpeed = 0.08
 
-const lidDeps = ['length', 'width', 'roof', 'wall', 'cornerRadius', 'screws', 'waterProof', 'screwDiameter', 'insertThickness', 'insertHeight', 'insertClearance', 'holes']
-const baseDeps = ['length', 'width', 'height', 'wall', 'floor', 'cornerRadius', 'holes', 'wallMounts', 'screws', 'waterProof', 'screwDiameter', 'insertThickness', 'insertHeight', 'sealThickness', 'wallMountScrewDiameter', 'insertClearance']
+const lidDeps = ['length', 'width', 'roof', 'wall', 'cornerRadius', 'lidScrews', 'waterProof', 'lidScrewDiameter', 'insertThickness', 'insertHeight', 'insertClearance', 'holes']
+const baseDeps = ['length', 'width', 'height', 'wall', 'floor', 'cornerRadius', 'holes', 'wallMounts', 'lidScrews', 'baseLidScrewDiameter', 'waterProof', 'insertThickness', 'insertHeight', 'sealThickness', 'wallMountScrewDiameter', 'insertClearance']
 const sealDeps = ['length', 'width', 'wall', 'cornerRadius', 'waterProof', 'sealThickness', 'insertClearance', 'insertThickness']
 const mountDeps = ['pcbMounts', 'waterProof', 'wall', 'floor', 'height']
 
@@ -198,7 +198,7 @@ export const Renderer = () => {
     
     // Lid
     if (checkDeps(diff, lidDeps)) {
-      console.log('lid')
+      console.log('Rendering lid')
       if (waterProof) {
         lidPos = [(width/2)+SPACING, -length/2, 0]
       } else {
@@ -209,7 +209,7 @@ export const Renderer = () => {
 
     // Base
     if (checkDeps(diff, baseDeps)) {
-      console.log('base')
+      console.log('Rendering base')
       if (waterProof) {
         basePos = [-width/2, -length/2, 0]
       } else {
@@ -220,7 +220,7 @@ export const Renderer = () => {
 
     // Waterproof seal
     if (checkDeps(diff, sealDeps)) {
-      console.log('seal')
+      console.log('Rendering waterproof seal')
       if (params.waterProof) {
         sealPos = [-width-(width/2)-SPACING, -length/2, 0] as Vec3
         _waterProofSeal.current = translate(sealPos, waterProofSeal(params))
@@ -229,7 +229,7 @@ export const Renderer = () => {
 
     // PCB Mounts
     if (checkDeps(diff, mountDeps)) {
-      console.log('mounts')
+      console.log('Rendering PCB mounts')
       if (pcbMountParams.length > 0) {
         if (waterProof) {
           mountsPos = [-width/2, -length/2, 0]

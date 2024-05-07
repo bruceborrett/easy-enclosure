@@ -64,8 +64,9 @@ export type Params = {
   pcbMounts: PCBMount[],
   wallMounts: boolean,
   wallMountScrewDiameter: number,
-  screws: boolean,
-  screwDiameter: number,
+  lidScrews: boolean,
+  lidScrewDiameter: number,
+  baseLidScrewDiameter: number,
 }
 
 const defaults: Params = {
@@ -159,8 +160,9 @@ const defaults: Params = {
   ],
   wallMounts: true,
   wallMountScrewDiameter: 3.98,
-  screws: true,
-  screwDiameter: 2.98,
+  lidScrews: true,
+  lidScrewDiameter: 2.98,
+  baseLidScrewDiameter: 2.88,
 }
 
 const paramState = hookstate(defaults)

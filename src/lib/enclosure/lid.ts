@@ -10,14 +10,14 @@ const { union } = booleans
 const { translate } = transforms
 
 export const lid = (params: Params) => {
-  const { length, width, wall, roof, cornerRadius, insertThickness, insertHeight, insertClearance } = params
+  const { length, width, wall, roof, cornerRadius, insertThickness, insertHeight, insertClearance, baseLidScrewDiameter, lidScrewDiameter } = params
 
   const entities = []
   const subtracts = []
 
   entities.push(roundedCube(width, length, roof, cornerRadius))
 
-  if (params.screws) {
+  if (params.lidScrews) {
     entities.push(
       translate([
         wall+insertClearance, 
@@ -32,7 +32,8 @@ export const lid = (params: Params) => {
         (cornerRadius+wall)/2
       ))
     )
-    subtracts.push(screws(params))
+    let screwOffset = (baseLidScrewDiameter/2) + (cornerRadius/4) + wall;
+    subtracts.push(screws(length, width, roof*2, screwOffset, lidScrewDiameter))
   } else {
     entities.push(
       translate([

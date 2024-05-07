@@ -1,4 +1,4 @@
-import { cuboid, cylinder } from '@jscad/modeling/src/primitives'
+import { cube, cuboid, cylinder } from '@jscad/modeling/src/primitives'
 import { rotateZ, translate } from '@jscad/modeling/src/operations/transforms'
 import { hull } from '@jscad/modeling/src/operations/hulls'
 import { subtract } from '@jscad/modeling/src/operations/booleans'
@@ -47,7 +47,7 @@ export const clover = (l: number, w: number, h: number, r=8, s=100) => {
     translate([l-r, 0, 0], roundedCube(r, r, h, r, s)),
     translate([0, w-r, 0], roundedCube(r, r, h, r, s)),
     translate([l-r, w-r, 0], roundedCube(r, r, h, r, s)),
-    )
+  )
   const rounded = subtract(
     cornersRemoved,
     translate([0, r*2, 0], rotateZ(degToRad(0), roundedCorner(r, h*2, s))),
