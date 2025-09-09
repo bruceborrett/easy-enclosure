@@ -40,9 +40,9 @@ const rotateSpeed = 0.002
 const panSpeed = 1
 const zoomSpeed = 0.08
 
-const lidDeps = ['length', 'width', 'roof', 'wall', 'cornerRadius', 'lidScrews', 'waterProof', 'lidScrewDiameter', 'insertThickness', 'insertHeight', 'insertClearance', 'holes']
+const lidDeps = ['length', 'width', 'roof', 'wall', 'cornerRadius', 'lidScrews', 'waterProof', 'lidScrewDiameter', 'baseLidScrewDiameter', 'insertThickness', 'insertHeight', 'insertClearance', 'holes']
 const baseDeps = ['length', 'width', 'height', 'wall', 'floor', 'cornerRadius', 'holes', 'wallMounts', 'lidScrews', 'baseLidScrewDiameter', 'waterProof', 'insertThickness', 'insertHeight', 'sealThickness', 'wallMountScrewDiameter', 'insertClearance']
-const sealDeps = ['length', 'width', 'wall', 'cornerRadius', 'waterProof', 'sealThickness', 'insertClearance', 'insertThickness']
+const sealDeps = ['length', 'width', 'wall', 'cornerRadius', 'waterProof', 'sealThickness', 'insertClearance', 'insertThickness', 'lidScrewDiameter', 'baseLidScrewDiameter', 'lidScrews']
 const mountDeps = ['pcbMounts', 'waterProof', 'wall', 'floor', 'height']
 
 type Render = (options: any) => void;
