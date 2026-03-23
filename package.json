@@ -1,6 +1,6 @@
 {
   "name": "easy-enclosure",
-  "version": "0.1.0",
+  "version": "0.1.81",
   "private": true,
   "homepage": "https://bruceborrett.github.io/easy-enclosure/",
   "dependencies": {
@@ -37,9 +37,9 @@
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "REACT_APP_VERSION=$npm_package_version react-scripts start",
+    "build": "REACT_APP_VERSION=$npm_package_version react-scripts build",
+    "test": "REACT_APP_VERSION=$npm_package_version react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
