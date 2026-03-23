@@ -10,6 +10,7 @@ import {
 import {
   PointerEventHandler,
   WheelEventHandler,
+  useCallback,
   useEffect,
   useRef,
 } from "react";
@@ -260,6 +261,9 @@ export const Renderer = () => {
       animationFrame.current = requestAnimationFrame(updateAndRender);
   };
 
+  const updateAndRenderRef = useRef(updateAndRender);
+  updateAndRenderRef.current = updateAndRender;
+
   const setCamera = () => {
     perspectiveCamera.setProjection(camera, camera, {
       width: window.innerWidth,
@@ -267,7 +271,7 @@ export const Renderer = () => {
     });
   };
 
-  const renderModel = async (params: Params, diff: string[]) => {
+  const renderModel = useCallback(async (params: Params, diff: string[]) => {
     let lidPos: Vec3;
     let basePos: Vec3;
     let sealPos: Vec3;
@@ -363,12 +367,12 @@ export const Renderer = () => {
         glOptions: { container: container.current },
       });
       setCamera();
-      updateAndRender();
+      updateAndRenderRef.current();
     } else {
       renderOptions.current.entities = entitiesFromSolids({}, model.current);
       updateView = true;
     }
-  };
+  }, []);
 
   useEffect(() => {
     const _params = params.get({ noproxy: true }) as Params;
@@ -393,7 +397,7 @@ export const Renderer = () => {
         });
       }, 250);
     }
-  }, [params]);
+  }, [loading, params, renderModel]);
 
   return (
     <div
