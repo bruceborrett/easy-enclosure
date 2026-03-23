@@ -1,8 +1,11 @@
-import { translate } from "@jscad/modeling/src/operations/transforms";
 import { subtract, union } from "@jscad/modeling/src/operations/booleans";
 import { hull } from "@jscad/modeling/src/operations/hulls";
+import {
+  mirrorX,
+  rotateY,
+  translate,
+} from "@jscad/modeling/src/operations/transforms";
 import { cube, cuboid, cylinder } from "@jscad/modeling/src/primitives";
-import { rotateY, mirrorX } from "@jscad/modeling/src/operations/transforms";
 
 import { Params } from "../params";
 
@@ -55,24 +58,32 @@ export const flange = (screwDiameter: number) => {
 };
 
 export const flanges = (params: Params) => {
-  const { length, width, cornerRadius, wallMountScrewDiameter } = params;
+  const {
+    length,
+    width,
+    cornerRadius,
+    wallMountScrewDiameter,
+    wallMountCount,
+  } = params;
   const outerWidth =
     wallMountScrewDiameter + SCREWCLEARANCE * 2 + RIDGEWIDTH * 2;
   const cornerSpacing = cornerRadius + outerWidth / 2;
   const z = outerWidth / 2;
-  return union(
-    translate([-RIDGEWIDTH, cornerSpacing, z], flange(wallMountScrewDiameter)),
+
+  const yPositions =
+    wallMountCount === 2
+      ? [length / 2]
+      : [cornerSpacing, length - cornerSpacing];
+
+  const left = yPositions.map((y) =>
+    translate([-RIDGEWIDTH, y, z], flange(wallMountScrewDiameter)),
+  );
+  const right = yPositions.map((y) =>
     translate(
-      [-RIDGEWIDTH, length - cornerSpacing, z],
-      flange(wallMountScrewDiameter),
-    ),
-    translate(
-      [width + RIDGEWIDTH, cornerSpacing, z],
-      mirrorX(flange(wallMountScrewDiameter)),
-    ),
-    translate(
-      [width + RIDGEWIDTH, length - cornerSpacing, z],
+      [width + RIDGEWIDTH, y, z],
       mirrorX(flange(wallMountScrewDiameter)),
     ),
   );
+
+  return union(...left, ...right);
 };

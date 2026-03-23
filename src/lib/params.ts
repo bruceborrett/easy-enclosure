@@ -73,6 +73,7 @@ export type Params = {
   pcbMounts: PCBMount[];
   internalWalls: InternalWall[];
   wallMounts: boolean;
+  wallMountCount: number;
   wallMountScrewDiameter: number;
   lidScrews: boolean;
   lidScrewDiameter: number;
@@ -182,6 +183,7 @@ const defaults: Params = {
     },
   ],
   wallMounts: true,
+  wallMountCount: 4,
   wallMountScrewDiameter: 3.98,
   lidScrews: true,
   lidScrewDiameter: 2.98,

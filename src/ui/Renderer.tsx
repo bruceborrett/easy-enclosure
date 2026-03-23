@@ -83,6 +83,7 @@ const baseDeps = [
   "insertHeight",
   "sealThickness",
   "wallMountScrewDiameter",
+  "wallMountCount",
   "insertClearance",
 ];
 const sealDeps = [

@@ -86,6 +86,7 @@ export const ParamsForm = () => {
     wall,
     cornerRadius,
     wallMountScrewDiameter,
+    wallMountCount,
     holes,
     pcbMounts,
     internalWalls,
@@ -502,13 +503,27 @@ export const ParamsForm = () => {
           onChange={(e) => wallMounts.set(e.currentTarget.checked)}
         />
         {wallMounts.value && (
-          <NumberInput
-            label="Screw Diameter"
-            value={wallMountScrewDiameter.value}
-            min={1}
-            step={0.01}
-            onChange={(e) => handleChange(e, wallMountScrewDiameter.set)}
-          />
+          <>
+            <div className="input-group">
+              <label>Mount Count</label>
+              <select
+                value={wallMountCount.value}
+                onChange={(e) =>
+                  wallMountCount.set(parseInt(e.target.value, 10))
+                }
+              >
+                <option value={2}>2</option>
+                <option value={4}>4</option>
+              </select>
+            </div>
+            <NumberInput
+              label="Screw Diameter"
+              value={wallMountScrewDiameter.value}
+              min={1}
+              step={0.01}
+              onChange={(e) => handleChange(e, wallMountScrewDiameter.set)}
+            />
+          </>
         )}
       </Accordian>
 

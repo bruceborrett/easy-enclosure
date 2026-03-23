@@ -77,7 +77,7 @@ export const Tools = () => {
     fileReader.readAsText(e.target.files[0], "UTF-8");
     fileReader.onload = (e) => {
       const data = JSON.parse(fileReader.result as string);
-      params.set(data);
+      params.set({ ...params.get(), ...data });
     };
   };
 
