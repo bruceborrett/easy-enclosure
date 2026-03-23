@@ -1,5 +1,5 @@
-import { hookstate, useHookstate } from '@hookstate/core';
-import { Surface } from './enclosure';
+import { hookstate, useHookstate } from "@hookstate/core";
+import { Surface } from "./enclosure";
 
 // The following types do not work due to this issue in the Hookstate library - https://github.com/avkonst/hookstate/issues/369
 // Once that issue is resolved, we can use the following types instead of the Hole type below.
@@ -28,46 +28,56 @@ import { Surface } from './enclosure';
 // type Hole = CircleHole | SquareHole | RectangleHole
 
 export type Hole = {
-  shape: 'circle' | 'square' | 'rectangle',
-  diameter: number,
-  width: number,
-  length: number,
-  surface: Surface,
-  x: number,
-  y: number,
-}
+  shape: "circle" | "square" | "rectangle";
+  diameter: number;
+  width: number;
+  length: number;
+  surface: Surface;
+  x: number;
+  y: number;
+};
 
 export type PCBMount = {
-  x: number,
-  y: number,
-  height: number,
-  outerDiameter: number,
-  screwDiameter: number,
-}
+  x: number;
+  y: number;
+  height: number;
+  outerDiameter: number;
+  screwDiameter: number;
+};
+
+export type InternalWall = {
+  x: number;
+  y: number;
+  height: number;
+  length: number;
+  thickness: number;
+  rotation: number;
+};
 
 export type Params = {
-  length: number,
-  width: number,
-  height: number,
-  floor: number,
-  roof: number,
-  wall: number,
-  waterProof: boolean,
-  sealThickness: number,
-  insertThickness: number,
-  insertHeight: number,
-  insertClearance: number,
-  showLid: boolean,
-  showBase: boolean,
-  cornerRadius: number,
-  holes: Hole[],
-  pcbMounts: PCBMount[],
-  wallMounts: boolean,
-  wallMountScrewDiameter: number,
-  lidScrews: boolean,
-  lidScrewDiameter: number,
-  baseLidScrewDiameter: number,
-}
+  length: number;
+  width: number;
+  height: number;
+  floor: number;
+  roof: number;
+  wall: number;
+  waterProof: boolean;
+  sealThickness: number;
+  insertThickness: number;
+  insertHeight: number;
+  insertClearance: number;
+  showLid: boolean;
+  showBase: boolean;
+  cornerRadius: number;
+  holes: Hole[];
+  pcbMounts: PCBMount[];
+  internalWalls: InternalWall[];
+  wallMounts: boolean;
+  wallMountScrewDiameter: number;
+  lidScrews: boolean;
+  lidScrewDiameter: number;
+  baseLidScrewDiameter: number;
+};
 
 const defaults: Params = {
   length: 80,
@@ -86,8 +96,8 @@ const defaults: Params = {
   cornerRadius: 3,
   holes: [
     {
-      shape: 'circle',
-      surface: 'front',
+      shape: "circle",
+      surface: "front",
       diameter: 12.5,
       width: 10,
       length: 10,
@@ -95,8 +105,8 @@ const defaults: Params = {
       y: 0,
     },
     {
-      shape: 'square',
-      surface: 'left',
+      shape: "square",
+      surface: "left",
       diameter: 10,
       width: 12,
       length: 10,
@@ -104,8 +114,8 @@ const defaults: Params = {
       y: 0,
     },
     {
-      shape: 'rectangle',
-      surface: 'back',
+      shape: "rectangle",
+      surface: "back",
       width: 40,
       length: 6,
       diameter: 10,
@@ -113,8 +123,8 @@ const defaults: Params = {
       y: 0,
     },
     {
-      shape: 'square',
-      surface: 'right',
+      shape: "square",
+      surface: "right",
       width: 12.5,
       length: 10,
       diameter: 10,
@@ -122,8 +132,8 @@ const defaults: Params = {
       y: 0,
     },
     {
-      shape: 'square',
-      surface: 'top',
+      shape: "square",
+      surface: "top",
       width: 30,
       length: 10,
       diameter: 10,
@@ -138,35 +148,48 @@ const defaults: Params = {
       height: 5,
       outerDiameter: 6,
       screwDiameter: 2,
-    }, {
+    },
+    {
       x: -30,
       y: 24,
       height: 5,
       outerDiameter: 6,
       screwDiameter: 2,
-    }, {
+    },
+    {
       x: -30,
       y: -24,
       height: 5,
       outerDiameter: 6,
       screwDiameter: 2,
-    }, {
+    },
+    {
       x: 30,
       y: -24,
       height: 5,
       outerDiameter: 6,
       screwDiameter: 2,
-    }
+    },
+  ],
+  internalWalls: [
+    {
+      x: 0,
+      y: 0,
+      height: 10,
+      length: 25,
+      thickness: 2,
+      rotation: 0,
+    },
   ],
   wallMounts: true,
   wallMountScrewDiameter: 3.98,
   lidScrews: true,
   lidScrewDiameter: 2.98,
   baseLidScrewDiameter: 2.88,
-}
+};
 
-const paramState = hookstate(defaults)
+const paramState = hookstate(defaults);
 
 export const useParams = () => {
-  return useHookstate(paramState)
-}
+  return useHookstate(paramState);
+};
