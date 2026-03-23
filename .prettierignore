@@ -1,0 +1,6 @@
+node_modules/
+build/
+OpenJSCAD.org/
+coverage/
+*.min.js
+*.min.css

@@ -8,9 +8,9 @@ EasyEnclosure is an open-source 3D modeling software tailored specifically for d
 
 ## Key Features
 
-* User-Friendly Interface
-* Real-Time 3D Preview
-* Export to STL Format
+- User-Friendly Interface
+- Real-Time 3D Preview
+- Export to STL Format
 
 ## Technology Stack
 
@@ -28,6 +28,7 @@ It is very time consuming and expensive to continuously test prints with all the
 Pull requests are also welcome!
 
 ## ToDo
+
 - [x] Basic square enclosure
 - [x] Configurable dimensions
 - [x] Configurable wall thickness
@@ -44,13 +45,14 @@ Pull requests are also welcome!
 - [ ] Pre-defined templates for common devices (Pi, Arduino etc)
 
 ## Notes
-* All measurements are in millimeters
-* Enclosures intended for outdoor use should be printed with PETG filament
-* Waterproof seal should be printed with TPU filament
-* Supports are required for holes
-* Overall height = Base Height + wall thickness
-* Inner height = Base Height - wall thickness
-* Inner width = width - (wall thickness * 2)
-* Inner length = length - (wall thickness * 2)
-* Screws take up extra space in corners, keep this in mind when deciding length and width
-* PCB mount X and Y is derived from center of base
+
+- All measurements are in millimeters
+- Enclosures intended for outdoor use should be printed with PETG filament
+- Waterproof seal should be printed with TPU filament
+- Supports are required for holes
+- Overall height = Base Height + wall thickness
+- Inner height = Base Height - wall thickness
+- Inner width = width - (wall thickness \* 2)
+- Inner length = length - (wall thickness \* 2)
+- Screws take up extra space in corners, keep this in mind when deciding length and width
+- PCB mount X and Y is derived from center of base
