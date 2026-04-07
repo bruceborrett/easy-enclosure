@@ -234,9 +234,9 @@ Use this table as the migration tracker.
 | M-007 | Port renderer setup and animation lifecycle     | Unassigned | Complete    | Added `RendererComponent` with RAF loop and JSCAD render initialization  |
 | M-008 | Port pointer pan/zoom/rotate interactions       | Unassigned | Complete    | Ported pointer handlers and orbit controls interactions                  |
 | M-009 | Port dependency-diff model recompute logic      | Unassigned | Complete    | Ported param diff/dependency arrays and selective model recomputation    |
-| M-010 | Port STL export flow                            | Unassigned | Not Started |                                                                          |
-| M-011 | Port load/save JSON settings flow               | Unassigned | Not Started |                                                                          |
-| M-012 | Port tools modal UX                             | Unassigned | Not Started |                                                                          |
+| M-010 | Port STL export flow                            | Unassigned | Complete    | Added Angular tools export for lid/base/seal STL files                   |
+| M-011 | Port load/save JSON settings flow               | Unassigned | Complete    | Added JSON file import/export wired to `EnclosureStateService`           |
+| M-012 | Port tools modal UX                             | Unassigned | Complete    | Added export confirmation modal and tools overlay UI                     |
 | M-013 | Rebuild params accordion sections               | Unassigned | Not Started |                                                                          |
 | M-014 | Port holes dynamic array CRUD                   | Unassigned | Not Started |                                                                          |
 | M-015 | Port PCB mounts dynamic array CRUD              | Unassigned | Not Started |                                                                          |
