@@ -223,33 +223,33 @@ Exit criteria:
 
 Use this table as the migration tracker.
 
-| ID    | Task                                            | Owner      | Status      | Notes                                                     |
-| ----- | ----------------------------------------------- | ---------- | ----------- | --------------------------------------------------------- |
-| M-001 | Bootstrap Angular workspace in `angular-app`    | Unassigned | Complete    | Done on 2026-04-07                                        |
-| M-002 | Configure Angular base path for GitHub Pages    | Unassigned | Complete    | `baseHref` set to `/easy-enclosure/`                      |
-| M-003 | Add Angular scripts to root package workflow    | Unassigned | Complete    | Added `ng:dev`, `ng:build`, `ng:build:ghpages`, `ng:test` |
-| M-004 | Create signal-based enclosure state service     | Unassigned | Not Started |                                                           |
-| M-005 | Port params defaults and reset behaviors        | Unassigned | Not Started |                                                           |
-| M-006 | Integrate enclosure geometry library in Angular | Unassigned | Not Started |                                                           |
-| M-007 | Port renderer setup and animation lifecycle     | Unassigned | Not Started |                                                           |
-| M-008 | Port pointer pan/zoom/rotate interactions       | Unassigned | Not Started |                                                           |
-| M-009 | Port dependency-diff model recompute logic      | Unassigned | Not Started |                                                           |
-| M-010 | Port STL export flow                            | Unassigned | Not Started |                                                           |
-| M-011 | Port load/save JSON settings flow               | Unassigned | Not Started |                                                           |
-| M-012 | Port tools modal UX                             | Unassigned | Not Started |                                                           |
-| M-013 | Rebuild params accordion sections               | Unassigned | Not Started |                                                           |
-| M-014 | Port holes dynamic array CRUD                   | Unassigned | Not Started |                                                           |
-| M-015 | Port PCB mounts dynamic array CRUD              | Unassigned | Not Started |                                                           |
-| M-016 | Port internal walls dynamic array CRUD          | Unassigned | Not Started |                                                           |
-| M-017 | Port waterproof and lid screw coupling rules    | Unassigned | Not Started |                                                           |
-| M-018 | Port wall mount and insert settings behavior    | Unassigned | Not Started |                                                           |
-| M-019 | Add Angular unit tests for app shell            | Unassigned | Not Started |                                                           |
-| M-020 | Add state service unit tests                    | Unassigned | Not Started |                                                           |
-| M-021 | Add params-to-renderer integration test         | Unassigned | Not Started |                                                           |
-| M-022 | Add tools workflow tests                        | Unassigned | Not Started |                                                           |
-| M-023 | Cut over build/deploy scripts to Angular        | Unassigned | Not Started |                                                           |
-| M-024 | Remove React dependencies and old source        | Unassigned | Not Started |                                                           |
-| M-025 | Update README and contributor setup docs        | Unassigned | Not Started |                                                           |
+| ID    | Task                                            | Owner      | Status      | Notes                                                                    |
+| ----- | ----------------------------------------------- | ---------- | ----------- | ------------------------------------------------------------------------ |
+| M-001 | Bootstrap Angular workspace in `angular-app`    | Unassigned | Complete    | Done on 2026-04-07                                                       |
+| M-002 | Configure Angular base path for GitHub Pages    | Unassigned | Complete    | `baseHref` set to `/easy-enclosure/`                                     |
+| M-003 | Add Angular scripts to root package workflow    | Unassigned | Complete    | Added `ng:dev`, `ng:build`, `ng:build:ghpages`, `ng:test`                |
+| M-004 | Create signal-based enclosure state service     | Unassigned | Complete    | Added `EnclosureStateService` with signals and reset APIs                |
+| M-005 | Port params defaults and reset behaviors        | Unassigned | Complete    | Ported to `angular-app/src/app/core/params.ts`                           |
+| M-006 | Integrate enclosure geometry library in Angular | Unassigned | Complete    | Copied `src/lib/enclosure/*` to Angular core and added `@jscad/modeling` |
+| M-007 | Port renderer setup and animation lifecycle     | Unassigned | Not Started |                                                                          |
+| M-008 | Port pointer pan/zoom/rotate interactions       | Unassigned | Not Started |                                                                          |
+| M-009 | Port dependency-diff model recompute logic      | Unassigned | Not Started |                                                                          |
+| M-010 | Port STL export flow                            | Unassigned | Not Started |                                                                          |
+| M-011 | Port load/save JSON settings flow               | Unassigned | Not Started |                                                                          |
+| M-012 | Port tools modal UX                             | Unassigned | Not Started |                                                                          |
+| M-013 | Rebuild params accordion sections               | Unassigned | Not Started |                                                                          |
+| M-014 | Port holes dynamic array CRUD                   | Unassigned | Not Started |                                                                          |
+| M-015 | Port PCB mounts dynamic array CRUD              | Unassigned | Not Started |                                                                          |
+| M-016 | Port internal walls dynamic array CRUD          | Unassigned | Not Started |                                                                          |
+| M-017 | Port waterproof and lid screw coupling rules    | Unassigned | Not Started |                                                                          |
+| M-018 | Port wall mount and insert settings behavior    | Unassigned | Not Started |                                                                          |
+| M-019 | Add Angular unit tests for app shell            | Unassigned | Not Started |                                                                          |
+| M-020 | Add state service unit tests                    | Unassigned | Not Started |                                                                          |
+| M-021 | Add params-to-renderer integration test         | Unassigned | Not Started |                                                                          |
+| M-022 | Add tools workflow tests                        | Unassigned | Not Started |                                                                          |
+| M-023 | Cut over build/deploy scripts to Angular        | Unassigned | Not Started |                                                                          |
+| M-024 | Remove React dependencies and old source        | Unassigned | Not Started |                                                                          |
+| M-025 | Update README and contributor setup docs        | Unassigned | Not Started |                                                                          |
 
 Status values:
 
