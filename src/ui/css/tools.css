@@ -8,11 +8,16 @@
 }
 
 #tools .tool-button {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
   margin: 8px;
   padding: 0;
-  background: none;
-  border: none;
+  border-radius: 12px;
+  color: #f4f9ff;
+  background-color: var(--ui-primary);
   outline: none;
   cursor: pointer;
 }
@@ -22,11 +27,16 @@
   top: 0;
   right: 8px;
   display: block;
-  padding: 8px;
-  background: none;
-  border: none;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid var(--ui-primary-border);
+  background-color: var(--ui-primary);
+  color: #ffffff;
   cursor: pointer;
   font-size: 24px;
+  line-height: 1;
 }
 
 #export {
@@ -34,10 +44,7 @@
   top: 65%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #4e9eff;
-  color: white;
-  border: none;
-  border-radius: 3px;
-  padding: 12px;
+  border-radius: 8px;
+  padding: 12px 22px;
   cursor: pointer;
 }

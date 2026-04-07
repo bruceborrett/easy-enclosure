@@ -264,7 +264,7 @@ export const ParamsForm = () => {
             className="sub-params"
           >
             <button className="remove-btn" onClick={() => holes[i].set(none)}>
-              <BiTrash title="Remove Hole" size="16" color="#ff7f50" />
+              <BiTrash title="Remove Hole" size="16" />
             </button>
             <p>
               <b>Hole {i + 1}</b>
@@ -352,7 +352,7 @@ export const ParamsForm = () => {
               className="remove-btn"
               onClick={() => pcbMounts[i].set(none)}
             >
-              <BiTrash title="Remove Mount" size="16" color="#ff7f50" />
+              <BiTrash title="Remove Mount" size="16" />
             </button>
             <p>
               <b>Mount {i + 1}</b>
@@ -403,7 +403,7 @@ export const ParamsForm = () => {
               className="remove-btn"
               onClick={() => internalWalls[i].set(none)}
             >
-              <BiTrash title="Remove Internal Wall" size="16" color="#ff7f50" />
+              <BiTrash title="Remove Internal Wall" size="16" />
             </button>
             <p>
               <b>Internal Wall {i + 1}</b>

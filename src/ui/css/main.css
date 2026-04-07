@@ -12,6 +12,46 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+:root {
+  --ui-primary: #c84630;
+  --ui-primary-hover: #b13d2a;
+  --ui-primary-active: #8f2f21;
+  --ui-primary-soft: #f7ebe9;
+  --ui-primary-border: #8f2f21;
+  --ui-primary-soft-hover: #f1dfdc;
+}
+
+button {
+  border: 1px solid var(--ui-primary-border);
+  border-radius: 8px;
+  background-color: var(--ui-primary);
+  color: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+}
+
+button:hover:not(:disabled) {
+  background-color: var(--ui-primary-hover);
+}
+
+button:active:not(:disabled) {
+  background-color: var(--ui-primary-active);
+}
+
+button:focus-visible {
+  outline: 3px solid rgba(200, 70, 48, 0.35);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
 #jscad {
   width: 99vw;
   height: 99vh;

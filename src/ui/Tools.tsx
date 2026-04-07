@@ -94,17 +94,13 @@ export const Tools = () => {
         className="tool-button"
         onClick={() => fileInput.current?.click()}
       >
-        <BiSolidFolderOpen
-          title="Load settings from file"
-          size="36"
-          color="#666666"
-        />
+        <BiSolidFolderOpen title="Load settings from file" size="28" />
       </button>
       <button className="tool-button" onClick={() => saveParamsFile()}>
-        <BiSolidSave title="Save settings to file" size="36" color="#666666" />
+        <BiSolidSave title="Save settings to file" size="28" />
       </button>
       <button className="tool-button" onClick={() => setOpen(true)}>
-        <BiSolidFileExport title="Export to STL" size="36" color="#666666" />
+        <BiSolidFileExport title="Export to STL" size="28" />
       </button>
 
       <input
@@ -117,9 +113,9 @@ export const Tools = () => {
 
       <div id="modal" className={open ? "open" : ""}>
         <div id="modal-content">
-          <span id="close" onClick={() => setOpen(false)}>
+          <button id="close" type="button" onClick={() => setOpen(false)}>
             &times;
-          </span>
+          </button>
           <p>
             Multiple STL files will be exported, one for each entity (lid, base,
             waterproof seal etc)
