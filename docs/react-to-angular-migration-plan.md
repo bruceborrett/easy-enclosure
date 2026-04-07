@@ -231,9 +231,9 @@ Use this table as the migration tracker.
 | M-004 | Create signal-based enclosure state service     | Unassigned | Complete    | Added `EnclosureStateService` with signals and reset APIs                |
 | M-005 | Port params defaults and reset behaviors        | Unassigned | Complete    | Ported to `angular-app/src/app/core/params.ts`                           |
 | M-006 | Integrate enclosure geometry library in Angular | Unassigned | Complete    | Copied `src/lib/enclosure/*` to Angular core and added `@jscad/modeling` |
-| M-007 | Port renderer setup and animation lifecycle     | Unassigned | Not Started |                                                                          |
-| M-008 | Port pointer pan/zoom/rotate interactions       | Unassigned | Not Started |                                                                          |
-| M-009 | Port dependency-diff model recompute logic      | Unassigned | Not Started |                                                                          |
+| M-007 | Port renderer setup and animation lifecycle     | Unassigned | Complete    | Added `RendererComponent` with RAF loop and JSCAD render initialization  |
+| M-008 | Port pointer pan/zoom/rotate interactions       | Unassigned | Complete    | Ported pointer handlers and orbit controls interactions                  |
+| M-009 | Port dependency-diff model recompute logic      | Unassigned | Complete    | Ported param diff/dependency arrays and selective model recomputation    |
 | M-010 | Port STL export flow                            | Unassigned | Not Started |                                                                          |
 | M-011 | Port load/save JSON settings flow               | Unassigned | Not Started |                                                                          |
 | M-012 | Port tools modal UX                             | Unassigned | Not Started |                                                                          |

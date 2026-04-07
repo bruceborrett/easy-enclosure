@@ -29,6 +29,7 @@
     "@angular/platform-browser": "^20.3.0",
     "@angular/router": "^20.3.0",
     "@jscad/modeling": "^2.13.0",
+    "@jscad/regl-renderer": "^2.6.15",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
