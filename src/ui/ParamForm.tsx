@@ -101,6 +101,16 @@ export const ParamsForm = () => {
     insertClearance,
   } = useParams();
 
+  const resetToSimpleEnclosure = () => {
+    holes.set([]);
+    pcbMounts.set([]);
+    internalWalls.set([]);
+    waterProof.set(false);
+    wallMounts.set(false);
+    lidScrews.set(false);
+    setActiveTab(1);
+  };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     set: (v: number) => void,
@@ -158,6 +168,14 @@ export const ParamsForm = () => {
 
   return (
     <form id="param-form" onSubmit={handleSubmit}>
+      <button
+        type="button"
+        className="simple-reset-btn"
+        onClick={resetToSimpleEnclosure}
+      >
+        START FROM SCRATCH
+      </button>
+
       <Accordian
         title="General"
         active={activeTab === 1}

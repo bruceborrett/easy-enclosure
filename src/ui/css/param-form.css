@@ -113,6 +113,24 @@ label {
   cursor: pointer;
 }
 
+.simple-reset-btn {
+  display: block;
+  border: 1px solid #777;
+  background-color: #f2f2f2;
+  margin: 8px 8px 8px 0;
+  border-radius: 3px;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  width: calc(100% - 8px);
+  letter-spacing: 0.02em;
+}
+
+.simple-reset-btn:hover {
+  background-color: #e8e8e8;
+}
+
 .add-btn {
   display: block;
   border: none;
