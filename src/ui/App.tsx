@@ -12,7 +12,7 @@ import "../ui/css/param-form.css";
 import "../ui/css/tools.css";
 
 function App() {
-  const appVersion = process.env.REACT_APP_VERSION;
+  const appVersion = import.meta.env.VITE_APP_VERSION;
 
   return (
     <>
