@@ -243,10 +243,10 @@ Use this table as the migration tracker.
 | M-016 | Port internal walls dynamic array CRUD          | Unassigned | Complete    | Ported add/remove/edit internal walls list                               |
 | M-017 | Port waterproof and lid screw coupling rules    | Unassigned | Complete    | Ported bi-directional toggle coupling behavior                           |
 | M-018 | Port wall mount and insert settings behavior    | Unassigned | Complete    | Ported wall mount and lid insert settings controls                       |
-| M-019 | Add Angular unit tests for app shell            | Unassigned | Not Started |                                                                          |
-| M-020 | Add state service unit tests                    | Unassigned | Not Started |                                                                          |
-| M-021 | Add params-to-renderer integration test         | Unassigned | Not Started |                                                                          |
-| M-022 | Add tools workflow tests                        | Unassigned | Not Started |                                                                          |
+| M-019 | Add Angular unit tests for app shell            | Unassigned | Complete    | Added shell composition test in `angular-app/src/app/app.spec.ts`        |
+| M-020 | Add state service unit tests                    | Unassigned | Complete    | Added service coverage in `enclosure-state.service.spec.ts`              |
+| M-021 | Add params-to-renderer integration test         | Unassigned | Complete    | Added render-cycle integration spec in `renderer.component.spec.ts`      |
+| M-022 | Add tools workflow tests                        | Unassigned | Complete    | Added workflow tests in `tools.component.spec.ts`                        |
 | M-023 | Cut over build/deploy scripts to Angular        | Unassigned | Not Started |                                                                          |
 | M-024 | Remove React dependencies and old source        | Unassigned | Not Started |                                                                          |
 | M-025 | Update README and contributor setup docs        | Unassigned | Not Started |                                                                          |

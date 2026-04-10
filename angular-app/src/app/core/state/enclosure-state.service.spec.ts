@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { cloneParams } from '../params';
 import { EnclosureStateService } from './enclosure-state.service';
 
 describe('EnclosureStateService', () => {
@@ -22,6 +23,16 @@ describe('EnclosureStateService', () => {
     expect(service.params().length).toBe(120);
     expect(service.params().width).toBe(95);
     expect(service.params().waterProof).toBeFalse();
+  });
+
+  it('clones incoming params in setParams', () => {
+    const next = cloneParams(service.params());
+    next.length = 144;
+
+    service.setParams(next);
+    next.length = 33;
+
+    expect(service.params().length).toBe(144);
   });
 
   it('resets to simple enclosure defaults', () => {

@@ -49,7 +49,7 @@ export class ToolsComponent {
     const tsStr = this.formattedTimestamp();
     const data = JSON.stringify(this.state.params(), null, 2);
     const textFile = new Blob([data], { type: 'text/plain' });
-    saveAs(textFile, `enclosure-${tsStr}.json`);
+    this.saveFile(textFile, `enclosure-${tsStr}.json`);
   }
 
   loadParamsFile(event: Event): void {
@@ -59,7 +59,6 @@ export class ToolsComponent {
     }
 
     const fileReader = new FileReader();
-    fileReader.readAsText(input.files[0], 'UTF-8');
     fileReader.onload = () => {
       const data = JSON.parse(fileReader.result as string) as Partial<Params>;
       const merged = {
@@ -68,6 +67,7 @@ export class ToolsComponent {
       };
       this.state.setParams(merged as Params);
     };
+    fileReader.readAsText(input.files[0], 'UTF-8');
 
     input.value = '';
   }
@@ -103,7 +103,11 @@ export class ToolsComponent {
   private exportGeometry(name: string, geometry: Geom3): void {
     const rawData = serialize({ binary: false }, geometry);
     const blob = new Blob([rawData], { type: 'application/octet-stream' });
-    saveAs(blob, `${name}.stl`);
+    this.saveFile(blob, `${name}.stl`);
+  }
+
+  private saveFile(data: Blob, fileName: string): void {
+    saveAs(data, fileName);
   }
 
   private formattedTimestamp(): string {
