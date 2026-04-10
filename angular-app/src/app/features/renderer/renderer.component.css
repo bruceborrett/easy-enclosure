@@ -1,4 +1,6 @@
 #jscad {
-  width: 99vw;
-  height: 99vh;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
 }
