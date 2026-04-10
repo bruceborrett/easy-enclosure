@@ -237,12 +237,12 @@ Use this table as the migration tracker.
 | M-010 | Port STL export flow                            | Unassigned | Complete    | Added Angular tools export for lid/base/seal STL files                   |
 | M-011 | Port load/save JSON settings flow               | Unassigned | Complete    | Added JSON file import/export wired to `EnclosureStateService`           |
 | M-012 | Port tools modal UX                             | Unassigned | Complete    | Added export confirmation modal and tools overlay UI                     |
-| M-013 | Rebuild params accordion sections               | Unassigned | Not Started |                                                                          |
-| M-014 | Port holes dynamic array CRUD                   | Unassigned | Not Started |                                                                          |
-| M-015 | Port PCB mounts dynamic array CRUD              | Unassigned | Not Started |                                                                          |
-| M-016 | Port internal walls dynamic array CRUD          | Unassigned | Not Started |                                                                          |
-| M-017 | Port waterproof and lid screw coupling rules    | Unassigned | Not Started |                                                                          |
-| M-018 | Port wall mount and insert settings behavior    | Unassigned | Not Started |                                                                          |
+| M-013 | Rebuild params accordion sections               | Unassigned | Complete    | Added full Angular params accordion component and shell integration      |
+| M-014 | Port holes dynamic array CRUD                   | Unassigned | Complete    | Ported add/remove/edit hole list with conditional fields                 |
+| M-015 | Port PCB mounts dynamic array CRUD              | Unassigned | Complete    | Ported add/remove/edit PCB mounts list                                   |
+| M-016 | Port internal walls dynamic array CRUD          | Unassigned | Complete    | Ported add/remove/edit internal walls list                               |
+| M-017 | Port waterproof and lid screw coupling rules    | Unassigned | Complete    | Ported bi-directional toggle coupling behavior                           |
+| M-018 | Port wall mount and insert settings behavior    | Unassigned | Complete    | Ported wall mount and lid insert settings controls                       |
 | M-019 | Add Angular unit tests for app shell            | Unassigned | Not Started |                                                                          |
 | M-020 | Add state service unit tests                    | Unassigned | Not Started |                                                                          |
 | M-021 | Add params-to-renderer integration test         | Unassigned | Not Started |                                                                          |

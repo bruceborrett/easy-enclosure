@@ -1,0 +1,132 @@
+#param-form {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 260px;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  z-index: 4;
+}
+
+#param-form::-webkit-scrollbar {
+  display: none;
+}
+
+select {
+  display: block;
+  margin-top: 2px;
+  padding-left: 8px;
+  width: 90%;
+  height: 28px;
+  border: 1px solid #666;
+  border-radius: 3px;
+  background-color: #fff;
+}
+
+input {
+  display: block;
+  margin-top: 2px;
+  padding-left: 8px;
+  width: 80%;
+  height: 24px;
+  border: 1px solid #666;
+  border-radius: 3px;
+}
+
+input[type='checkbox'] {
+  float: left;
+  margin-right: 8px;
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  border: none;
+  border-radius: 0;
+}
+
+label {
+  font-size: 12px;
+}
+
+.input-group {
+  display: inline-block;
+  margin-bottom: 4px;
+  width: 50%;
+}
+
+.accordian {
+  height: 32px;
+  width: 100%;
+  overflow: hidden;
+  transition: all 1s ease;
+}
+
+.accordian.active {
+  height: auto;
+}
+
+.accordian-header {
+  width: 100%;
+  font-size: 14px;
+  font-weight: 500;
+  color: #888;
+  cursor: pointer;
+}
+
+.active .accordian-header {
+  color: #444;
+}
+
+.accordian-icon {
+  float: right;
+  margin-right: 12px;
+  text-align: center;
+}
+
+.sub-params {
+  margin-right: 8px;
+  margin-bottom: 8px;
+  padding-left: 8px;
+  padding-bottom: 8px;
+  border: 1px solid #acacac;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.remove-btn {
+  float: right;
+  margin: 8px;
+  padding: 7px;
+  min-width: 34px;
+  min-height: 34px;
+  border-radius: 999px;
+  color: #f4fbff;
+  cursor: pointer;
+}
+
+.simple-reset-btn {
+  display: block;
+  margin: 8px 8px 8px 0;
+  padding: 10px;
+  width: calc(100% - 8px);
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+}
+
+.add-btn {
+  display: block;
+  margin-top: 16px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  padding: 10px;
+  width: calc(100% - 8px);
+  border-radius: 8px;
+  font-size: 11px;
+  cursor: pointer;
+}
