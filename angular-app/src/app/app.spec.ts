@@ -11,6 +11,9 @@ class MockParamsFormComponent {}
 @Component({ selector: 'app-tools', template: '' })
 class MockToolsComponent {}
 
+@Component({ selector: 'app-funding', template: '' })
+class MockFundingComponent {}
+
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -18,7 +21,12 @@ describe('App', () => {
     })
       .overrideComponent(App, {
         set: {
-          imports: [MockRendererComponent, MockParamsFormComponent, MockToolsComponent],
+          imports: [
+            MockRendererComponent,
+            MockParamsFormComponent,
+            MockToolsComponent,
+            MockFundingComponent,
+          ],
         },
       })
       .compileComponents();
@@ -38,5 +46,6 @@ describe('App', () => {
     expect(host.querySelector('app-renderer')).not.toBeNull();
     expect(host.querySelector('app-params-form')).not.toBeNull();
     expect(host.querySelector('app-tools')).not.toBeNull();
+    expect(host.querySelector('app-funding')).not.toBeNull();
   });
 });
