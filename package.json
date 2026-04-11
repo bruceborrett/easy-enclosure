@@ -1,77 +1,29 @@
 {
   "name": "easy-enclosure",
-  "version": "0.1.101",
+  "version": "0.1.102",
   "private": true,
   "homepage": "https://bruceborrett.github.io/easy-enclosure/",
-  "dependencies": {
-    "@hookstate/core": "^4.0.1",
-    "@jscad/modeling": "^2.13.0",
-    "@jscad/openjscad": "^1.6.1",
-    "@jscad/regl-renderer": "^2.6.15",
-    "@jscad/stl-serializer": "^2.1.23",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/file-saver": "^2.0.5",
-    "@types/node": "^20.5.0",
-    "@types/react": "^18.2.20",
-    "@types/react-dom": "^18.2.7",
-    "file-saver": "^2.0.5",
-    "lodash": "^4.17.21",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-github-btn": "^1.4.0",
-    "react-icons": "^4.11.0",
-    "react-use-gesture": "^9.1.3",
-    "remove": "^0.1.5",
-    "typescript": "^5.1.6",
-    "web-vitals": "^2.1.4"
-  },
   "scripts": {
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist",
-    "dev": "VITE_APP_VERSION=$npm_package_version vite",
+    "deploy": "gh-pages -d angular-app/dist/angular-app/browser",
     "ng:sync-version": "node -e \"const fs=require('node:fs');const v=process.env.npm_package_version||'dev';fs.writeFileSync('angular-app/src/app/app-version.ts', \\\"export const APP_VERSION = '\\\"+v+\\\"';\\\\n\\\");\"",
     "ng:dev": "npm run ng:sync-version && npm --prefix angular-app run start",
     "ng:build": "npm run ng:sync-version && npm --prefix angular-app run build",
     "ng:build:ghpages": "npm run ng:sync-version && npm --prefix angular-app run build",
     "ng:test": "npm --prefix angular-app run test --",
-    "start": "npm run dev",
-    "build": "VITE_APP_VERSION=$npm_package_version vite build",
+    "dev": "npm run ng:dev",
+    "start": "npm run ng:dev",
+    "build": "npm run ng:build",
     "prepare": "husky",
     "bump:version": "npm version patch --no-git-tag-version",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "preview": "vite preview",
+    "test": "npm run ng:test -- --watch=false --browsers=ChromeHeadless",
+    "test:watch": "npm run ng:test",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
   "devDependencies": {
-    "@vitejs/plugin-react": "^5.0.4",
-    "@types/lodash": "^4.14.200",
     "gh-pages": "^5.0.0",
     "husky": "^9.1.7",
-    "jsdom": "^26.1.0",
-    "prettier": "^3.6.2",
-    "vite": "^7.1.7",
-    "vitest": "^3.2.4"
+    "prettier": "^3.6.2"
   }
 }

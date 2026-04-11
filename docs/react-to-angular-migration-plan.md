@@ -247,9 +247,9 @@ Use this table as the migration tracker.
 | M-020 | Add state service unit tests                    | Unassigned | Complete    | Added service coverage in `enclosure-state.service.spec.ts`              |
 | M-021 | Add params-to-renderer integration test         | Unassigned | Complete    | Added render-cycle integration spec in `renderer.component.spec.ts`      |
 | M-022 | Add tools workflow tests                        | Unassigned | Complete    | Added workflow tests in `tools.component.spec.ts`                        |
-| M-023 | Cut over build/deploy scripts to Angular        | Unassigned | Not Started |                                                                          |
-| M-024 | Remove React dependencies and old source        | Unassigned | Not Started |                                                                          |
-| M-025 | Update README and contributor setup docs        | Unassigned | Not Started |                                                                          |
+| M-023 | Cut over build/deploy scripts to Angular        | Unassigned | Complete    | Root scripts now default to Angular and deploy targets Angular build     |
+| M-024 | Remove React dependencies and old source        | Unassigned | Complete    | Removed React/Vite source, config, and root React dependencies           |
+| M-025 | Update README and contributor setup docs        | Unassigned | Complete    | README now documents Angular workflow, scripts, and deployment path       |
 
 Status values:
 

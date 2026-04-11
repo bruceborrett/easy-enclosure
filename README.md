@@ -11,17 +11,65 @@ EasyEnclosure is an open-source 3D modeling software tailored specifically for d
 - User-Friendly Interface
 - Real-Time 3D Preview
 - Export to STL Format
+- Save and load parameter presets as JSON
 
 ## Technology Stack
 
-Typescript, React, JSCad
+TypeScript, Angular, JSCAD
+
+## Development
+
+### Prerequisites
+
+- Node.js 20+
+- npm 10+
+
+### Install
+
+```bash
+npm install
+```
+
+### Run Locally
+
+```bash
+npm run dev
+```
+
+This starts the Angular app from `angular-app/` and synchronizes the UI version badge from the root `package.json` version.
+
+### Build
+
+```bash
+npm run build
+```
+
+### Test
+
+```bash
+npm test
+```
+
+or watch mode:
+
+```bash
+npm run test:watch
+```
+
+### Deploy to GitHub Pages
+
+```bash
+npm run deploy
+```
+
+Deployment publishes `angular-app/dist/angular-app/browser`.
 
 ## Contributions
 
-<a href="https://github.com/sponsors/bruceborrett" target="_blank"><img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86" height="50" width="217" ></a>
-<a href="https://www.buymeacoffee.com/bruceborrett" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="50" width="217" style="border-radius:8px;"></a>
+<a href="https://github.com/sponsors/bruceborrett" target="_blank"><img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%232f5d85" height="50" width="217"></a>
+<a href="https://www.buymeacoffee.com/bruceborrett" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-blue.png" alt="Buy Me A Coffee" height="50" width="217" style="border-radius:8px;"></a>
 
-If you find this software useful and would like to see further development please consider [donating](https://www.buymeacoffee.com/bruceborrett) or [sponsoring]() :pray:
+If you find this software useful and would like to see further development please consider [donating](https://www.buymeacoffee.com/bruceborrett) or [sponsoring](https://github.com/sponsors/bruceborrett).
 
 It is very time consuming and expensive to continuously test prints with all the various combinations of settings, so you can also help by printing with as many different settings as possible and reporting any issues you may find.
 
