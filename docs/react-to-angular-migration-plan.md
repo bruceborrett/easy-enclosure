@@ -223,33 +223,33 @@ Exit criteria:
 
 Use this table as the migration tracker.
 
-| ID    | Task                                            | Owner      | Status      | Notes                                                                    |
-| ----- | ----------------------------------------------- | ---------- | ----------- | ------------------------------------------------------------------------ |
-| M-001 | Bootstrap Angular workspace in `angular-app`    | Unassigned | Complete    | Done on 2026-04-07                                                       |
-| M-002 | Configure Angular base path for GitHub Pages    | Unassigned | Complete    | `baseHref` set to `/easy-enclosure/`                                     |
-| M-003 | Add Angular scripts to root package workflow    | Unassigned | Complete    | Added `ng:dev`, `ng:build`, `ng:build:ghpages`, `ng:test`                |
-| M-004 | Create signal-based enclosure state service     | Unassigned | Complete    | Added `EnclosureStateService` with signals and reset APIs                |
-| M-005 | Port params defaults and reset behaviors        | Unassigned | Complete    | Ported to `angular-app/src/app/core/params.ts`                           |
-| M-006 | Integrate enclosure geometry library in Angular | Unassigned | Complete    | Copied `src/lib/enclosure/*` to Angular core and added `@jscad/modeling` |
-| M-007 | Port renderer setup and animation lifecycle     | Unassigned | Complete    | Added `RendererComponent` with RAF loop and JSCAD render initialization  |
-| M-008 | Port pointer pan/zoom/rotate interactions       | Unassigned | Complete    | Ported pointer handlers and orbit controls interactions                  |
-| M-009 | Port dependency-diff model recompute logic      | Unassigned | Complete    | Ported param diff/dependency arrays and selective model recomputation    |
-| M-010 | Port STL export flow                            | Unassigned | Complete    | Added Angular tools export for lid/base/seal STL files                   |
-| M-011 | Port load/save JSON settings flow               | Unassigned | Complete    | Added JSON file import/export wired to `EnclosureStateService`           |
-| M-012 | Port tools modal UX                             | Unassigned | Complete    | Added export confirmation modal and tools overlay UI                     |
-| M-013 | Rebuild params accordion sections               | Unassigned | Complete    | Added full Angular params accordion component and shell integration      |
-| M-014 | Port holes dynamic array CRUD                   | Unassigned | Complete    | Ported add/remove/edit hole list with conditional fields                 |
-| M-015 | Port PCB mounts dynamic array CRUD              | Unassigned | Complete    | Ported add/remove/edit PCB mounts list                                   |
-| M-016 | Port internal walls dynamic array CRUD          | Unassigned | Complete    | Ported add/remove/edit internal walls list                               |
-| M-017 | Port waterproof and lid screw coupling rules    | Unassigned | Complete    | Ported bi-directional toggle coupling behavior                           |
-| M-018 | Port wall mount and insert settings behavior    | Unassigned | Complete    | Ported wall mount and lid insert settings controls                       |
-| M-019 | Add Angular unit tests for app shell            | Unassigned | Complete    | Added shell composition test in `angular-app/src/app/app.spec.ts`        |
-| M-020 | Add state service unit tests                    | Unassigned | Complete    | Added service coverage in `enclosure-state.service.spec.ts`              |
-| M-021 | Add params-to-renderer integration test         | Unassigned | Complete    | Added render-cycle integration spec in `renderer.component.spec.ts`      |
-| M-022 | Add tools workflow tests                        | Unassigned | Complete    | Added workflow tests in `tools.component.spec.ts`                        |
-| M-023 | Cut over build/deploy scripts to Angular        | Unassigned | Complete    | Root scripts now default to Angular and deploy targets Angular build     |
-| M-024 | Remove React dependencies and old source        | Unassigned | Complete    | Removed React/Vite source, config, and root React dependencies           |
-| M-025 | Update README and contributor setup docs        | Unassigned | Complete    | README now documents Angular workflow, scripts, and deployment path       |
+| ID    | Task                                            | Owner      | Status   | Notes                                                                    |
+| ----- | ----------------------------------------------- | ---------- | -------- | ------------------------------------------------------------------------ |
+| M-001 | Bootstrap Angular workspace in `angular-app`    | Unassigned | Complete | Done on 2026-04-07                                                       |
+| M-002 | Configure Angular base path for GitHub Pages    | Unassigned | Complete | `baseHref` set to `/easy-enclosure/`                                     |
+| M-003 | Add Angular scripts to root package workflow    | Unassigned | Complete | Added `ng:dev`, `ng:build`, `ng:build:ghpages`, `ng:test`                |
+| M-004 | Create signal-based enclosure state service     | Unassigned | Complete | Added `EnclosureStateService` with signals and reset APIs                |
+| M-005 | Port params defaults and reset behaviors        | Unassigned | Complete | Ported to `angular-app/src/app/core/params.ts`                           |
+| M-006 | Integrate enclosure geometry library in Angular | Unassigned | Complete | Copied `src/lib/enclosure/*` to Angular core and added `@jscad/modeling` |
+| M-007 | Port renderer setup and animation lifecycle     | Unassigned | Complete | Added `RendererComponent` with RAF loop and JSCAD render initialization  |
+| M-008 | Port pointer pan/zoom/rotate interactions       | Unassigned | Complete | Ported pointer handlers and orbit controls interactions                  |
+| M-009 | Port dependency-diff model recompute logic      | Unassigned | Complete | Ported param diff/dependency arrays and selective model recomputation    |
+| M-010 | Port STL export flow                            | Unassigned | Complete | Added Angular tools export for lid/base/seal STL files                   |
+| M-011 | Port load/save JSON settings flow               | Unassigned | Complete | Added JSON file import/export wired to `EnclosureStateService`           |
+| M-012 | Port tools modal UX                             | Unassigned | Complete | Added export confirmation modal and tools overlay UI                     |
+| M-013 | Rebuild params accordion sections               | Unassigned | Complete | Added full Angular params accordion component and shell integration      |
+| M-014 | Port holes dynamic array CRUD                   | Unassigned | Complete | Ported add/remove/edit hole list with conditional fields                 |
+| M-015 | Port PCB mounts dynamic array CRUD              | Unassigned | Complete | Ported add/remove/edit PCB mounts list                                   |
+| M-016 | Port internal walls dynamic array CRUD          | Unassigned | Complete | Ported add/remove/edit internal walls list                               |
+| M-017 | Port waterproof and lid screw coupling rules    | Unassigned | Complete | Ported bi-directional toggle coupling behavior                           |
+| M-018 | Port wall mount and insert settings behavior    | Unassigned | Complete | Ported wall mount and lid insert settings controls                       |
+| M-019 | Add Angular unit tests for app shell            | Unassigned | Complete | Added shell composition test in `angular-app/src/app/app.spec.ts`        |
+| M-020 | Add state service unit tests                    | Unassigned | Complete | Added service coverage in `enclosure-state.service.spec.ts`              |
+| M-021 | Add params-to-renderer integration test         | Unassigned | Complete | Added render-cycle integration spec in `renderer.component.spec.ts`      |
+| M-022 | Add tools workflow tests                        | Unassigned | Complete | Added workflow tests in `tools.component.spec.ts`                        |
+| M-023 | Cut over build/deploy scripts to Angular        | Unassigned | Complete | Root scripts now default to Angular and deploy targets Angular build     |
+| M-024 | Remove React dependencies and old source        | Unassigned | Complete | Removed React/Vite source, config, and root React dependencies           |
+| M-025 | Update README and contributor setup docs        | Unassigned | Complete | README now documents Angular workflow, scripts, and deployment path      |
 
 Status values:
 
