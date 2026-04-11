@@ -1,1 +1,18 @@
 <div id="jscad" #container></div>
+
+<aside id="dimension-info" aria-live="polite">
+  <p class="dimension-title">Inside Dimensions</p>
+  <p>
+    Wall to wall:
+    {{ formatMm(enclosureMeasurements().wallToWall.width) }} x
+    {{ formatMm(enclosureMeasurements().wallToWall.length) }}
+  </p>
+  <p>
+    Screw to screw:
+    @if (enclosureMeasurements().screwToScrew; as screwToScrew) {
+      {{ formatMm(screwToScrew.width) }} x {{ formatMm(screwToScrew.length) }}
+    } @else {
+      Not available (lid screws off)
+    }
+  </p>
+</aside>

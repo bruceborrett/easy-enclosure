@@ -2,11 +2,12 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  computed,
+  effect,
   ElementRef,
+  inject,
   OnDestroy,
   ViewChild,
-  effect,
-  inject,
 } from '@angular/core';
 import type { Geom3 } from '@jscad/modeling/src/geometries/types';
 import type { Vec3 } from '@jscad/modeling/src/maths/types';
@@ -105,6 +106,29 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
 
   private readonly state = inject(EnclosureStateService);
 
+  readonly enclosureMeasurements = computed(() => {
+    const params = this.state.params();
+    const innerWallThickness = this.getInnerWallThickness(params);
+    const wallToWall = {
+      width: Math.max(0, params.width - innerWallThickness * 2),
+      length: Math.max(0, params.length - innerWallThickness * 2),
+    };
+
+    let screwToScrew: { width: number; length: number } | null = null;
+    if (params.lidScrews) {
+      const offset = this.getScrewOffset(params);
+      screwToScrew = {
+        width: Math.max(0, params.width - offset * 2),
+        length: Math.max(0, params.length - offset * 2),
+      };
+    }
+
+    return {
+      wallToWall,
+      screwToScrew,
+    };
+  });
+
   private readonly perspectiveCamera = cameras.perspective;
   private readonly orbitControls = controls.orbit;
 
@@ -201,8 +225,25 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
     this.zoomDelta += event.deltaY;
   }
 
+  formatMm(value: number): string {
+    return `${value.toFixed(2)} mm`;
+  }
+
   private checkDeps(diff: string[], deps: string[]): boolean {
     return diff.some((item) => deps.includes(item));
+  }
+
+  private getInnerWallThickness(params: Params): number {
+    if (!params.waterProof) {
+      return params.wall;
+    }
+
+    return params.wall * 2 + params.insertClearance * 2 + params.insertThickness;
+  }
+
+  private getScrewOffset(params: Params): number {
+    const diameterMax = Math.max(params.baseLidScrewDiameter, params.lidScrewDiameter);
+    return diameterMax / 2 + params.cornerRadius / 4 + params.wall / 2;
   }
 
   private diffParams(previous: Params, current: Params): string[] {

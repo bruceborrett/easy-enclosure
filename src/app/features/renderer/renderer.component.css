@@ -4,3 +4,46 @@
   width: 100vw;
   height: 100vh;
 }
+
+#dimension-info {
+  position: fixed;
+  top: 12px;
+  left: 82px;
+  z-index: 5;
+  padding: 10px 12px;
+  border: 1px solid var(--surface-border);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  color: var(--text-primary);
+  font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+  font-size: 12px;
+  line-height: 1.35;
+  backdrop-filter: blur(6px);
+  pointer-events: none;
+}
+
+#dimension-info p {
+  margin: 0;
+}
+
+#dimension-info p + p {
+  margin-top: 4px;
+}
+
+#dimension-info .dimension-title {
+  margin-bottom: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 840px) {
+  #dimension-info {
+    top: 10px;
+    left: 10px;
+    max-width: calc(100vw - 20px);
+  }
+}
