@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Manrope:wght@500;600;700&display=swap');
+
+:root {
+  --bg-canvas: #ecf2f8;
+  --bg-atmosphere-a: rgba(117, 156, 201, 0.24);
+  --bg-atmosphere-b: rgba(139, 169, 194, 0.2);
+  --surface: rgba(255, 255, 255, 0.84);
+  --surface-strong: rgba(255, 255, 255, 0.96);
+  --surface-border: rgba(108, 130, 156, 0.3);
+  --text-primary: #1f2f42;
+  --text-secondary: #5c728a;
+  --ui-primary: #2f5d85;
+  --ui-primary-hover: #284f71;
+  --ui-primary-active: #1f3f5c;
+  --ui-primary-soft: #e8eff6;
+  --ui-primary-soft-hover: #dce7f1;
+  --focus-ring: rgba(47, 93, 133, 0.28);
+  --shadow-soft: 0 12px 30px rgba(38, 65, 95, 0.16);
+  --radius-lg: 14px;
+  --radius-md: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  color: var(--text-primary);
+  font-family: 'Manrope', 'IBM Plex Sans', 'Segoe UI', sans-serif;
+  letter-spacing: 0.01em;
+  background:
+    radial-gradient(600px 340px at 10% 8%, var(--bg-atmosphere-a), transparent 72%),
+    radial-gradient(560px 360px at 88% 92%, var(--bg-atmosphere-b), transparent 76%),
+    var(--bg-canvas);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+button {
+  border: 1px solid rgba(36, 79, 114, 0.22);
+  border-radius: var(--radius-md);
+  background-color: var(--ui-primary);
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.015em;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+button:hover:not(:disabled) {
+  background-color: var(--ui-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(35, 71, 104, 0.22);
+}
+
+button:active:not(:disabled) {
+  background-color: var(--ui-primary-active);
+  transform: translateY(0);
+}
+
+button:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.hidden {
+  display: none;
+}

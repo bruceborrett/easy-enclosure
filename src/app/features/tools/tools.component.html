@@ -1,0 +1,35 @@
+<div id="tools">
+  <button
+    class="tool-button"
+    type="button"
+    title="Load settings from file"
+    (click)="openFilePicker()"
+  >
+    Load
+  </button>
+  <button
+    class="tool-button"
+    type="button"
+    title="Save settings to file"
+    (click)="saveParamsFile()"
+  >
+    Save
+  </button>
+  <button class="tool-button" type="button" title="Export to STL" (click)="openExportModal()">
+    STL
+  </button>
+
+  <input #fileInput type="file" accept=".json" class="hidden" (change)="loadParamsFile($event)" />
+</div>
+
+<div id="modal" [class.open]="isExportModalOpen()">
+  <div id="modal-content">
+    <button id="close" type="button" (click)="closeExportModal()" aria-label="Close export modal">
+      &times;
+    </button>
+    <p>
+      Multiple STL files will be exported, one for each entity (lid, base, waterproof seal etc).
+    </p>
+    <button id="export" type="button" (click)="exportStl()">Export</button>
+  </div>
+</div>
