@@ -87,17 +87,17 @@ angular-app/
 
 ## File Mapping
 
-- `src/index.tsx` -> `angular-app/src/main.ts`, `angular-app/src/app/app.component.ts`
-- `src/ui/App.tsx` -> `angular-app/src/app/app.component.ts`
-- `src/ui/Renderer.tsx` -> `angular-app/src/app/features/renderer/renderer.component.ts`
-- `src/ui/ParamForm.tsx` -> `angular-app/src/app/features/params/params-form.component.ts`
-- `src/ui/Tools.tsx` -> `angular-app/src/app/features/tools/tools.component.ts`
-- `src/ui/LoadingIndicator.tsx` -> `angular-app/src/app/shared/loading-indicator/loading-indicator.component.ts`
-- `src/ui/Funding.tsx` -> `angular-app/src/app/shared/funding/funding.component.ts`
-- `src/lib/params.ts` -> `angular-app/src/app/core/state/enclosure-state.service.ts`
-- `src/lib/enclosure/*` -> `angular-app/src/app/core/enclosure/*` (or imported from existing location)
-- `src/ui/css/*.css` -> `angular-app/src/styles.css` and feature/shared component stylesheets
-- `src/ui/App.test.tsx` -> `angular-app/src/app/app.component.spec.ts`
+- `src/index.tsx` -> `src/main.ts`, `src/app/app.ts`
+- `src/ui/App.tsx` -> `src/app/app.ts`
+- `src/ui/Renderer.tsx` -> `src/app/features/renderer/renderer.component.ts`
+- `src/ui/ParamForm.tsx` -> `src/app/features/params/params-form.component.ts`
+- `src/ui/Tools.tsx` -> `src/app/features/tools/tools.component.ts`
+- `src/ui/LoadingIndicator.tsx` -> removed in Angular shell
+- `src/ui/Funding.tsx` -> `src/app/shared/funding/funding.component.ts`
+- `src/lib/params.ts` -> `src/app/core/params.ts` and `src/app/core/state/enclosure-state.service.ts`
+- `src/lib/enclosure/*` -> `src/app/core/enclosure/*`
+- `src/ui/css/*.css` -> `src/styles.css` and feature/shared component stylesheets
+- `src/ui/App.test.tsx` -> `src/app/app.spec.ts`
 - `vite.config.ts` / React scripts -> Angular CLI config and scripts
 
 ## Phase Plan
@@ -108,7 +108,7 @@ Objective: Add Angular workspace and verify basic dev/build/test flow.
 
 Tasks:
 
-- Generate Angular standalone app in `angular-app`.
+- Generate Angular standalone app and keep workspace at repository root.
 - Configure base path for GitHub Pages compatibility.
 - Add scripts for Angular dev/build/test.
 
@@ -225,11 +225,11 @@ Use this table as the migration tracker.
 
 | ID    | Task                                            | Owner      | Status   | Notes                                                                    |
 | ----- | ----------------------------------------------- | ---------- | -------- | ------------------------------------------------------------------------ |
-| M-001 | Bootstrap Angular workspace in `angular-app`    | Unassigned | Complete | Done on 2026-04-07                                                       |
+| M-001 | Bootstrap Angular workspace in `angular-app`    | Unassigned | Complete | Done on 2026-04-07, later flattened into repository root                 |
 | M-002 | Configure Angular base path for GitHub Pages    | Unassigned | Complete | `baseHref` set to `/easy-enclosure/`                                     |
-| M-003 | Add Angular scripts to root package workflow    | Unassigned | Complete | Added `ng:dev`, `ng:build`, `ng:build:ghpages`, `ng:test`                |
+| M-003 | Add Angular scripts to root package workflow    | Unassigned | Complete | Added root `dev`, `build`, `test`, and deploy scripts                    |
 | M-004 | Create signal-based enclosure state service     | Unassigned | Complete | Added `EnclosureStateService` with signals and reset APIs                |
-| M-005 | Port params defaults and reset behaviors        | Unassigned | Complete | Ported to `angular-app/src/app/core/params.ts`                           |
+| M-005 | Port params defaults and reset behaviors        | Unassigned | Complete | Ported to `src/app/core/params.ts`                                       |
 | M-006 | Integrate enclosure geometry library in Angular | Unassigned | Complete | Copied `src/lib/enclosure/*` to Angular core and added `@jscad/modeling` |
 | M-007 | Port renderer setup and animation lifecycle     | Unassigned | Complete | Added `RendererComponent` with RAF loop and JSCAD render initialization  |
 | M-008 | Port pointer pan/zoom/rotate interactions       | Unassigned | Complete | Ported pointer handlers and orbit controls interactions                  |

@@ -1,8 +1,8 @@
-import { translate } from "@jscad/modeling/src/operations/transforms";
-import { Params, PCBMount } from "../params";
-import { cylinder } from "@jscad/modeling/src/primitives";
-import { subtract, union } from "@jscad/modeling/src/operations/booleans";
-import { Geom3 } from "@jscad/modeling/src/geometries/types";
+import { translate } from '@jscad/modeling/src/operations/transforms';
+import { Params, PCBMount } from '../params';
+import { cylinder } from '@jscad/modeling/src/primitives';
+import { subtract, union } from '@jscad/modeling/src/operations/booleans';
+import { Geom3 } from '@jscad/modeling/src/geometries/types';
 
 export const pcbMount = (mountParams: PCBMount) => {
   return subtract(
@@ -26,12 +26,7 @@ export const pcbMounts = (params: Params) => {
 
   pcbMounts.forEach((mount) => {
     const z = mount.height / 2 + floor;
-    mounts.push(
-      translate(
-        [width / 2 - mount.x, length / 2 - mount.y, z],
-        pcbMount(mount),
-      ),
-    );
+    mounts.push(translate([width / 2 - mount.x, length / 2 - mount.y, z], pcbMount(mount)));
   });
 
   return union(mounts);

@@ -1,12 +1,12 @@
-import { booleans } from "@jscad/modeling";
-import { Params } from "../params";
+import { booleans } from '@jscad/modeling';
+import { Params } from '../params';
 
-import { holes } from "./holes";
-import { flanges } from "./wallmount";
-import { clover, hollowRoundCube, roundedCube } from "./utils";
-import { waterProofSealCutout } from "./waterproofseal";
-import { screws } from "./screws";
-import { translate } from "@jscad/modeling/src/operations/transforms";
+import { holes } from './holes';
+import { flanges } from './wallmount';
+import { clover, hollowRoundCube, roundedCube } from './utils';
+import { waterProofSealCutout } from './waterproofseal';
+import { screws } from './screws';
+import { translate } from '@jscad/modeling/src/operations/transforms';
 
 const { subtract, union } = booleans;
 
@@ -49,9 +49,7 @@ export const base = (params: Params) => {
       ),
     );
     let screwOffset = diameterMax / 2 + cornerRadius / 4 + wall / 2;
-    subtracts.push(
-      screws(length, width, height, screwOffset, baseLidScrewDiameter),
-    );
+    subtracts.push(screws(length, width, height, screwOffset, baseLidScrewDiameter));
   } else {
     body.push(hollowRoundCube(width, length, height, _wall, cornerRadius));
   }
@@ -65,7 +63,7 @@ export const base = (params: Params) => {
   }
 
   const holeCount = params.holes.filter((v, i) => {
-    return ["front", "back", "left", "right", "bottom"].includes(v.surface);
+    return ['front', 'back', 'left', 'right', 'bottom'].includes(v.surface);
   }).length;
 
   if (holeCount > 0) {

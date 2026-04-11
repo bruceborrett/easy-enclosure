@@ -1,8 +1,8 @@
-import { Params } from "../params";
+import { Params } from '../params';
 
-import { cloverFrame } from "./utils";
+import { cloverFrame } from './utils';
 
-import { translate } from "@jscad/modeling/src/operations/transforms";
+import { translate } from '@jscad/modeling/src/operations/transforms';
 
 export const waterProofSealCutout = (params: Params) => {
   const {

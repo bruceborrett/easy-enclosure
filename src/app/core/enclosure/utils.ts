@@ -1,16 +1,10 @@
-import { subtract } from "@jscad/modeling/src/operations/booleans";
-import { hull } from "@jscad/modeling/src/operations/hulls";
-import { rotateZ, translate } from "@jscad/modeling/src/operations/transforms";
-import { cuboid, cylinder } from "@jscad/modeling/src/primitives";
-import { degToRad } from "@jscad/modeling/src/utils";
+import { subtract } from '@jscad/modeling/src/operations/booleans';
+import { hull } from '@jscad/modeling/src/operations/hulls';
+import { rotateZ, translate } from '@jscad/modeling/src/operations/transforms';
+import { cuboid, cylinder } from '@jscad/modeling/src/primitives';
+import { degToRad } from '@jscad/modeling/src/utils';
 
-export const roundedCube = (
-  l: number,
-  w: number,
-  h: number,
-  r = 8,
-  s = 100,
-) => {
+export const roundedCube = (l: number, w: number, h: number, r = 8, s = 100) => {
   const c = cylinder({
     height: h,
     radius: r,
@@ -26,27 +20,13 @@ export const roundedCube = (
   );
 };
 
-export const roundedFrame = (
-  l: number,
-  w: number,
-  h: number,
-  t: number,
-  r = 8,
-  s = 100,
-) => {
+export const roundedFrame = (l: number, w: number, h: number, t: number, r = 8, s = 100) => {
   const outer = roundedCube(l, w, h, r, s);
   const inner = roundedCube(l - t * 2, w - t * 2, h, r, s);
   return subtract(outer, translate([t, t, 0], inner));
 };
 
-export const hollowRoundCube = (
-  l: number,
-  w: number,
-  h: number,
-  t: number,
-  r = 8,
-  s = 100,
-) => {
+export const hollowRoundCube = (l: number, w: number, h: number, t: number, r = 8, s = 100) => {
   const outer = roundedCube(l, w, h, r, s);
   const inner = roundedCube(l - t * 2, w - t * 2, h, r, s);
   return subtract(outer, translate([t, t, t], inner));
@@ -73,38 +53,16 @@ export const clover = (l: number, w: number, h: number, r = 8, s = 100) => {
     translate([0, r * 2, 0], rotateZ(degToRad(0), roundedCorner(r, h * 2, s))),
     translate([r * 2, 0, 0], rotateZ(degToRad(0), roundedCorner(r, h * 2, s))),
     translate([l, r * 2, 0], rotateZ(degToRad(90), roundedCorner(r, h * 2, s))),
-    translate(
-      [l - r * 2, 0, 0],
-      rotateZ(degToRad(90), roundedCorner(r, h * 2, s)),
-    ),
-    translate(
-      [l, w - r * 2, 0],
-      rotateZ(degToRad(180), roundedCorner(r, h * 2, s)),
-    ),
-    translate(
-      [l - r * 2, w, 0],
-      rotateZ(degToRad(180), roundedCorner(r, h * 2, s)),
-    ),
-    translate(
-      [0, w - r * 2, 0],
-      rotateZ(degToRad(270), roundedCorner(r, h * 2, s)),
-    ),
-    translate(
-      [r * 2, w, 0],
-      rotateZ(degToRad(270), roundedCorner(r, h * 2, s)),
-    ),
+    translate([l - r * 2, 0, 0], rotateZ(degToRad(90), roundedCorner(r, h * 2, s))),
+    translate([l, w - r * 2, 0], rotateZ(degToRad(180), roundedCorner(r, h * 2, s))),
+    translate([l - r * 2, w, 0], rotateZ(degToRad(180), roundedCorner(r, h * 2, s))),
+    translate([0, w - r * 2, 0], rotateZ(degToRad(270), roundedCorner(r, h * 2, s))),
+    translate([r * 2, w, 0], rotateZ(degToRad(270), roundedCorner(r, h * 2, s))),
   );
   return rounded;
 };
 
-export const cloverFrame = (
-  l: number,
-  w: number,
-  h: number,
-  t: number,
-  r = 8,
-  s = 100,
-) => {
+export const cloverFrame = (l: number, w: number, h: number, t: number, r = 8, s = 100) => {
   const outer = clover(l, w, h, r, s);
   const inner = clover(l - t * 2, w - t * 2, h, r, s);
   return subtract(outer, translate([t, t, 0], inner));

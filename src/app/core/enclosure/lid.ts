@@ -1,10 +1,10 @@
-import { booleans, transforms } from "@jscad/modeling";
-import { cloverFrame, roundedCube, roundedFrame } from "./utils";
+import { booleans, transforms } from '@jscad/modeling';
+import { cloverFrame, roundedCube, roundedFrame } from './utils';
 
-import { Params } from "../params";
-import { screws } from "./screws";
-import { subtract } from "@jscad/modeling/src/operations/booleans";
-import { holes } from "./holes";
+import { Params } from '../params';
+import { screws } from './screws';
+import { subtract } from '@jscad/modeling/src/operations/booleans';
+import { holes } from './holes';
 
 const { union } = booleans;
 const { translate } = transforms;
@@ -43,9 +43,7 @@ export const lid = (params: Params) => {
       ),
     );
     let screwOffset = diameterMax / 2 + cornerRadius / 4 + wall / 2;
-    subtracts.push(
-      screws(length, width, roof * 2, screwOffset, lidScrewDiameter),
-    );
+    subtracts.push(screws(length, width, roof * 2, screwOffset, lidScrewDiameter));
   } else {
     entities.push(
       translate(
@@ -62,11 +60,11 @@ export const lid = (params: Params) => {
   }
 
   const holeCount = params.holes.filter((v, i) => {
-    return v.surface === "top";
+    return v.surface === 'top';
   }).length;
 
   if (holeCount > 0) {
-    subtracts.push(holes(params, ["top"]));
+    subtracts.push(holes(params, ['top']));
   }
 
   if (subtracts.length > 0) {
