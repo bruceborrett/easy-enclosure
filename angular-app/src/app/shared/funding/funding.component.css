@@ -1,0 +1,47 @@
+:host {
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  z-index: 6;
+}
+
+.funding {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid var(--surface-border);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(6px);
+}
+
+.funding a {
+  display: inline-flex;
+  align-items: center;
+}
+
+.funding img {
+  height: 28px;
+  width: auto;
+  border-radius: 6px;
+}
+
+.github-stars {
+  border: 0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+@media (max-width: 840px) {
+  :host {
+    left: 10px;
+    bottom: 64px;
+  }
+
+  .funding {
+    flex-wrap: wrap;
+    max-width: calc(100vw - 20px);
+  }
+}

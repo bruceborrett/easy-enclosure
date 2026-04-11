@@ -1,6 +1,6 @@
 {
   "name": "easy-enclosure",
-  "version": "0.1.99",
+  "version": "0.1.100",
   "private": true,
   "homepage": "https://bruceborrett.github.io/easy-enclosure/",
   "dependencies": {
@@ -31,9 +31,10 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "dev": "VITE_APP_VERSION=$npm_package_version vite",
-    "ng:dev": "npm --prefix angular-app run start",
-    "ng:build": "npm --prefix angular-app run build",
-    "ng:build:ghpages": "npm --prefix angular-app run build",
+    "ng:sync-version": "node -e \"const fs=require('node:fs');const v=process.env.npm_package_version||'dev';fs.writeFileSync('angular-app/src/app/app-version.ts', \\\"export const APP_VERSION = '\\\"+v+\\\"';\\\\n\\\");\"",
+    "ng:dev": "npm run ng:sync-version && npm --prefix angular-app run start",
+    "ng:build": "npm run ng:sync-version && npm --prefix angular-app run build",
+    "ng:build:ghpages": "npm run ng:sync-version && npm --prefix angular-app run build",
     "ng:test": "npm --prefix angular-app run test --",
     "start": "npm run dev",
     "build": "VITE_APP_VERSION=$npm_package_version vite build",
