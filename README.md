@@ -36,7 +36,7 @@ npm install
 npm run dev
 ```
 
-This starts the Angular app from `angular-app/` and synchronizes the UI version badge from the root `package.json` version.
+This starts the Angular app from the repository root and synchronizes the UI version badge from `package.json`.
 
 ### Build
 
@@ -62,7 +62,7 @@ npm run test:watch
 npm run deploy
 ```
 
-Deployment publishes `angular-app/dist/angular-app/browser`.
+Deployment publishes `dist/angular-app/browser`.
 
 ## Contributions
 

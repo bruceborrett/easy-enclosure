@@ -7,12 +7,31 @@
 
 # testing
 /coverage
+/test-out
 
 # production
 /dist
+/tmp
+/out-tsc
+/bazel-out
 
 # misc
 .DS_Store
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.history/*
+/.angular/cache
+.sass-cache/
+/connect.lock
+/libpeerconnection.log
+testem.log
+/typings
+__screenshots__/
 .env.local
 .env.development.local
 .env.test.local

@@ -1,29 +1,66 @@
 {
   "name": "easy-enclosure",
-  "version": "0.1.103",
+  "version": "0.1.104",
   "private": true,
   "homepage": "https://bruceborrett.github.io/easy-enclosure/",
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
   "scripts": {
+    "ng": "ng",
+    "ng:sync-version": "node -e \"const fs=require('node:fs');const v=process.env.npm_package_version||'dev';fs.writeFileSync('src/app/app-version.ts', \\\"export const APP_VERSION = '\\\"+v+\\\"';\\\\n\\\");\"",
+    "dev": "npm run ng:sync-version && ng serve",
+    "start": "npm run dev",
+    "build": "npm run ng:sync-version && ng build",
+    "build:watch": "ng build --watch --configuration development",
+    "test": "ng test --watch=false --browsers=ChromeHeadless",
+    "test:watch": "ng test",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d angular-app/dist/angular-app/browser",
-    "ng:sync-version": "node -e \"const fs=require('node:fs');const v=process.env.npm_package_version||'dev';fs.writeFileSync('angular-app/src/app/app-version.ts', \\\"export const APP_VERSION = '\\\"+v+\\\"';\\\\n\\\");\"",
-    "ng:dev": "npm run ng:sync-version && npm --prefix angular-app run start",
-    "ng:build": "npm run ng:sync-version && npm --prefix angular-app run build",
-    "ng:build:ghpages": "npm run ng:sync-version && npm --prefix angular-app run build",
-    "ng:test": "npm --prefix angular-app run test --",
-    "dev": "npm run ng:dev",
-    "start": "npm run ng:dev",
-    "build": "npm run ng:build",
+    "deploy": "gh-pages -d dist/angular-app/browser",
     "prepare": "husky",
     "bump:version": "npm version patch --no-git-tag-version",
-    "test": "npm run ng:test -- --watch=false --browsers=ChromeHeadless",
-    "test:watch": "npm run ng:test",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
+  "dependencies": {
+    "@angular/common": "^20.3.0",
+    "@angular/compiler": "^20.3.0",
+    "@angular/core": "^20.3.0",
+    "@angular/forms": "^20.3.0",
+    "@angular/platform-browser": "^20.3.0",
+    "@angular/router": "^20.3.0",
+    "@jscad/modeling": "^2.13.0",
+    "@jscad/regl-renderer": "^2.6.15",
+    "@jscad/stl-serializer": "^2.1.23",
+    "file-saver": "^2.0.5",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.15.0"
+  },
   "devDependencies": {
+    "@angular/build": "^20.3.22",
+    "@angular/cli": "^20.3.22",
+    "@angular/compiler-cli": "^20.3.0",
+    "@types/file-saver": "^2.0.7",
+    "@types/jasmine": "~5.1.0",
     "gh-pages": "^5.0.0",
     "husky": "^9.1.7",
-    "prettier": "^3.6.2"
+    "jasmine-core": "~5.9.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "prettier": "^3.6.2",
+    "typescript": "~5.9.2"
   }
 }
