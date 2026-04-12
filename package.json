@@ -1,6 +1,6 @@
 {
   "name": "easy-enclosure",
-  "version": "0.1.111",
+  "version": "1.0.1",
   "private": true,
   "homepage": "https://bruceborrett.github.io/easy-enclosure/",
   "prettier": {
@@ -17,7 +17,7 @@
   },
   "scripts": {
     "ng": "ng",
-    "ng:sync-version": "node -e \"const fs=require('node:fs');const v=process.env.npm_package_version||'dev';fs.writeFileSync('src/app/app-version.ts', \\\"export const APP_VERSION = '\\\"+v+\\\"';\\\\n\\\");\"",
+    "ng:sync-version": "node scripts/sync-version.js",
     "dev": "npm run ng:sync-version && ng serve",
     "start": "npm run dev",
     "build": "npm run ng:sync-version && ng build",
@@ -27,7 +27,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist/angular-app/browser",
     "prepare": "husky",
-    "bump:version": "npm version patch --no-git-tag-version",
+    "bump:version": "node scripts/bump-version.js",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
