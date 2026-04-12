@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
 
 import type { Hole, InternalWall, PCBMount, Params } from '../../core/params';
 import { EnclosureStateService } from '../../core/state/enclosure-state.service';
@@ -14,6 +14,7 @@ type Surface = 'top' | 'bottom' | 'left' | 'right' | 'front' | 'back';
 export class ParamsFormComponent {
   private readonly state = inject(EnclosureStateService);
 
+  readonly compact = input(false);
   readonly activeTab = signal<number | null>(null);
 
   readonly surfaces: Surface[] = ['front', 'right', 'back', 'left', 'top', 'bottom'];

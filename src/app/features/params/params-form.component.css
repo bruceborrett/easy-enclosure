@@ -18,6 +18,21 @@
   animation: panel-in 280ms ease-out;
 }
 
+:host-context(.ui-sidebar) #param-form {
+  position: static;
+  top: auto;
+  right: auto;
+  width: 100%;
+  max-height: none;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  backdrop-filter: none;
+  animation: none;
+}
+
 #param-form::-webkit-scrollbar {
   display: none;
 }
@@ -75,6 +90,33 @@ label {
   margin-bottom: 10px;
   width: 50%;
   vertical-align: top;
+}
+
+.compact-params {
+  padding: 2px 0;
+}
+
+.compact-title {
+  margin: 0 0 10px;
+  color: var(--text-secondary);
+  font-family: 'Manrope', 'IBM Plex Sans', 'Segoe UI', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.compact-params .input-group {
+  width: 50%;
+}
+
+.compact-params .checkbox-group {
+  width: 100%;
+}
+
+.compact-params .checkbox-group label {
+  display: inline-block;
+  margin-top: 3px;
 }
 
 .accordian {
@@ -175,6 +217,14 @@ select:focus-visible {
     width: auto;
     max-height: 56vh;
     border-radius: 16px;
+  }
+
+  :host-context(.ui-sidebar) #param-form {
+    right: auto;
+    left: auto;
+    width: 100%;
+    max-height: none;
+    border-radius: 0;
   }
 }
 
