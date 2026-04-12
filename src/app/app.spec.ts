@@ -5,14 +5,8 @@ import { App } from './app';
 @Component({ selector: 'app-renderer', template: '' })
 class MockRendererComponent {}
 
-@Component({ selector: 'app-params-form', template: '' })
-class MockParamsFormComponent {}
-
-@Component({ selector: 'app-tools', template: '' })
-class MockToolsComponent {}
-
-@Component({ selector: 'app-funding', template: '' })
-class MockFundingComponent {}
+@Component({ selector: 'app-sidebar', template: '' })
+class MockSidebarComponent {}
 
 describe('App', () => {
   beforeEach(async () => {
@@ -21,12 +15,7 @@ describe('App', () => {
     })
       .overrideComponent(App, {
         set: {
-          imports: [
-            MockRendererComponent,
-            MockParamsFormComponent,
-            MockToolsComponent,
-            MockFundingComponent,
-          ],
+          imports: [MockRendererComponent, MockSidebarComponent],
         },
       })
       .compileComponents();
@@ -44,8 +33,6 @@ describe('App', () => {
 
     const host = fixture.nativeElement as HTMLElement;
     expect(host.querySelector('app-renderer')).not.toBeNull();
-    expect(host.querySelector('app-params-form')).not.toBeNull();
-    expect(host.querySelector('app-tools')).not.toBeNull();
-    expect(host.querySelector('app-funding')).not.toBeNull();
+    expect(host.querySelector('app-sidebar')).not.toBeNull();
   });
 });
