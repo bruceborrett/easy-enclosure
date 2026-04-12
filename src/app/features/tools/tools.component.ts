@@ -14,7 +14,7 @@ import { saveAs } from 'file-saver';
 import { base } from '../../core/enclosure/base';
 import { internalWalls } from '../../core/enclosure/internalwalls';
 import { lid } from '../../core/enclosure/lid';
-import { pcbMounts } from '../../core/enclosure/pcbmount';
+import { pcbMountsOnBase, pcbMountsOnLid } from '../../core/enclosure/pcbmount';
 import { waterProofSeal } from '../../core/enclosure/waterproofseal';
 import type { Params } from '../../core/params';
 import { EnclosureStateService } from '../../core/state/enclosure-state.service';
@@ -74,13 +74,17 @@ export class ToolsComponent {
   exportStl(): void {
     const tsStr = this.formattedTimestamp();
     const currentParams = this.state.params();
+    const lidMounts = pcbMountsOnLid(currentParams);
 
-    this.exportGeometry(`enclosure-lid-${tsStr}`, lid(currentParams));
+    const lidGeometry = lidMounts ? union([lid(currentParams), lidMounts]) : lid(currentParams);
+
+    this.exportGeometry(`enclosure-lid-${tsStr}`, lidGeometry);
 
     const baseParts: Geom3[] = [base(currentParams)];
+    const baseMounts = pcbMountsOnBase(currentParams);
 
-    if (currentParams.pcbMounts.length > 0) {
-      baseParts.push(pcbMounts(currentParams));
+    if (baseMounts) {
+      baseParts.push(baseMounts);
     }
 
     if (currentParams.internalWalls.length > 0) {

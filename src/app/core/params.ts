@@ -11,6 +11,7 @@ export type Hole = {
 };
 
 export type PCBMount = {
+  surface: Surface;
   x: number;
   y: number;
   height: number;
@@ -117,6 +118,7 @@ export const DEFAULT_PARAMS: Params = {
   ],
   pcbMounts: [
     {
+      surface: 'bottom',
       x: 30,
       y: 24,
       height: 5,
@@ -124,6 +126,7 @@ export const DEFAULT_PARAMS: Params = {
       screwDiameter: 2,
     },
     {
+      surface: 'bottom',
       x: -30,
       y: 24,
       height: 5,
@@ -131,6 +134,7 @@ export const DEFAULT_PARAMS: Params = {
       screwDiameter: 2,
     },
     {
+      surface: 'bottom',
       x: -30,
       y: -24,
       height: 5,
@@ -138,6 +142,7 @@ export const DEFAULT_PARAMS: Params = {
       screwDiameter: 2,
     },
     {
+      surface: 'bottom',
       x: 30,
       y: -24,
       height: 5,

@@ -313,6 +313,19 @@
             </p>
 
             <div class="input-group">
+              <label>Surface</label>
+              <select
+                [value]="mount.surface || 'bottom'"
+                (change)="updatePcbMount($index, { surface: $any($event.target).value })"
+              >
+                @for (surface of surfaces; track surface) {
+                  <option [value]="surface">
+                    {{ surface[0].toUpperCase() + surface.slice(1) }}
+                  </option>
+                }
+              </select>
+            </div>
+            <div class="input-group">
               <label>X</label>
               <input
                 type="number"

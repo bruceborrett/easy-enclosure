@@ -52,6 +52,20 @@ describe('ParamsFormComponent', () => {
     expect(state.params().holes.length).toBe(initialCount);
   });
 
+  it('supports pcb mount surface updates', () => {
+    const initialCount = state.params().pcbMounts.length;
+
+    component.addPcbMount();
+    expect(state.params().pcbMounts.length).toBe(initialCount + 1);
+    expect(state.params().pcbMounts[initialCount].surface).toBe('bottom');
+
+    component.updatePcbMount(initialCount, { surface: 'left' });
+    expect(state.params().pcbMounts[initialCount].surface).toBe('left');
+
+    component.removePcbMount(initialCount);
+    expect(state.params().pcbMounts.length).toBe(initialCount);
+  });
+
   it('applies waterproof and lid screw coupling rules', () => {
     component.onWaterproofChange(false);
     expect(state.params().waterProof).toBeFalse();

@@ -24,7 +24,7 @@ import type { Entity } from '@jscad/regl-renderer/types/geometry-utils-V2/entity
 import { base } from '../../core/enclosure/base';
 import { internalWalls } from '../../core/enclosure/internalwalls';
 import { lid } from '../../core/enclosure/lid';
-import { pcbMounts } from '../../core/enclosure/pcbmount';
+import { pcbMountsOnBase, pcbMountsOnLid } from '../../core/enclosure/pcbmount';
 import { waterProofSeal } from '../../core/enclosure/waterproofseal';
 import type { Params } from '../../core/params';
 import { EnclosureStateService } from '../../core/state/enclosure-state.service';
@@ -78,7 +78,18 @@ const sealDeps = [
   'baseLidScrewDiameter',
   'lidScrews',
 ];
-const mountDeps = ['pcbMounts', 'waterProof', 'wall', 'floor', 'height'];
+const mountDeps = [
+  'pcbMounts',
+  'waterProof',
+  'wall',
+  'floor',
+  'height',
+  'roof',
+  'length',
+  'width',
+  'insertThickness',
+  'insertClearance',
+];
 const internalWallDeps = ['internalWalls', 'length', 'width', 'waterProof', 'floor'];
 
 type RenderOptions = {
@@ -352,10 +363,28 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
     }
 
     if (this.checkDeps(diff, mountDeps) && pcbMountParams.length > 0) {
-      mountsPos = waterProof
+      const baseMountsPos: Vec3 = waterProof
         ? [-width / 2, -length / 2, 0]
         : [-(width + SPACING / 2), -length / 2, 0];
-      this.mountsModel = translate(mountsPos, pcbMounts(params));
+
+      const lidMountsPos: Vec3 = waterProof
+        ? [width / 2 + SPACING, -length / 2, 0]
+        : [SPACING / 2, -length / 2, 0];
+
+      const mountParts: Geom3[] = [];
+      const baseMounts = pcbMountsOnBase(params);
+      const lidMounts = pcbMountsOnLid(params);
+
+      if (baseMounts) {
+        mountParts.push(translate(baseMountsPos, baseMounts));
+      }
+
+      if (lidMounts) {
+        mountParts.push(translate(lidMountsPos, lidMounts));
+      }
+
+      this.mountsModel =
+        mountParts.length > 0 ? (mountParts.length > 1 ? union(mountParts) : mountParts[0]) : null;
     }
 
     if (this.checkDeps(diff, internalWallDeps) && internalWallParams.length > 0) {

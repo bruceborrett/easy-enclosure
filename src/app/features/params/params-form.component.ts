@@ -75,6 +75,7 @@ export class ParamsFormComponent {
   addPcbMount(): void {
     const current = this.params();
     const next: PCBMount = {
+      surface: 'bottom',
       x: 0,
       y: 0,
       height: 5,
