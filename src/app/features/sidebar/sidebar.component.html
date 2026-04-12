@@ -1,25 +1,37 @@
 <aside
-  class="ui-sidebar"
-  [class.closed]="!sidebarOpen()"
-  [class.side-left]="sidebarSide() === 'left'"
-  [class.side-right]="sidebarSide() === 'right'"
+  class="ui-sidebar fixed top-3 z-20 max-h-[calc(100vh-1.5rem)] overflow-hidden rounded-2xl border border-slate-300/70 bg-white/80 shadow-[0_22px_55px_rgba(25,53,86,0.25)] backdrop-blur-xl transition-all duration-300 max-[840px]:top-2.5 max-[840px]:max-h-[calc(100vh-1.25rem)] max-[840px]:w-[calc(100vw-1.25rem)]"
+  [class.left-3]="sidebarSide() === 'left'"
+  [class.right-3]="sidebarSide() === 'right'"
+  [style.width]="sidebarOpen() ? 'min(25.5rem, calc(100vw - 1.5rem))' : '13rem'"
 >
-  <div class="sidebar-topbar">
-    <p class="sidebar-brand">Easy Enclosure</p>
-    <div class="topbar-actions">
+  <div
+    class="flex min-h-12 items-center justify-between gap-2 border-b border-slate-300/70 bg-gradient-to-r from-slate-100/70 via-white/60 to-slate-100/40 px-2 py-1"
+  >
+    <p
+      class="m-0 truncate text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate-700 transition-opacity duration-200"
+      [class.opacity-0]="!sidebarOpen()"
+      [class.pointer-events-none]="!sidebarOpen()"
+    >
+      Easy Enclosure
+    </p>
+    <div class="inline-flex items-center gap-1.5">
       <button
-        class="topbar-btn"
+        class="inline-flex h-8 items-center justify-center rounded-full border border-slate-300 bg-white/80 px-3 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-600 transition hover:border-slate-500 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/35"
         type="button"
         (click)="toggleCompactMode()"
         [attr.aria-pressed]="compactMode()"
       >
         {{ compactMode() ? 'Full' : 'Compact' }}
       </button>
-      <button class="topbar-btn" type="button" (click)="toggleSidebarSide()">
+      <button
+        class="inline-flex h-8 items-center justify-center rounded-full border border-slate-300 bg-white/80 px-3 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-600 transition hover:border-slate-500 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/35"
+        type="button"
+        (click)="toggleSidebarSide()"
+      >
         {{ sidebarSide() === 'right' ? 'Left' : 'Right' }}
       </button>
       <button
-        class="topbar-btn"
+        class="inline-flex h-8 items-center justify-center rounded-full border border-slate-300 bg-white/80 px-3 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-600 transition hover:border-slate-500 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/35"
         type="button"
         (click)="toggleSidebar()"
         [attr.aria-expanded]="sidebarOpen()"
@@ -30,65 +42,100 @@
     </div>
   </div>
 
-  <div class="sidebar-content" id="sidebar-content">
-    <section class="sidebar-panel sidebar-actions" aria-label="Quick actions">
-      <p class="panel-label">Actions</p>
-      <app-tools />
-    </section>
-
-    <section class="sidebar-panel sidebar-dimensions" aria-live="polite">
-      <p class="panel-label">Inside Dimensions</p>
-      <div class="dimension-row">
-        <span>Wall to wall</span>
-        <strong>
-          {{ formatMm(enclosureMeasurements().wallToWall.width) }} x
-          {{ formatMm(enclosureMeasurements().wallToWall.length) }}
-        </strong>
-      </div>
-      <div class="dimension-row">
-        <span>Screw to screw</span>
-        <strong>
-          @if (enclosureMeasurements().screwToScrew; as screwToScrew) {
-            {{ formatMm(screwToScrew.width) }} x {{ formatMm(screwToScrew.length) }}
-          } @else {
-            N/A
-          }
-        </strong>
-      </div>
-    </section>
-
-    <section class="sidebar-section" [class.open]="activeSidebarSection() === 'params'">
-      <button
-        class="section-toggle"
-        type="button"
-        (click)="setActiveSidebarSection('params')"
-        [attr.aria-expanded]="activeSidebarSection() === 'params'"
+  @if (sidebarOpen()) {
+    <div
+      class="max-h-[calc(100vh-6rem)] space-y-4 overflow-y-auto p-3 max-[840px]:max-h-[calc(100vh-5.5rem)]"
+      id="sidebar-content"
+    >
+      <section
+        class="rounded-xl border border-slate-300/70 bg-white/70 p-2 shadow-[0_8px_18px_rgba(27,50,80,0.12)]"
+        aria-label="Quick actions"
       >
-        Parameters
-      </button>
-      @if (activeSidebarSection() === 'params') {
-        <div class="section-body">
-          <app-params-form [compact]="compactMode()" />
-        </div>
-      }
-    </section>
+        <p class="mb-2 text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-500">
+          Actions
+        </p>
+        <app-tools />
+      </section>
 
-    <section class="sidebar-section" [class.open]="activeSidebarSection() === 'funding'">
-      <button
-        class="section-toggle"
-        type="button"
-        (click)="setActiveSidebarSection('funding')"
-        [attr.aria-expanded]="activeSidebarSection() === 'funding'"
+      <section
+        class="rounded-xl border border-slate-300/70 bg-gradient-to-br from-slate-100/80 to-slate-50/70 p-3 shadow-[0_8px_18px_rgba(27,50,80,0.1)]"
+        aria-live="polite"
       >
-        Support the project
-      </button>
-      @if (activeSidebarSection() === 'funding') {
-        <div class="section-body">
-          <app-funding />
+        <p class="mb-3 text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-500">
+          Inside Dimensions
+        </p>
+        <div class="flex items-baseline justify-between gap-3">
+          <span class="text-[11px] font-medium text-slate-600">Wall to wall</span>
+          <strong class="text-right text-[11px] font-semibold text-slate-800">
+            {{ formatMm(enclosureMeasurements().wallToWall.width) }} x
+            {{ formatMm(enclosureMeasurements().wallToWall.length) }}
+          </strong>
         </div>
-      }
-    </section>
+        <div class="mt-2 flex items-baseline justify-between gap-3">
+          <span class="text-[11px] font-medium text-slate-600">Screw to screw</span>
+          <strong class="text-right text-[11px] font-semibold text-slate-800">
+            @if (enclosureMeasurements().screwToScrew; as screwToScrew) {
+              {{ formatMm(screwToScrew.width) }} x {{ formatMm(screwToScrew.length) }}
+            } @else {
+              N/A
+            }
+          </strong>
+        </div>
+      </section>
 
-    <div class="ui-version">v{{ appVersion }}</div>
-  </div>
+      <section
+        class="rounded-xl border border-slate-300/65 bg-white/70 p-2 shadow-[0_7px_16px_rgba(27,50,80,0.1)]"
+      >
+        <button
+          class="flex w-full items-center justify-between rounded-lg px-2 py-2 text-left text-[10px] font-extrabold uppercase tracking-[0.14em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/30"
+          [class.bg-slate-100]="activeSidebarSection() === 'params'"
+          [class.text-slate-800]="activeSidebarSection() === 'params'"
+          [class.text-slate-500]="activeSidebarSection() !== 'params'"
+          type="button"
+          (click)="setActiveSidebarSection('params')"
+          [attr.aria-expanded]="activeSidebarSection() === 'params'"
+        >
+          <span>Parameters</span>
+          <span class="text-[13px] leading-none">{{
+            activeSidebarSection() === 'params' ? '-' : '+'
+          }}</span>
+        </button>
+        @if (activeSidebarSection() === 'params') {
+          <div class="pt-2">
+            <app-params-form [compact]="compactMode()" />
+          </div>
+        }
+      </section>
+
+      <section
+        class="rounded-xl border border-slate-300/65 bg-white/70 p-2 shadow-[0_7px_16px_rgba(27,50,80,0.1)]"
+      >
+        <button
+          class="flex w-full items-center justify-between rounded-lg px-2 py-2 text-left text-[10px] font-extrabold uppercase tracking-[0.14em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/30"
+          [class.bg-slate-100]="activeSidebarSection() === 'funding'"
+          [class.text-slate-800]="activeSidebarSection() === 'funding'"
+          [class.text-slate-500]="activeSidebarSection() !== 'funding'"
+          type="button"
+          (click)="setActiveSidebarSection('funding')"
+          [attr.aria-expanded]="activeSidebarSection() === 'funding'"
+        >
+          <span>Support the project</span>
+          <span class="text-[13px] leading-none">{{
+            activeSidebarSection() === 'funding' ? '-' : '+'
+          }}</span>
+        </button>
+        @if (activeSidebarSection() === 'funding') {
+          <div class="pt-2">
+            <app-funding />
+          </div>
+        }
+      </section>
+
+      <div
+        class="rounded-lg border border-slate-300/70 bg-slate-100/80 px-3 py-2 text-center text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 select-none"
+      >
+        v{{ appVersion }}
+      </div>
+    </div>
+  }
 </aside>

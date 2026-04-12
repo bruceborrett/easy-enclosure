@@ -17,7 +17,6 @@ const SIDEBAR_COMPACT_KEY = 'easy-enclosure.sidebar.compact';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ToolsComponent, ParamsFormComponent, FundingComponent],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css',
 })
 export class SidebarComponent {
   private readonly state = inject(EnclosureStateService);

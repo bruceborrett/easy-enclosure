@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Manrope:wght@500;600;700&display=swap');
+@import 'tailwindcss';
+@source './src/**/*.{html,ts}';
 
 :root {
   --bg-canvas: #ecf2f8;

@@ -23,7 +23,6 @@ import { EnclosureStateService } from '../../core/state/enclosure-state.service'
   selector: 'app-tools',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './tools.component.html',
-  styleUrl: './tools.component.css',
 })
 export class ToolsComponent {
   @ViewChild('fileInput')

@@ -97,7 +97,6 @@ type RenderOptions = {
     '(wheel)': 'onWheel($event)',
   },
   templateUrl: './renderer.component.html',
-  styleUrl: './renderer.component.css',
 })
 export class RendererComponent implements AfterViewInit, OnDestroy {
   @ViewChild('container', { static: true })

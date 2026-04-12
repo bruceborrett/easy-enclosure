@@ -1,6 +1,6 @@
 {
   "name": "easy-enclosure",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "homepage": "https://bruceborrett.github.io/easy-enclosure/",
   "prettier": {
@@ -50,6 +50,7 @@
     "@angular/build": "^20.3.22",
     "@angular/cli": "^20.3.22",
     "@angular/compiler-cli": "^20.3.0",
+    "@tailwindcss/postcss": "^4.2.2",
     "@types/file-saver": "^2.0.7",
     "@types/jasmine": "~5.1.0",
     "gh-pages": "^5.0.0",
@@ -60,7 +61,9 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "postcss": "^8.5.9",
     "prettier": "^3.6.2",
+    "tailwindcss": "^4.2.2",
     "typescript": "~5.9.2"
   }
 }
