@@ -1,7 +1,9 @@
 #!/usr/bin/env sh
 npm run bump:version
+npm run ng:sync-version
 
 git add package.json
+git add src/app/app-version.ts
 if [ -f package-lock.json ]; then
   git add package-lock.json
 fi
