@@ -1,1 +1,14 @@
-<div id="jscad" #container class="fixed inset-0 h-screen w-screen"></div>
+<div id="jscad" #container class="fixed inset-0 h-screen w-screen">
+  <div class="pointer-events-none absolute inset-0 select-none">
+    @for (label of surfaceLabels(); track label.name) {
+      <div
+        class="absolute rounded-full border border-slate-200/80 bg-slate-900/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-white shadow-[0_6px_18px_rgba(15,23,42,0.35)]"
+        [style.left.px]="label.x"
+        [style.top.px]="label.y"
+        style="transform: translate(-50%, -50%)"
+      >
+        {{ label.name }}
+      </div>
+    }
+  </div>
+</div>

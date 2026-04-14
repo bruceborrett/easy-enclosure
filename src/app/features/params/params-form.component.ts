@@ -19,6 +19,13 @@ export class ParamsFormComponent {
 
   readonly surfaces: Surface[] = ['front', 'right', 'back', 'left', 'top', 'bottom'];
 
+  surfaceLabel(surface: Surface): string {
+    if (surface === 'top') {
+      return 'Lid';
+    }
+    return surface[0].toUpperCase() + surface.slice(1);
+  }
+
   params(): Params {
     return this.state.params();
   }

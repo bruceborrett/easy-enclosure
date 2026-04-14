@@ -6,6 +6,7 @@ import {
   ElementRef,
   inject,
   OnDestroy,
+  signal,
   ViewChild,
 } from '@angular/core';
 import type { Geom3 } from '@jscad/modeling/src/geometries/types';
@@ -99,6 +100,20 @@ type RenderOptions = {
   entities: Entity[];
 };
 
+type Vec3Tuple = [number, number, number];
+
+type SurfaceLabel = {
+  name: 'Front' | 'Back' | 'Left' | 'Right' | 'Lid' | 'Bottom' | 'Seal';
+  x: number;
+  y: number;
+};
+
+type SurfaceAnchor = {
+  name: SurfaceLabel['name'];
+  point: Vec3Tuple;
+  normal: Vec3Tuple;
+};
+
 @Component({
   selector: 'app-renderer',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -151,6 +166,13 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
   private prevParams: Params | null = null;
   private renderDelayHandle: ReturnType<typeof setTimeout> | null = null;
   private isViewReady = false;
+  private baseOrigin: Vec3Tuple = [0, 0, 0];
+  private lidOrigin: Vec3Tuple = [0, 0, 0];
+  private sealOrigin: Vec3Tuple = [0, 0, 0];
+  private wheelInteracting = false;
+  private wheelInteractionHandle: ReturnType<typeof setTimeout> | null = null;
+
+  readonly surfaceLabels = signal<SurfaceLabel[]>([]);
 
   constructor() {
     effect(() => {
@@ -172,6 +194,10 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
     if (this.renderDelayHandle !== null) {
       clearTimeout(this.renderDelayHandle);
       this.renderDelayHandle = null;
+    }
+    if (this.wheelInteractionHandle !== null) {
+      clearTimeout(this.wheelInteractionHandle);
+      this.wheelInteractionHandle = null;
     }
   }
 
@@ -201,15 +227,26 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
     this.lastX = event.pageX;
     this.lastY = event.pageY;
     this.containerRef?.nativeElement.setPointerCapture(event.pointerId);
+    this.updateSurfaceLabels();
   }
 
   onPointerUp(event: PointerEvent): void {
     this.pointerDown = false;
     this.containerRef?.nativeElement.releasePointerCapture(event.pointerId);
+    this.updateSurfaceLabels();
   }
 
   onWheel(event: WheelEvent): void {
     this.zoomDelta += event.deltaY;
+    this.wheelInteracting = true;
+    if (this.wheelInteractionHandle !== null) {
+      clearTimeout(this.wheelInteractionHandle);
+    }
+    this.wheelInteractionHandle = setTimeout(() => {
+      this.wheelInteracting = false;
+      this.updateSurfaceLabels();
+    }, 250);
+    this.updateSurfaceLabels();
   }
 
   private checkDeps(diff: string[], deps: string[]): boolean {
@@ -320,6 +357,8 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
       if (this.renderer && this.renderOptions) {
         this.renderer(this.renderOptions);
       }
+
+      this.updateSurfaceLabels();
     }
 
     this.animationFrame = requestAnimationFrame(this.updateAndRender);
@@ -330,6 +369,154 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
       width: window.innerWidth,
       height: window.innerHeight,
     });
+  }
+
+  private updateSurfaceLabels(): void {
+    const container = this.containerRef?.nativeElement;
+    if (!container || !this.baseModel || (!this.pointerDown && !this.wheelInteracting)) {
+      this.surfaceLabels.set([]);
+      return;
+    }
+
+    const { width, length, height, roof, insertHeight } = this.state.params();
+    const [originX, originY, originZ] = this.baseOrigin;
+    const [lidX, lidY, lidZ] = this.lidOrigin;
+
+    const anchors: SurfaceAnchor[] = [
+      {
+        name: 'Front',
+        point: [originX + width / 2, originY + length, originZ + height / 2],
+        normal: [0, 1, 0],
+      },
+      {
+        name: 'Back',
+        point: [originX + width / 2, originY, originZ + height / 2],
+        normal: [0, -1, 0],
+      },
+      {
+        name: 'Left',
+        point: [originX + width, originY + length / 2, originZ + height / 2],
+        normal: [1, 0, 0],
+      },
+      {
+        name: 'Right',
+        point: [originX, originY + length / 2, originZ + height / 2],
+        normal: [-1, 0, 0],
+      },
+      {
+        name: 'Bottom',
+        point: [originX + width / 2, originY + length / 2, originZ],
+        normal: [0, 0, -1],
+      },
+    ];
+
+    if (this.lidModel) {
+      anchors.push({
+        name: 'Lid',
+        point: [lidX + width / 2, lidY + length / 2, lidZ + roof + insertHeight],
+        normal: [0, 0, 1],
+      });
+    }
+
+    if (this.sealModel) {
+      const [sealX, sealY, sealZ] = this.sealOrigin;
+      anchors.push({
+        name: 'Seal',
+        point: [sealX + width / 2, sealY + length / 2, sealZ + Math.max(1, roof) / 2],
+        normal: [0, 0, 1],
+      });
+    }
+
+    const projected = anchors
+      .filter((anchor) => this.isFacingCamera(anchor.point, anchor.normal))
+      .map((anchor) => {
+        const screenPos = this.projectWorldToScreen(anchor.point, container);
+        return screenPos
+          ? {
+              name: anchor.name,
+              x: screenPos[0],
+              y: screenPos[1],
+            }
+          : null;
+      })
+      .filter((item): item is SurfaceLabel => item !== null);
+
+    this.surfaceLabels.set(projected);
+  }
+
+  private isFacingCamera(point: Vec3Tuple, normal: Vec3Tuple): boolean {
+    const cameraPosition = this.camera.position as Vec3Tuple;
+    const toCamera = this.normalize(this.subtract(cameraPosition, point));
+    return this.dot(normal, toCamera) > 0.08;
+  }
+
+  private projectWorldToScreen(
+    point: Vec3Tuple,
+    container: HTMLDivElement,
+  ): [number, number] | null {
+    const cameraPosition = this.camera.position as Vec3Tuple;
+    const cameraTarget = this.camera.target as Vec3Tuple;
+    const cameraUp = (this.camera.up as Vec3Tuple | undefined) ?? [0, 0, 1];
+
+    const zAxis = this.normalize(this.subtract(cameraPosition, cameraTarget));
+    const xAxis = this.normalize(this.cross(cameraUp, zAxis));
+    const yAxis = this.cross(zAxis, xAxis);
+
+    const toPoint = this.subtract(point, cameraPosition);
+    const camX = this.dot(toPoint, xAxis);
+    const camY = this.dot(toPoint, yAxis);
+    const camZ = this.dot(toPoint, zAxis);
+
+    if (camZ >= -0.001) {
+      return null;
+    }
+
+    const rawFov = this.camera.fov;
+    const fov = rawFov > Math.PI ? (rawFov * Math.PI) / 180 : rawFov;
+    const halfFovTan = Math.tan(fov / 2);
+
+    if (!Number.isFinite(halfFovTan) || halfFovTan === 0) {
+      return null;
+    }
+
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+    const aspect = width / Math.max(height, 1);
+
+    const ndcX = camX / (-camZ * halfFovTan * aspect);
+    const ndcY = camY / (-camZ * halfFovTan);
+
+    if (!Number.isFinite(ndcX) || !Number.isFinite(ndcY)) {
+      return null;
+    }
+
+    if (Math.abs(ndcX) > 1.05 || Math.abs(ndcY) > 1.05) {
+      return null;
+    }
+
+    const screenX = ((ndcX + 1) / 2) * width;
+    const screenY = ((1 - ndcY) / 2) * height;
+    return [screenX, screenY];
+  }
+
+  private subtract(a: Vec3Tuple, b: Vec3Tuple): Vec3Tuple {
+    return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+  }
+
+  private cross(a: Vec3Tuple, b: Vec3Tuple): Vec3Tuple {
+    return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  }
+
+  private dot(a: Vec3Tuple, b: Vec3Tuple): number {
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  }
+
+  private normalize(vector: Vec3Tuple): Vec3Tuple {
+    const magnitude = Math.hypot(vector[0], vector[1], vector[2]);
+    if (magnitude < 0.000001) {
+      return [0, 0, 0];
+    }
+    return [vector[0] / magnitude, vector[1] / magnitude, vector[2] / magnitude];
   }
 
   private async renderModel(params: Params, diff: string[]): Promise<void> {
@@ -348,6 +535,7 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
 
     if (this.checkDeps(diff, lidDeps)) {
       lidPos = waterProof ? [width / 2 + SPACING, -length / 2, 0] : [SPACING / 2, -length / 2, 0];
+      this.lidOrigin = lidPos;
       this.lidModel = translate(lidPos, lid(params));
     }
 
@@ -355,12 +543,16 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
       basePos = waterProof
         ? [-width / 2, -length / 2, 0]
         : [-(width + SPACING / 2), -length / 2, 0];
+      this.baseOrigin = basePos;
       this.baseModel = translate(basePos, base(params));
     }
 
     if (this.checkDeps(diff, sealDeps) && waterProof) {
       sealPos = [-width - width / 2 - SPACING, -length / 2, 0];
+      this.sealOrigin = sealPos;
       this.sealModel = translate(sealPos, waterProofSeal(params));
+    } else if (this.checkDeps(diff, sealDeps) && !waterProof) {
+      this.sealModel = null;
     }
 
     if (this.checkDeps(diff, mountDeps) && pcbMountParams.length > 0) {
@@ -429,12 +621,14 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
         glOptions: { container: this.containerRef.nativeElement },
       }) as (options?: RenderOptions) => void;
       this.setCameraProjection();
+      this.updateSurfaceLabels();
       if (this.animationFrame === null) {
         this.updateAndRender();
       }
     } else {
       this.renderOptions.entities = entitiesFromSolids({}, this.model) as Entity[];
       this.updateView = true;
+      this.updateSurfaceLabels();
     }
   }
 }
