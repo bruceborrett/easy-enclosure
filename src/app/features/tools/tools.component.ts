@@ -28,6 +28,9 @@ export class ToolsComponent {
   @ViewChild('fileInput')
   fileInput?: ElementRef<HTMLInputElement>;
 
+  @ViewChild('exportDialog')
+  exportDialog?: ElementRef<HTMLDialogElement>;
+
   private readonly state = inject(EnclosureStateService);
 
   readonly isExportModalOpen = signal(false);
@@ -38,10 +41,18 @@ export class ToolsComponent {
 
   openExportModal(): void {
     this.isExportModalOpen.set(true);
+    const dialog = this.exportDialog?.nativeElement;
+    if (dialog && !dialog.open) {
+      dialog.showModal();
+    }
   }
 
   closeExportModal(): void {
     this.isExportModalOpen.set(false);
+    const dialog = this.exportDialog?.nativeElement;
+    if (dialog?.open) {
+      dialog.close();
+    }
   }
 
   saveParamsFile(): void {
@@ -98,6 +109,23 @@ export class ToolsComponent {
 
     if (currentParams.waterProof) {
       this.exportGeometry(`enclosure-waterproof-seal-${tsStr}`, waterProofSeal(currentParams));
+    }
+
+    this.closeExportModal();
+  }
+
+  exportPcbMountsStl(): void {
+    const tsStr = this.formattedTimestamp();
+    const currentParams = this.state.params();
+
+    const baseMounts = pcbMountsOnBase(currentParams);
+    if (baseMounts) {
+      this.exportGeometry(`enclosure-pcb-mounts-base-${tsStr}`, baseMounts);
+    }
+
+    const lidMounts = pcbMountsOnLid(currentParams);
+    if (lidMounts) {
+      this.exportGeometry(`enclosure-pcb-mounts-lid-${tsStr}`, lidMounts);
     }
 
     this.closeExportModal();

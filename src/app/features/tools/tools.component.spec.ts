@@ -104,4 +104,57 @@ describe('ToolsComponent', () => {
     expect(exportedNames).toContain('enclosure-waterproof-seal-');
     expect(closeSpy).toHaveBeenCalled();
   });
+
+  it('exports only base and lid pcb mount STL artifacts', () => {
+    const exportGeometrySpy = spyOn(component as never, 'exportGeometry' as never);
+    const closeSpy = spyOn(component, 'closeExportModal');
+
+    const params = cloneParams(state.params());
+    params.pcbMounts = [
+      {
+        x: 10,
+        y: 10,
+        height: 8,
+        outerDiameter: 6,
+        screwDiameter: 3,
+        surface: 'bottom',
+      },
+      {
+        x: 20,
+        y: 20,
+        height: 8,
+        outerDiameter: 6,
+        screwDiameter: 3,
+        surface: 'top',
+      },
+    ];
+    state.setParams(params);
+
+    component.exportPcbMountsStl();
+
+    const exportedNames = exportGeometrySpy.calls
+      .allArgs()
+      .map((args) => args[0] as string)
+      .join(' ');
+    expect(exportedNames).toContain('enclosure-pcb-mounts-base-');
+    expect(exportedNames).toContain('enclosure-pcb-mounts-lid-');
+    expect(exportedNames).not.toContain('enclosure-base-');
+    expect(exportedNames).not.toContain('enclosure-lid-');
+    expect(exportedNames).not.toContain('enclosure-waterproof-seal-');
+    expect(closeSpy).toHaveBeenCalled();
+  });
+
+  it('skips pcb mount export when no mounts exist', () => {
+    const exportGeometrySpy = spyOn(component as never, 'exportGeometry' as never);
+    const closeSpy = spyOn(component, 'closeExportModal');
+
+    const params = cloneParams(state.params());
+    params.pcbMounts = [];
+    state.setParams(params);
+
+    component.exportPcbMountsStl();
+
+    expect(exportGeometrySpy).not.toHaveBeenCalled();
+    expect(closeSpy).toHaveBeenCalled();
+  });
 });
