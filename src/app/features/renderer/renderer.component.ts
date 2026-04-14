@@ -83,6 +83,7 @@ const mountDeps = [
   'waterProof',
   'wall',
   'floor',
+  'lidScrews',
   'height',
   'roof',
   'length',

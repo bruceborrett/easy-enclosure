@@ -27,6 +27,7 @@ const placeBaseMount = (mount: PCBMount, params: Params): Geom3 => {
   const surface: Surface = mount.surface ?? 'bottom';
   const mountBody = pcbMount(mount);
   const innerWall = waterProof ? wall * 2 + insertClearance * 2 + insertThickness : wall;
+  const baseFloor = params.lidScrews ? floor : innerWall;
   const bottomX = width / 2 - mount.x;
   const bottomY = length / 2 - mount.y;
   const wallX = width / 2 - mount.x;
@@ -34,7 +35,7 @@ const placeBaseMount = (mount: PCBMount, params: Params): Geom3 => {
   const wallZ = height / 2 + mount.y;
 
   if (surface === 'bottom') {
-    return translate([bottomX, bottomY, floor + mount.height / 2], mountBody);
+    return translate([bottomX, bottomY, baseFloor + mount.height / 2], mountBody);
   }
 
   if (surface === 'front') {
