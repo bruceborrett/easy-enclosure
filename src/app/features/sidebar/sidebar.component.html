@@ -2,42 +2,44 @@
   class="ui-sidebar fixed top-3 z-20 max-h-[calc(100vh-1.5rem)] overflow-hidden rounded-2xl border border-slate-300/70 bg-white/80 shadow-[0_22px_55px_rgba(25,53,86,0.25)] backdrop-blur-xl transition-all duration-300 max-[840px]:top-2.5 max-[840px]:max-h-[calc(100vh-1.25rem)] max-[840px]:w-[calc(100vw-1.25rem)]"
   [class.left-3]="sidebarSide() === 'left'"
   [class.right-3]="sidebarSide() === 'right'"
-  [style.width]="sidebarOpen() ? 'min(25.5rem, calc(100vw - 1.5rem))' : '13rem'"
+  [style.width]="sidebarOpen() ? 'min(25.5rem, calc(100vw - 1.5rem))' : '16rem'"
 >
   <div
     class="flex min-h-12 items-center justify-between gap-2 border-b border-slate-300/70 bg-gradient-to-r from-slate-100/70 via-white/60 to-slate-100/40 px-2 py-1"
   >
     <p
-      class="m-0 truncate text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate-700 transition-opacity duration-200"
-      [class.opacity-0]="!sidebarOpen()"
-      [class.pointer-events-none]="!sidebarOpen()"
+      class="m-0 whitespace-nowrap text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate-700 transition-opacity duration-200"
     >
       Easy Enclosure
     </p>
     <div class="inline-flex items-center gap-1.5">
+      @if (sidebarOpen()) {
+        <button
+          class="inline-flex h-8 items-center justify-center rounded-full border border-slate-300 bg-white/80 px-3 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-600 transition hover:border-slate-500 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/35"
+          type="button"
+          (click)="toggleCompactMode()"
+          [attr.aria-pressed]="compactMode()"
+        >
+          {{ compactMode() ? 'Full' : 'Compact' }}
+        </button>
+      }
+      @if (sidebarOpen()) {
+        <button
+          class="inline-flex h-8 items-center justify-center rounded-full border border-slate-300 bg-white/80 px-3 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-600 transition hover:border-slate-500 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/35"
+          type="button"
+          (click)="toggleSidebarSide()"
+        >
+          {{ sidebarSide() === 'right' ? 'Left' : 'Right' }}
+        </button>
+      }
       <button
-        class="inline-flex h-8 items-center justify-center rounded-full border border-slate-300 bg-white/80 px-3 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-600 transition hover:border-slate-500 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/35"
-        type="button"
-        (click)="toggleCompactMode()"
-        [attr.aria-pressed]="compactMode()"
-      >
-        {{ compactMode() ? 'Full' : 'Compact' }}
-      </button>
-      <button
-        class="inline-flex h-8 items-center justify-center rounded-full border border-slate-300 bg-white/80 px-3 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-600 transition hover:border-slate-500 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/35"
-        type="button"
-        (click)="toggleSidebarSide()"
-      >
-        {{ sidebarSide() === 'right' ? 'Left' : 'Right' }}
-      </button>
-      <button
-        class="inline-flex h-8 items-center justify-center rounded-full border border-slate-300 bg-white/80 px-3 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-600 transition hover:border-slate-500 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/35"
+        class="inline-flex h-8 items-center justify-center whitespace-nowrap rounded-full border border-slate-300 bg-white/80 px-3 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-600 transition hover:border-slate-500 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/35"
         type="button"
         (click)="toggleSidebar()"
         [attr.aria-expanded]="sidebarOpen()"
         aria-controls="sidebar-content"
       >
-        {{ sidebarOpen() ? 'Hide' : 'Show' }}
+        {{ sidebarOpen() ? 'Hide' : 'Show menu' }}
       </button>
     </div>
   </div>
