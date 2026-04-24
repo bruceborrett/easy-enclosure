@@ -1,11 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { APP_VERSION } from '../../app-version';
 import { EnclosureStateService } from '../../core/state/enclosure-state.service';
 import { FundingComponent } from '../../shared/funding/funding.component';
 import { ParamsFormComponent } from '../params/params-form.component';
 import { ToolsComponent } from '../tools/tools.component';
-
-type SidebarSection = 'params' | 'funding';
 
 @Component({
   selector: 'app-sidebar',
@@ -20,7 +18,6 @@ export class SidebarComponent {
   private readonly state = inject(EnclosureStateService);
 
   readonly appVersion = APP_VERSION.trim().length > 0 ? APP_VERSION : 'dev';
-  readonly activeSidebarSection = signal<SidebarSection>('params');
 
   readonly enclosureMeasurements = computed(() => {
     const params = this.state.params();
@@ -48,13 +45,6 @@ export class SidebarComponent {
       screwToScrew,
     };
   });
-
-  setActiveSidebarSection(section: SidebarSection): void {
-    if (this.activeSidebarSection() === section) {
-      return;
-    }
-    this.activeSidebarSection.set(section);
-  }
 
   formatMm(value: number): string {
     return `${value.toFixed(2)} mm`;

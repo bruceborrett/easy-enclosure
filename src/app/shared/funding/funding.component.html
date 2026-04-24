@@ -1,8 +1,6 @@
-<div
-  class="grid grid-cols-1 gap-2 rounded-xl border border-slate-300/70 bg-white/80 p-2 shadow-[0_8px_18px_rgba(27,50,80,0.12)]"
->
+<div class="grid grid-cols-1 gap-2">
   <a
-    class="flex min-h-12 w-full items-center justify-center rounded-md border border-slate-300/70 bg-slate-50/90 px-2 py-1"
+    class="flex min-h-12 w-full items-center justify-center border border-slate-200 bg-white px-2 py-1"
     href="https://github.com/sponsors/bruceborrett"
     target="_blank"
     rel="noreferrer"
@@ -15,22 +13,21 @@
     />
   </a>
 
-  <a
-    class="flex min-h-12 w-full items-center justify-center rounded-md border border-slate-300/70 bg-slate-50/90 px-2 py-1"
-    href="https://www.buymeacoffee.com/bruceborrett"
-    target="_blank"
-    rel="noreferrer"
+  <div
+    class="flex min-h-12 w-full items-center justify-center border border-slate-200 bg-white px-2 py-1"
   >
-    <img
-      class="max-h-10 w-full max-w-full rounded-md object-contain"
-      src="https://cdn.buymeacoffee.com/buttons/default-blue.png"
-      alt="Buy Me A Coffee"
+    <iframe
+      title="Buy Me a Coffee"
+      class="block h-8.5 w-full max-w-44 overflow-hidden border-0 bg-transparent"
+      [attr.srcdoc]="buyMeACoffeeSrcdoc"
       loading="lazy"
-    />
-  </a>
+      sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
+      referrerpolicy="strict-origin-when-cross-origin"
+    ></iframe>
+  </div>
 
   <div
-    class="flex min-h-12 w-full items-center justify-center rounded-md border border-slate-300/70 bg-slate-50/90 px-2 py-1"
+    class="flex min-h-12 w-full items-center justify-center border border-slate-200 bg-white px-2 py-1"
   >
     <iframe
       title="GitHub stars"

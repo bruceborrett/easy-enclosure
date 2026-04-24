@@ -1,74 +1,44 @@
-<div class="space-y-6">
-  <section class="mb-6" aria-label="Quick actions">
+<div class="space-y-8 text-slate-900">
+  <section aria-label="Quick actions">
     <h2 class="mb-3 text-xs font-extrabold uppercase tracking-wider text-slate-600">Actions</h2>
     <app-tools />
   </section>
 
-  <section class="rounded-xl border border-slate-200 bg-white p-3 shadow-sm" aria-live="polite">
-    <p class="mb-3 text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-500">
+  <section aria-live="polite">
+    <h2 class="mb-3 text-xs font-extrabold uppercase tracking-wider text-slate-600">
       Inside Dimensions
-    </p>
-    <div class="flex items-baseline justify-between gap-3">
-      <span class="text-[11px] font-medium text-slate-600">Wall to wall</span>
-      <strong class="text-right text-[11px] font-semibold text-slate-800">
-        {{ formatMm(enclosureMeasurements().wallToWall.width) }} x
-        {{ formatMm(enclosureMeasurements().wallToWall.length) }}
-      </strong>
-    </div>
-    <div class="mt-2 flex items-baseline justify-between gap-3">
-      <span class="text-[11px] font-medium text-slate-600">Screw to screw</span>
-      <strong class="text-right text-[11px] font-semibold text-slate-800">
-        @if (enclosureMeasurements().screwToScrew; as screwToScrew) {
-          {{ formatMm(screwToScrew.width) }} x {{ formatMm(screwToScrew.length) }}
-        } @else {
-          N/A
-        }
-      </strong>
+    </h2>
+    <div class="space-y-2 border border-slate-200 bg-white px-3 py-3">
+      <div class="flex items-baseline justify-between gap-3">
+        <span class="text-[11px] font-medium text-slate-600">Wall to wall</span>
+        <strong class="text-right text-[11px] font-semibold text-slate-800">
+          {{ formatMm(enclosureMeasurements().wallToWall.width) }} x
+          {{ formatMm(enclosureMeasurements().wallToWall.length) }}
+        </strong>
+      </div>
+      <div class="flex items-baseline justify-between gap-3">
+        <span class="text-[11px] font-medium text-slate-600">Screw to screw</span>
+        <strong class="text-right text-[11px] font-semibold text-slate-800">
+          @if (enclosureMeasurements().screwToScrew; as screwToScrew) {
+            {{ formatMm(screwToScrew.width) }} x {{ formatMm(screwToScrew.length) }}
+          } @else {
+            N/A
+          }
+        </strong>
+      </div>
     </div>
   </section>
 
   <section>
-    <button
-      class="flex w-full items-center justify-between rounded-lg px-2 py-2 text-left text-[10px] font-extrabold uppercase tracking-[0.14em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/30"
-      [class.bg-slate-100]="activeSidebarSection() === 'params'"
-      [class.text-slate-800]="activeSidebarSection() === 'params'"
-      [class.text-slate-500]="activeSidebarSection() !== 'params'"
-      type="button"
-      (click)="setActiveSidebarSection('params')"
-      [attr.aria-expanded]="activeSidebarSection() === 'params'"
-    >
-      <span>Parameters</span>
-      <span class="text-[13px] leading-none">{{
-        activeSidebarSection() === 'params' ? '-' : '+'
-      }}</span>
-    </button>
-    @if (activeSidebarSection() === 'params') {
-      <div class="pt-2">
-        <app-params-form />
-      </div>
-    }
+    <h2 class="mb-3 text-xs font-extrabold uppercase tracking-wider text-slate-600">Parameters</h2>
+    <app-params-form />
   </section>
 
   <section>
-    <button
-      class="flex w-full items-center justify-between rounded-lg px-2 py-2 text-left text-[10px] font-extrabold uppercase tracking-[0.14em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/30"
-      [class.bg-slate-100]="activeSidebarSection() === 'funding'"
-      [class.text-slate-800]="activeSidebarSection() === 'funding'"
-      [class.text-slate-500]="activeSidebarSection() !== 'funding'"
-      type="button"
-      (click)="setActiveSidebarSection('funding')"
-      [attr.aria-expanded]="activeSidebarSection() === 'funding'"
-    >
-      <span>Support the project</span>
-      <span class="text-[13px] leading-none">{{
-        activeSidebarSection() === 'funding' ? '-' : '+'
-      }}</span>
-    </button>
-    @if (activeSidebarSection() === 'funding') {
-      <div class="pt-2">
-        <app-funding />
-      </div>
-    }
+    <h2 class="mb-3 text-xs font-extrabold uppercase tracking-wider text-slate-600">
+      Support the project
+    </h2>
+    <app-funding />
   </section>
 
   <div
