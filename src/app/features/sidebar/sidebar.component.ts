@@ -12,6 +12,16 @@ import { ToolsComponent } from '../tools/tools.component';
   host: {
     class: 'block h-full min-h-0',
   },
+  styles: `
+    .sidebar-scroll {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .sidebar-scroll::-webkit-scrollbar {
+      display: none;
+    }
+  `,
   templateUrl: './sidebar.component.html',
 })
 export class SidebarComponent {
