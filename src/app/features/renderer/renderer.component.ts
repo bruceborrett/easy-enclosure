@@ -118,7 +118,7 @@ type SurfaceAnchor = {
   selector: 'app-renderer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    'class': 'relative block h-full w-full overflow-hidden',
+    class: 'relative block h-full w-full overflow-hidden',
     '(pointermove)': 'onPointerMove($event)',
     '(pointerdown)': 'onPointerDown($event)',
     '(pointerup)': 'onPointerUp($event)',
@@ -129,6 +129,8 @@ type SurfaceAnchor = {
 export class RendererComponent implements AfterViewInit, OnDestroy {
   @ViewChild('container', { static: true })
   containerRef?: ElementRef<HTMLDivElement>;
+
+  private resizeObserver: ResizeObserver | null = null;
 
   private readonly state = inject(EnclosureStateService);
 
@@ -184,10 +186,13 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.isViewReady = true;
+    this.observeContainerSize();
     this.scheduleModelRender(this.state.params());
   }
 
   ngOnDestroy(): void {
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = null;
     if (this.animationFrame !== null) {
       cancelAnimationFrame(this.animationFrame);
       this.animationFrame = null;
@@ -366,10 +371,34 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
   };
 
   private setCameraProjection(): void {
+    const container = this.containerRef?.nativeElement;
+    const width = container?.clientWidth ?? window.innerWidth;
+    const height = container?.clientHeight ?? window.innerHeight;
+
     this.perspectiveCamera.setProjection(this.camera, this.camera, {
-      width: window.innerWidth,
-      height: window.innerHeight,
+      width: Math.max(width, 1),
+      height: Math.max(height, 1),
     });
+  }
+
+  private observeContainerSize(): void {
+    const container = this.containerRef?.nativeElement;
+    if (!container || typeof ResizeObserver === 'undefined') {
+      return;
+    }
+
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = new ResizeObserver(() => {
+      if (!this.renderOptions) {
+        return;
+      }
+
+      this.setCameraProjection();
+      this.zoomToFit = true;
+      this.updateView = true;
+      this.updateSurfaceLabels();
+    });
+    this.resizeObserver.observe(container);
   }
 
   private updateSurfaceLabels(): void {
