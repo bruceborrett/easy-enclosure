@@ -10,7 +10,7 @@ import { ToolsComponent } from '../tools/tools.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ToolsComponent, ParamsFormComponent, FundingComponent],
   host: {
-    class: 'block h-full',
+    class: 'block h-full min-h-0',
   },
   templateUrl: './sidebar.component.html',
 })

@@ -1,49 +1,59 @@
-<div class="space-y-8 text-slate-900">
-  <section aria-label="Quick actions">
-    <h2 class="mb-3 text-xs font-extrabold uppercase tracking-wider text-slate-600">Actions</h2>
-    <app-tools />
-  </section>
+<div class="relative h-full text-slate-900">
+  <div class="h-full overflow-y-auto pb-20 pr-1">
+    <div class="space-y-8">
+      <section aria-label="Quick actions">
+        <h2 class="mb-3 text-xs font-extrabold uppercase tracking-wider text-slate-600">Actions</h2>
+        <app-tools />
+      </section>
 
-  <section aria-live="polite">
-    <h2 class="mb-3 text-xs font-extrabold uppercase tracking-wider text-slate-600">
-      Inside Dimensions
-    </h2>
-    <div class="space-y-2 border border-slate-200 bg-white px-3 py-3">
-      <div class="flex items-baseline justify-between gap-3">
-        <span class="text-[11px] font-medium text-slate-600">Wall to wall</span>
-        <strong class="text-right text-[11px] font-semibold text-slate-800">
-          {{ formatMm(enclosureMeasurements().wallToWall.width) }} x
-          {{ formatMm(enclosureMeasurements().wallToWall.length) }}
-        </strong>
-      </div>
-      <div class="flex items-baseline justify-between gap-3">
-        <span class="text-[11px] font-medium text-slate-600">Screw to screw</span>
-        <strong class="text-right text-[11px] font-semibold text-slate-800">
-          @if (enclosureMeasurements().screwToScrew; as screwToScrew) {
-            {{ formatMm(screwToScrew.width) }} x {{ formatMm(screwToScrew.length) }}
-          } @else {
-            N/A
-          }
-        </strong>
-      </div>
+      <section aria-live="polite">
+        <h2 class="mb-3 text-xs font-extrabold uppercase tracking-wider text-slate-600">
+          Inside Dimensions
+        </h2>
+        <div class="space-y-2 border border-slate-200 bg-white px-3 py-3">
+          <div class="flex items-baseline justify-between gap-3">
+            <span class="text-[11px] font-medium text-slate-600">Wall to wall</span>
+            <strong class="text-right text-[11px] font-semibold text-slate-800">
+              {{ formatMm(enclosureMeasurements().wallToWall.width) }} x
+              {{ formatMm(enclosureMeasurements().wallToWall.length) }}
+            </strong>
+          </div>
+          <div class="flex items-baseline justify-between gap-3">
+            <span class="text-[11px] font-medium text-slate-600">Screw to screw</span>
+            <strong class="text-right text-[11px] font-semibold text-slate-800">
+              @if (enclosureMeasurements().screwToScrew; as screwToScrew) {
+                {{ formatMm(screwToScrew.width) }} x {{ formatMm(screwToScrew.length) }}
+              } @else {
+                N/A
+              }
+            </strong>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="mb-3 text-xs font-extrabold uppercase tracking-wider text-slate-600">
+          Parameters
+        </h2>
+        <app-params-form />
+      </section>
+
+      <section>
+        <h2 class="mb-3 text-xs font-extrabold uppercase tracking-wider text-slate-600">
+          Support the project
+        </h2>
+        <app-funding />
+      </section>
     </div>
-  </section>
-
-  <section>
-    <h2 class="mb-3 text-xs font-extrabold uppercase tracking-wider text-slate-600">Parameters</h2>
-    <app-params-form />
-  </section>
-
-  <section>
-    <h2 class="mb-3 text-xs font-extrabold uppercase tracking-wider text-slate-600">
-      Support the project
-    </h2>
-    <app-funding />
-  </section>
+  </div>
 
   <div
-    class="border-t border-slate-200 pt-4 text-center text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 select-none"
+    class="pointer-events-none absolute inset-x-0 bottom-0 z-10 bg-linear-to-t from-slate-50 via-slate-50/95 to-transparent pt-8"
   >
-    v{{ appVersion }}
+    <div
+      class="border-t border-slate-200 pt-4 text-center text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 select-none"
+    >
+      v{{ appVersion }}
+    </div>
   </div>
 </div>
