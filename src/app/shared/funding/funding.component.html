@@ -1,10 +1,5 @@
 <div class="grid grid-cols-1 gap-2">
-  <a
-    class="flex min-h-12 w-full cursor-pointer items-center gap-3 border border-slate-200 bg-white px-3 py-2 text-left text-slate-900 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/30"
-    href="https://github.com/sponsors/bruceborrett"
-    target="_blank"
-    rel="noreferrer"
-  >
+  <app-action-button href="https://github.com/sponsors/bruceborrett" [external]="true" variant="tile">
     <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[#284f71] text-white">
       <svg viewBox="0 0 16 16" class="h-4 w-4 fill-current" aria-hidden="true">
         <path d="M8 1.25l1.86 3.77 4.16.61-3.01 2.93.71 4.14L8 10.75 4.28 12.7 5 8.56 1.99 5.63l4.16-.61L8 1.25z" />
@@ -16,14 +11,9 @@
       </span>
       <span class="block text-sm font-semibold leading-tight">Sponsor development</span>
     </span>
-  </a>
+  </app-action-button>
 
-  <a
-    class="flex min-h-12 w-full cursor-pointer items-center gap-3 border border-slate-200 bg-white px-3 py-2 text-left text-slate-900 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/30"
-    href="https://www.buymeacoffee.com/bruceborrett"
-    target="_blank"
-    rel="noreferrer"
-  >
+  <app-action-button href="https://www.buymeacoffee.com/bruceborrett" [external]="true" variant="tile">
     <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[#284f71] text-white">
       <svg viewBox="0 0 24 24" class="h-4.5 w-4.5" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <path d="M6 8h9a0 0 0 0 1 0 0v5a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4V8a0 0 0 0 1 0 0z" fill="#FFDD00" stroke="currentColor" />
@@ -37,14 +27,9 @@
       </span>
       <span class="block text-sm font-semibold leading-tight">Send a small thank you</span>
     </span>
-  </a>
+  </app-action-button>
 
-  <a
-    class="flex min-h-12 w-full cursor-pointer items-center gap-3 border border-slate-200 bg-white px-3 py-2 text-left text-slate-900 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/30"
-    href="https://github.com/bruceborrett/easy-enclosure/stargazers"
-    target="_blank"
-    rel="noreferrer"
-  >
+  <app-action-button href="https://github.com/bruceborrett/easy-enclosure/stargazers" [external]="true" variant="tile">
     <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[#284f71] text-white">
       <svg viewBox="0 0 16 16" class="h-4 w-4 fill-current" aria-hidden="true">
         <path d="M8 1.25l1.86 3.77 4.16.61-3.01 2.93.71 4.14L8 10.75 4.28 12.7 5 8.56 1.99 5.63l4.16-.61L8 1.25z" />
@@ -56,5 +41,5 @@
       </span>
       <span class="block text-sm font-semibold leading-tight">Star easy-enclosure</span>
     </span>
-  </a>
+  </app-action-button>
 </div>

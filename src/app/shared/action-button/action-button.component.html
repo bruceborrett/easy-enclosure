@@ -1,0 +1,19 @@
+<ng-template #content>
+  <ng-content />
+</ng-template>
+
+@if (href()) {
+  <a
+    [href]="href() || ''"
+    [attr.target]="target()"
+    [attr.rel]="rel()"
+    [attr.title]="title()"
+    [class]="buttonClass()"
+  >
+    <ng-container [ngTemplateOutlet]="content" />
+  </a>
+} @else {
+  <button [type]="type()" [attr.title]="title()" [class]="buttonClass()">
+    <ng-container [ngTemplateOutlet]="content" />
+  </button>
+}

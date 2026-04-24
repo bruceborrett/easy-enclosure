@@ -18,10 +18,12 @@ import { pcbMountsOnBase, pcbMountsOnLid } from '../../core/enclosure/pcbmount';
 import { waterProofSeal } from '../../core/enclosure/waterproofseal';
 import type { Params } from '../../core/params';
 import { EnclosureStateService } from '../../core/state/enclosure-state.service';
+import { ActionButtonComponent } from '../../shared/action-button/action-button.component';
 
 @Component({
   selector: 'app-tools',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ActionButtonComponent],
   templateUrl: './tools.component.html',
 })
 export class ToolsComponent {

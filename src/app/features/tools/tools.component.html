@@ -1,28 +1,21 @@
 <div class="grid grid-cols-3 gap-2">
-  <button
-    class="inline-flex h-10 w-full items-center justify-center rounded-xl border border-slate-300 bg-white/85 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-700 transition hover:border-slate-500 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/30"
-    type="button"
-    title="Load settings from file"
+  <app-action-button
+    variant="toolbar"
+    [title]="'Load settings from file'"
     (click)="openFilePicker()"
   >
     Load
-  </button>
-  <button
-    class="inline-flex h-10 w-full items-center justify-center rounded-xl border border-slate-300 bg-white/85 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-700 transition hover:border-slate-500 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/30"
-    type="button"
-    title="Save settings to file"
-    (click)="saveParamsFile()"
-  >
+  </app-action-button>
+  <app-action-button variant="toolbar" [title]="'Save settings to file'" (click)="saveParamsFile()">
     Save
-  </button>
-  <button
-    class="inline-flex h-10 w-full items-center justify-center rounded-xl border border-slate-300 bg-slate-900 text-[10px] font-bold uppercase tracking-[0.12em] text-white transition hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/30"
-    type="button"
-    title="Export to STL"
+  </app-action-button>
+  <app-action-button
+    variant="toolbar-primary"
+    [title]="'Export to STL'"
     (click)="openExportModal()"
   >
     STL
-  </button>
+  </app-action-button>
 
   <input #fileInput type="file" accept=".json" class="hidden" (change)="loadParamsFile($event)" />
 </div>
@@ -46,20 +39,12 @@
       Export the full enclosure or only PCB mounts for quick fit checks.
     </p>
     <div class="flex flex-wrap items-center justify-center gap-2">
-      <button
-        class="inline-flex h-11 items-center justify-center rounded-xl border border-slate-300 bg-white px-5 text-sm font-semibold text-slate-800 transition hover:border-slate-500 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/30"
-        type="button"
-        (click)="exportPcbMountsStl()"
-      >
+      <app-action-button variant="dialog" (click)="exportPcbMountsStl()">
         Export PCB Mounts
-      </button>
-      <button
-        class="inline-flex h-11 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 px-6 text-sm font-semibold text-white transition hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/30"
-        type="button"
-        (click)="exportStl()"
-      >
+      </app-action-button>
+      <app-action-button variant="dialog-primary" (click)="exportStl()">
         Export Full Enclosure
-      </button>
+      </app-action-button>
     </div>
   </div>
 </dialog>
