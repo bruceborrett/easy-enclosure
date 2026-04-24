@@ -118,6 +118,7 @@ type SurfaceAnchor = {
   selector: 'app-renderer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
+    'class': 'relative block h-full w-full overflow-hidden',
     '(pointermove)': 'onPointerMove($event)',
     '(pointerdown)': 'onPointerDown($event)',
     '(pointerup)': 'onPointerUp($event)',

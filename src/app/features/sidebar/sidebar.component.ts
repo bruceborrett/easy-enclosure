@@ -6,25 +6,20 @@ import { ParamsFormComponent } from '../params/params-form.component';
 import { ToolsComponent } from '../tools/tools.component';
 
 type SidebarSection = 'params' | 'funding';
-type SidebarSide = 'left' | 'right';
-
-const SIDEBAR_OPEN_KEY = 'easy-enclosure.sidebar.open';
-const SIDEBAR_SIDE_KEY = 'easy-enclosure.sidebar.side';
-const SIDEBAR_COMPACT_KEY = 'easy-enclosure.sidebar.compact';
 
 @Component({
   selector: 'app-sidebar',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ToolsComponent, ParamsFormComponent, FundingComponent],
+  host: {
+    class: 'block h-full',
+  },
   templateUrl: './sidebar.component.html',
 })
 export class SidebarComponent {
   private readonly state = inject(EnclosureStateService);
 
   readonly appVersion = APP_VERSION.trim().length > 0 ? APP_VERSION : 'dev';
-  readonly sidebarOpen = signal(this.readStoredBoolean(SIDEBAR_OPEN_KEY, true));
-  readonly sidebarSide = signal<SidebarSide>(this.readStoredSide());
-  readonly compactMode = signal(this.readStoredBoolean(SIDEBAR_COMPACT_KEY, false));
   readonly activeSidebarSection = signal<SidebarSection>('params');
 
   readonly enclosureMeasurements = computed(() => {
@@ -54,31 +49,6 @@ export class SidebarComponent {
     };
   });
 
-  toggleSidebar(): void {
-    this.sidebarOpen.update((value) => {
-      const next = !value;
-      this.storeBoolean(SIDEBAR_OPEN_KEY, next);
-      return next;
-    });
-  }
-
-  toggleSidebarSide(): void {
-    this.sidebarSide.update((value) => {
-      const next: SidebarSide = value === 'right' ? 'left' : 'right';
-      this.storeString(SIDEBAR_SIDE_KEY, next);
-      return next;
-    });
-  }
-
-  toggleCompactMode(): void {
-    this.compactMode.update((value) => {
-      const next = !value;
-      this.storeBoolean(SIDEBAR_COMPACT_KEY, next);
-      return next;
-    });
-    this.activeSidebarSection.set('params');
-  }
-
   setActiveSidebarSection(section: SidebarSection): void {
     if (this.activeSidebarSection() === section) {
       return;
@@ -88,43 +58,5 @@ export class SidebarComponent {
 
   formatMm(value: number): string {
     return `${value.toFixed(2)} mm`;
-  }
-
-  private readStoredBoolean(key: string, fallback: boolean): boolean {
-    if (typeof localStorage === 'undefined') {
-      return fallback;
-    }
-
-    const value = localStorage.getItem(key);
-    if (value === 'true') {
-      return true;
-    }
-    if (value === 'false') {
-      return false;
-    }
-    return fallback;
-  }
-
-  private readStoredSide(): SidebarSide {
-    if (typeof localStorage === 'undefined') {
-      return 'right';
-    }
-
-    const value = localStorage.getItem(SIDEBAR_SIDE_KEY);
-    return value === 'left' ? 'left' : 'right';
-  }
-
-  private storeBoolean(key: string, value: boolean): void {
-    if (typeof localStorage === 'undefined') {
-      return;
-    }
-    localStorage.setItem(key, value ? 'true' : 'false');
-  }
-
-  private storeString(key: string, value: string): void {
-    if (typeof localStorage === 'undefined') {
-      return;
-    }
-    localStorage.setItem(key, value);
   }
 }

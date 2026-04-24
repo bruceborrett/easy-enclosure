@@ -1,2 +1,11 @@
-<app-renderer />
-<app-sidebar />
+<div class="flex h-screen overflow-hidden">
+  <div class="relative min-w-0 flex-1">
+    <app-renderer />
+  </div>
+
+  <aside
+    class="ui-sidebar relative z-10 w-80 overflow-y-auto border-l border-slate-200 bg-slate-50 p-4"
+  >
+    <app-sidebar />
+  </aside>
+</div>
