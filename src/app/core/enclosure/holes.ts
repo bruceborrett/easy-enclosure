@@ -8,6 +8,8 @@ import { Geom3 } from '@jscad/modeling/src/geometries/types';
 import { Vec3 } from '@jscad/modeling/src/maths/types';
 import { Surface, SURFACES } from '.';
 
+const TOP_HOLE_DEPTH_TOLERANCE = 0.2;
+
 export const holes = (
   params: Params,
   surfacesFilter: Surface[] = ['bottom', 'left', 'right', 'back', 'front'],
@@ -39,10 +41,9 @@ export const holes = (
       let y: number;
       let z: number;
       let rot: Vec3;
-      let holeDepth: number;
 
       const totalWallThickness = insertThickness + insertClearance * 2 + wall * 2;
-      holeDepth = totalWallThickness;
+      let holeDepth = totalWallThickness;
 
       if (surface === 'front') {
         y = length - totalWallThickness / 2;
@@ -77,7 +78,7 @@ export const holes = (
         x = width / 2 - hole.y;
         z = 0;
         if (surface === 'top') {
-          holeDepth = roof + insertHeight + 0.2;
+          holeDepth = roof + insertHeight + TOP_HOLE_DEPTH_TOLERANCE;
           z = holeDepth / 2;
         }
         rot = [0, 0, 0];
