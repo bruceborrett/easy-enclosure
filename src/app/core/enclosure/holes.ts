@@ -16,7 +16,9 @@ export const holes = (
     length,
     width,
     height,
+    roof,
     wall,
+    insertHeight,
     insertThickness,
     insertClearance,
     holes: holeParams,
@@ -37,8 +39,10 @@ export const holes = (
       let y: number;
       let z: number;
       let rot: Vec3;
+      let holeDepth: number;
 
       const totalWallThickness = insertThickness + insertClearance * 2 + wall * 2;
+      holeDepth = totalWallThickness;
 
       if (surface === 'front') {
         y = length - totalWallThickness / 2;
@@ -72,6 +76,10 @@ export const holes = (
         y = length / 2 - hole.x;
         x = width / 2 - hole.y;
         z = 0;
+        if (surface === 'top') {
+          holeDepth = roof + insertHeight + 0.2;
+          z = holeDepth / 2;
+        }
         rot = [0, 0, 0];
       } else {
         throw new Error(`Invalid surface: ${surface}`);
@@ -84,7 +92,7 @@ export const holes = (
             rotate(
               rot,
               cuboid({
-                size: [hole.width, hole.width, totalWallThickness],
+                size: [hole.width, hole.width, holeDepth],
               }),
             ),
           ),
@@ -96,7 +104,7 @@ export const holes = (
             rotate(
               rot,
               cuboid({
-                size: [hole.width, hole.length, totalWallThickness],
+                size: [hole.width, hole.length, holeDepth],
               }),
             ),
           ),
@@ -109,7 +117,7 @@ export const holes = (
               rot,
               cylinder({
                 radius: hole.diameter / 2,
-                height: totalWallThickness,
+                height: holeDepth,
               }),
             ),
           ),
