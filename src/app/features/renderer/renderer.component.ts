@@ -9,9 +9,11 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import type { Geom3 } from '@jscad/modeling/src/geometries/types';
+import { fromPoints, transform as transformPath2 } from '@jscad/modeling/src/geometries/path2';
+import type { Geom3, Path2 } from '@jscad/modeling/src/geometries/types';
 import type { Vec3 } from '@jscad/modeling/src/maths/types';
 import { union } from '@jscad/modeling/src/operations/booleans';
+import { cuboid } from '@jscad/modeling/src/primitives';
 import { translate } from '@jscad/modeling/src/operations/transforms';
 import {
   cameras,
@@ -93,6 +95,7 @@ const mountDeps = [
   'insertClearance',
 ];
 const internalWallDeps = ['internalWalls', 'length', 'width', 'waterProof', 'floor'];
+const gridDeps = ['gridSpacing', 'width', 'length'];
 
 type RenderOptions = {
   camera: typeof cameras.perspective.defaults;
@@ -267,6 +270,55 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
       }
     });
     return diffKeys;
+  }
+
+  /**
+   * Build a scale-reference grid under the model. A wide flat slab (`plane`)
+   * sits below the model and a single open path2 (`lines`) carries every grid
+   * segment so the renderer only issues one drawLines call. `gridSpacing`
+   * controls the distance between lines in mm; 0 hides the grid.
+   */
+  private buildGridGeometry(params: Params): { plane: Geom3; lines: Path2 } | null {
+    const spacing = Math.max(0, params.gridSpacing);
+    if (spacing === 0) {
+      return null;
+    }
+
+    const { width, length } = params;
+    const largest = Math.max(width, length);
+    // Cover 3x the larger footprint, rounded up to a spacing multiple so the
+    // grid edges land cleanly. Bounded so very small enclosures still show a
+    // grid and very large ones do not push the camera too far back.
+    const size = Math.max(
+      spacing * 6,
+      Math.min(1200, Math.ceil((largest * 3) / spacing) * spacing),
+    );
+    const halfSize = size / 2;
+    const planeThickness = 0.1;
+    const planeTopZ = -0.5;
+    const lineZ = planeTopZ + planeThickness / 2 + 0.01;
+
+    const plane = translate(
+      [0, 0, planeTopZ - planeThickness / 2],
+      cuboid({ size: [size, size, planeThickness] }),
+    );
+
+    // Path2 points are interpreted in the local XY plane (z = 0). After the
+    // translate we set below the path2's transform matrix, all segments sit
+    // exactly on the floor surface in world coordinates — X-parallel lines at
+    // varying y, Y-parallel lines at varying x.
+    const points: [number, number][] = [];
+    // One extra iteration past halfSize so both edges get a line.
+    for (let i = -halfSize; i <= halfSize + 0.001; i += spacing) {
+      // X-parallel segment (constant y = i).
+      points.push([-halfSize, i], [halfSize, i]);
+      // Y-parallel segment (constant x = i).
+      points.push([i, -halfSize], [i, halfSize]);
+    }
+    const lines = fromPoints({}, points);
+    transformPath2(translate([0, 0, lineZ]), lines);
+
+    return { plane, lines };
   }
 
   private scheduleModelRender(params: Params): void {
@@ -640,10 +692,37 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
 
     this.model = union(result);
 
+    const modelEntities = entitiesFromSolids({}, this.model) as Entity[];
+    const gridGeom = this.buildGridGeometry(params);
+    let gridEntities: Entity[] = [];
+    if (gridGeom) {
+      const planeEntities = entitiesFromSolids(
+        { color: [0.82, 0.86, 0.92] },
+        gridGeom.plane,
+      ) as Entity[];
+      const lineEntities = entitiesFromSolids(
+        { color: [0.32, 0.38, 0.48] },
+        gridGeom.lines,
+      ) as Entity[];
+      // Mark the floor plane as transparent so it sorts behind solid lines.
+      for (const entity of planeEntities) {
+        entity.visuals.transparent = true;
+      }
+      gridEntities = [...planeEntities, ...lineEntities];
+    }
+    const entities: Entity[] = [...modelEntities, ...gridEntities];
+
+    // Re-frame the camera when the grid becomes visible (so it lands in view)
+    // or when its size-affecting inputs change while it is on. Leave the user's
+    // manual orbit alone when the grid is simply toggled off.
+    if (gridGeom && this.checkDeps(diff, gridDeps)) {
+      this.zoomToFit = true;
+    }
+
     this.renderOptions = {
       camera: this.camera,
       drawCommands,
-      entities: entitiesFromSolids({}, this.model) as Entity[],
+      entities,
     };
 
     if (!this.renderer && this.containerRef?.nativeElement) {
@@ -656,7 +735,7 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
         this.updateAndRender();
       }
     } else {
-      this.renderOptions.entities = entitiesFromSolids({}, this.model) as Entity[];
+      this.renderOptions.entities = entities;
       this.updateView = true;
       this.updateSurfaceLabels();
     }

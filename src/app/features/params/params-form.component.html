@@ -499,4 +499,25 @@
       }
     </div>
   </div>
+
+  <div class="accordian" [class.active]="activeTab() === 9">
+    <p class="accordian-header" (click)="setActiveTab(9)">
+      Display
+      <span class="accordian-icon">{{ activeTab() === 9 ? '-' : '+' }}</span>
+    </p>
+    <div class="accordian-body">
+      <div class="input-group">
+        <label>Grid Spacing (mm)</label>
+        <input
+          type="number"
+          min="0"
+          step="1"
+          [value]="params().gridSpacing"
+          (keydown.enter)="$any($event.target).blur()"
+          (blur)="setNumberParam('gridSpacing', $any($event.target).value)"
+        />
+        <small class="hint">Set to 0 to hide the grid.</small>
+      </div>
+    </div>
+  </div>
 </form>
