@@ -89,7 +89,7 @@ Pull requests are also welcome!
 - [x] PCB Mounts
 - [x] Export each entity seperately
 - [x] Save settings to file
-- [ ] Din rail mounts
+- [x] Din rail mounts
 - [ ] Pre-defined templates for common devices (Pi, Arduino etc)
 
 ## Notes
