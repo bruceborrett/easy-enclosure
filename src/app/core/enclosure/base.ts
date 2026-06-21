@@ -6,6 +6,7 @@ import { flanges } from './wallmount';
 import { clover, hollowRoundCube, roundedCube } from './utils';
 import { waterProofSealCutout } from './waterproofseal';
 import { screws } from './screws';
+import { dinRailMount } from './dinrail';
 import { translate } from '@jscad/modeling/src/operations/transforms';
 
 const { subtract, union } = booleans;
@@ -56,6 +57,10 @@ export const base = (params: Params) => {
 
   if (params.wallMounts) {
     body.push(flanges(params));
+  }
+
+  if (params.dinRailMount) {
+    body.push(dinRailMount(params));
   }
 
   if (params.waterProof) {

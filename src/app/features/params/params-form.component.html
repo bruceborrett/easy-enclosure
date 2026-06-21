@@ -460,7 +460,7 @@
 
   <div class="accordian" [class.active]="activeTab() === 8">
     <p class="accordian-header" (click)="setActiveTab(8)">
-      Wall Mounts
+      Mounting
       <span class="accordian-icon">{{ activeTab() === 8 ? '-' : '+' }}</span>
     </p>
     <div class="accordian-body">
@@ -494,6 +494,76 @@
             [value]="params().wallMountScrewDiameter"
             (keydown.enter)="$any($event.target).blur()"
             (blur)="setNumberParam('wallMountScrewDiameter', $any($event.target).value)"
+          />
+        </div>
+      }
+
+      <div class="input-group">
+        <label>DIN Rail Mount</label>
+        <input
+          type="checkbox"
+          [checked]="params().dinRailMount"
+          (change)="setBooleanParam('dinRailMount', $any($event.target).checked)"
+        />
+      </div>
+
+      @if (params().dinRailMount) {
+        <div class="input-group">
+          <label>Surface</label>
+          <select
+            [value]="params().dinRailSurface"
+            (change)="setDinRailSurface($any($event.target).value)"
+          >
+            <option value="bottom">Bottom</option>
+            <option value="back">Back</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label>Rail Width</label>
+          <input
+            type="number"
+            min="20"
+            step="0.1"
+            [value]="params().dinRailWidth"
+            (keydown.enter)="$any($event.target).blur()"
+            (blur)="setNumberParam('dinRailWidth', $any($event.target).value)"
+          />
+        </div>
+
+        <div class="input-group">
+          <label>Crown Width</label>
+          <input
+            type="number"
+            min="15"
+            step="0.1"
+            [value]="params().dinRailCrownWidth"
+            (keydown.enter)="$any($event.target).blur()"
+            (blur)="setNumberParam('dinRailCrownWidth', $any($event.target).value)"
+          />
+        </div>
+
+        <div class="input-group">
+          <label>Rail Depth</label>
+          <input
+            type="number"
+            min="5"
+            step="0.1"
+            [value]="params().dinRailDepth"
+            (keydown.enter)="$any($event.target).blur()"
+            (blur)="setNumberParam('dinRailDepth', $any($event.target).value)"
+          />
+        </div>
+
+        <div class="input-group">
+          <label>Slot Length</label>
+          <input
+            type="number"
+            min="20"
+            step="1"
+            [value]="params().dinRailLength"
+            (keydown.enter)="$any($event.target).blur()"
+            (blur)="setNumberParam('dinRailLength', $any($event.target).value)"
           />
         </div>
       }

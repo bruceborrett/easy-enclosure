@@ -92,6 +92,12 @@ label {
   vertical-align: top;
 }
 
+/* A toggle (checkbox) gets its own full-width row so it doesn't share a line
+   with the parameter fields below/beside it. */
+.input-group:has(input[type='checkbox']) {
+  width: 100%;
+}
+
 .compact-params {
   padding: 2px 0;
 }

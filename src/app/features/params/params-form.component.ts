@@ -144,6 +144,12 @@ export class ParamsFormComponent {
     });
   }
 
+  setDinRailSurface(value: string): void {
+    if (value === 'bottom' || value === 'back') {
+      this.state.updateParam('dinRailSurface', value);
+    }
+  }
+
   parseIntValue(rawValue: string): number {
     return parseInt(rawValue, 10);
   }

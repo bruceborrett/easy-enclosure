@@ -52,6 +52,12 @@ export type Params = {
   lidScrews: boolean;
   lidScrewDiameter: number;
   baseLidScrewDiameter: number;
+  dinRailMount: boolean;
+  dinRailSurface: 'bottom' | 'back';
+  dinRailWidth: number;
+  dinRailCrownWidth: number;
+  dinRailDepth: number;
+  dinRailLength: number;
 };
 
 export const DEFAULT_PARAMS: Params = {
@@ -166,6 +172,12 @@ export const DEFAULT_PARAMS: Params = {
   lidScrews: true,
   lidScrewDiameter: 2.98,
   baseLidScrewDiameter: 2.88,
+  dinRailMount: false,
+  dinRailSurface: 'bottom',
+  dinRailWidth: 35,
+  dinRailCrownWidth: 27,
+  dinRailDepth: 8.5,
+  dinRailLength: 60,
 };
 
 export const cloneParams = (params: Params): Params => {
