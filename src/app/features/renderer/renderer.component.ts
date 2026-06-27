@@ -93,6 +93,7 @@ const mountDeps = [
   'insertClearance',
 ];
 const internalWallDeps = ['internalWalls', 'length', 'width', 'waterProof', 'floor'];
+const gridDeps = ['gridSpacing', 'gridWidth', 'gridLength'];
 
 type RenderOptions = {
   camera: typeof cameras.perspective.defaults;
@@ -269,6 +270,44 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
     return diffKeys;
   }
 
+  /**
+   * Build a scale-reference grid under the model using the renderer's native
+   * `drawGrid` command — the same one OpenJSCAD's own viewer uses. It draws
+   * thin two-tier lines (major + sub-grid) with anti-z-fighting polygon offset,
+   * alpha blending, and optional fog fade-out, so there is no need to build a
+   * floor slab or line geometry by hand.
+   *
+   * - `gridSpacing` is the distance between minor lines in mm; 0 hides the grid.
+   * - `gridWidth` / `gridLength` are the grid extents in mm (X and Y), so the
+   *   grid can be rectangular.
+   * - Lines fade out toward the edges once the grid exceeds 320 mm on either
+   *   side, so large grids dissolve into the background instead of showing a
+   *   hard square boundary. Major lines fall every fifth spacing.
+   */
+  private buildGridEntity(params: Params): Entity | null {
+    const spacing = Math.max(0, params.gridSpacing);
+    if (spacing === 0) {
+      return null;
+    }
+
+    const width = Math.max(1, params.gridWidth);
+    const length = Math.max(1, params.gridLength);
+    const fadeOut = width > 320 || length > 320;
+
+    return {
+      visuals: {
+        drawCmd: 'drawGrid',
+        show: true,
+        color: [0, 0, 0, 1],
+        subColor: [0, 0, 1, 0.5],
+        fadeOut,
+        transparent: true,
+      },
+      size: [width, length],
+      ticks: [spacing * 5, spacing],
+    } as unknown as Entity;
+  }
+
   private scheduleModelRender(params: Params): void {
     if (!this.isViewReady) {
       return;
@@ -334,10 +373,14 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
         return;
       }
       this.control.zoomToFit.tightness = 1;
+      // Frame the model only: reference entities (drawGrid/drawAxis) carry no
+      // `geometry`, so including them would feed `undefined` into the bounds
+      // calculation and NaN out the camera.
+      const frameEntities = this.renderOptions.entities.filter((entity) => entity.geometry);
       const updated = this.orbitControls.zoomToFit({
         controls: this.control,
         camera: this.camera,
-        entities: this.renderOptions.entities,
+        entities: frameEntities,
       });
       this.control = { ...this.control, ...updated.controls };
       this.zoomToFit = false;
@@ -640,10 +683,23 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
 
     this.model = union(result);
 
+    const modelEntities = entitiesFromSolids({}, this.model) as Entity[];
+    const gridEntity = this.buildGridEntity(params);
+    // The grid is a reference plane sitting under the model, so list it first
+    // so it draws before the solid geometry.
+    const entities: Entity[] = gridEntity ? [gridEntity, ...modelEntities] : modelEntities;
+
+    // Re-frame the camera when the grid becomes visible (so it lands in view)
+    // or when its size-affecting inputs change while it is on. Leave the user's
+    // manual orbit alone when the grid is simply toggled off.
+    if (gridEntity && this.checkDeps(diff, gridDeps)) {
+      this.zoomToFit = true;
+    }
+
     this.renderOptions = {
       camera: this.camera,
       drawCommands,
-      entities: entitiesFromSolids({}, this.model) as Entity[],
+      entities,
     };
 
     if (!this.renderer && this.containerRef?.nativeElement) {
@@ -656,7 +712,7 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
         this.updateAndRender();
       }
     } else {
-      this.renderOptions.entities = entitiesFromSolids({}, this.model) as Entity[];
+      this.renderOptions.entities = entities;
       this.updateView = true;
       this.updateSurfaceLabels();
     }
