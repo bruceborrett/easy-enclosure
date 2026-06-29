@@ -75,23 +75,6 @@ It is very time consuming and expensive to continuously test prints with all the
 
 Pull requests are also welcome!
 
-## ToDo
-
-- [x] Basic square enclosure
-- [x] Configurable dimensions
-- [x] Configurable wall thickness
-- [x] Rounded corners with configurable radius
-- [x] Wall mount flanges
-- [x] STL Export
-- [x] Holes
-- [x] Waterproof seal
-- [x] Screws
-- [x] PCB Mounts
-- [x] Export each entity seperately
-- [x] Save settings to file
-- [ ] Din rail mounts
-- [ ] Pre-defined templates for common devices (Pi, Arduino etc)
-
 ## Notes
 
 - All measurements are in millimeters
