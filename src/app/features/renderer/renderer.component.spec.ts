@@ -39,64 +39,67 @@ describe('RendererComponent', () => {
   }));
 
   describe('buildGridEntity', () => {
-    it('returns null when gridSpacing is 0', () => {
+    it('returns null when showGrid is false', () => {
       const fixture = TestBed.createComponent(RendererComponent);
       component = fixture.componentInstance;
-      const result = (component as any).buildGridEntity({
-        ...DEFAULT_PARAMS,
-        gridSpacing: 0,
-      });
+      const result = (component as any).buildGridEntity(
+        {
+          ...DEFAULT_PARAMS,
+          showGrid: false,
+          gridSpacing: 10,
+        },
+        [
+          [-50, -40, 0],
+          [50, 40, 30],
+        ],
+      );
       expect(result).toBeNull();
     });
 
-    it('returns a drawGrid entity sized to gridWidth/gridLength', () => {
+    it('returns null when gridSpacing is 0', () => {
       const fixture = TestBed.createComponent(RendererComponent);
       component = fixture.componentInstance;
-      const result = (component as any).buildGridEntity({
-        ...DEFAULT_PARAMS,
-        gridSpacing: 10,
-        gridWidth: 200,
-        gridLength: 150,
-      });
+      const result = (component as any).buildGridEntity(
+        {
+          ...DEFAULT_PARAMS,
+          showGrid: true,
+          gridSpacing: 0,
+        },
+        [
+          [-50, -40, 0],
+          [50, 40, 30],
+        ],
+      );
+      expect(result).toBeNull();
+    });
+
+    it('returns a drawGrid entity centered on measured bounds', () => {
+      const fixture = TestBed.createComponent(RendererComponent);
+      component = fixture.componentInstance;
+      const bounds = [
+        [-180, -60, 0],
+        [140, 90, 30],
+      ];
+      const result = (component as any).buildGridEntity(
+        {
+          ...DEFAULT_PARAMS,
+          showGrid: true,
+          gridSpacing: 10,
+        },
+        bounds,
+      );
+
       expect(result).not.toBeNull();
       expect(result.visuals.drawCmd).toBe('drawGrid');
       expect(result.visuals.show).toBe(true);
-      // Rectangular extent [width, length].
-      expect(result.size).toEqual([200, 150]);
-      // ticks[1] = minor step = spacing; ticks[0] = major step = 5× spacing.
+      expect(result.visuals.fadeOut).toBe(true);
       expect(result.ticks[1]).toBe(10);
       expect(result.ticks[0]).toBe(50);
-    });
-
-    it('disables fadeOut while the grid is within 320 mm', () => {
-      const fixture = TestBed.createComponent(RendererComponent);
-      component = fixture.componentInstance;
-      const result = (component as any).buildGridEntity({
-        ...DEFAULT_PARAMS,
-        gridSpacing: 10,
-        gridWidth: 320,
-        gridLength: 320,
-      });
-      expect(result.visuals.fadeOut).toBe(false);
-    });
-
-    it('enables fadeOut once the grid exceeds 320 mm on either side', () => {
-      const fixture = TestBed.createComponent(RendererComponent);
-      component = fixture.componentInstance;
-      const wide = (component as any).buildGridEntity({
-        ...DEFAULT_PARAMS,
-        gridSpacing: 10,
-        gridWidth: 400,
-        gridLength: 320,
-      });
-      const long = (component as any).buildGridEntity({
-        ...DEFAULT_PARAMS,
-        gridSpacing: 10,
-        gridWidth: 320,
-        gridLength: 400,
-      });
-      expect(wide.visuals.fadeOut).toBe(true);
-      expect(long.visuals.fadeOut).toBe(true);
+      expect(result.model).toEqual([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -20, 15, 0, 1]);
+      expect(result.fadeCenter).toEqual([-20, 15]);
+      expect(result.fadeDistance).toBe(325);
+      // drawGrid interprets size[0] as Y span and size[1] as X span.
+      expect(result.size).toEqual([450, 650]);
     });
   });
 });

@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import type { Geom3 } from '@jscad/modeling/src/geometries/types';
 import type { Vec3 } from '@jscad/modeling/src/maths/types';
+import measureBoundingBox from '@jscad/modeling/src/measurements/measureBoundingBox';
 import { union } from '@jscad/modeling/src/operations/booleans';
 import { translate } from '@jscad/modeling/src/operations/transforms';
 import {
@@ -93,7 +94,138 @@ const mountDeps = [
   'insertClearance',
 ];
 const internalWallDeps = ['internalWalls', 'length', 'width', 'waterProof', 'floor'];
-const gridDeps = ['gridSpacing', 'gridWidth', 'gridLength'];
+const gridDeps = [
+  'showGrid',
+  'gridSpacing',
+  'length',
+  'width',
+  'waterProof',
+  'showLid',
+  'showBase',
+];
+
+const createIdentityMatrix = (): number[] => [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+
+const makeAdaptiveGridLayer = (regl: any, params: any = {}) => {
+  const positions: number[] = [];
+  const defaults = {
+    visuals: {
+      color: [0, 0, 1, 1],
+      fadeOut: false,
+    },
+    ticks: 1,
+    size: [16, 16],
+    lineWidth: 2,
+  };
+  const visuals = Object.assign({}, defaults.visuals, params.visuals || {});
+  const { fadeOut, color } = visuals;
+  const { size, ticks, lineWidth } = Object.assign({}, defaults, params);
+
+  const width = size[0];
+  const length = size[1];
+
+  for (let i = -width * 0.5; i <= width * 0.5; i += ticks) {
+    positions.push(-length * 0.5, i, 0);
+    positions.push(length * 0.5, i, 0);
+    positions.push(-length * 0.5, i, 0);
+  }
+
+  for (let i = -length * 0.5; i <= length * 0.5; i += ticks) {
+    positions.push(i, -width * 0.5, 0);
+    positions.push(i, width * 0.5, 0);
+    positions.push(i, -width * 0.5, 0);
+  }
+
+  return regl({
+    vert: `precision mediump float;
+
+    uniform mat4 model, view, projection;
+
+    attribute vec3 position;
+    varying vec4 worldPosition;
+
+    void main() {
+      worldPosition = model * vec4(position, 1.0);
+      gl_Position = projection * view * worldPosition;
+    }`,
+    frag: `precision mediump float;
+
+    uniform vec4 color;
+    uniform vec4 fogColor;
+    uniform bool fadeOut;
+    uniform vec2 fadeCenter;
+    uniform float fadeDistance;
+    varying vec4 worldPosition;
+
+    void main() {
+      float dist = 0.0;
+      if (fadeOut) {
+        dist = distance(fadeCenter, worldPosition.xy) / max(fadeDistance, 0.0001);
+        dist = clamp(dist, 0.0, 1.0);
+        dist = sqrt(dist);
+      }
+
+      gl_FragColor = mix(color, fogColor, dist);
+    }`,
+    attributes: {
+      position: regl.buffer(positions),
+    },
+    count: positions.length / 3,
+    uniforms: {
+      model: (_context: unknown, props: any) => props?.model ?? createIdentityMatrix(),
+      color: (_context: unknown, props: any) => props?.color ?? color,
+      fogColor: (_context: unknown, props: any) => {
+        const activeColor = props?.color ?? color;
+        return [activeColor[0], activeColor[1], activeColor[2], 0];
+      },
+      fadeOut: (_context: unknown, props: any) => props?.fadeOut ?? fadeOut,
+      fadeCenter: (_context: unknown, props: any) => props?.fadeCenter ?? [0, 0],
+      fadeDistance: (_context: unknown, props: any) =>
+        props?.fadeDistance ?? Math.max(width, length) * 0.5,
+    },
+    lineWidth: (_context: unknown, props: any) =>
+      Math.min(props?.lineWidth ?? lineWidth, regl.limits.lineWidthDims[1]),
+    primitive: 'lines',
+    cull: {
+      enable: true,
+      face: 'front',
+    },
+    polygonOffset: {
+      enable: true,
+      offset: {
+        factor: 1,
+        units: Math.random() * 10,
+      },
+    },
+    blend: {
+      enable: true,
+      func: {
+        src: 'src alpha',
+        dst: 'one minus src alpha',
+      },
+    },
+  });
+};
+
+const makeAdaptiveGridCommand = (regl: any, params: any = {}) => {
+  const defaults = {
+    size: [50, 50],
+    ticks: [10, 1],
+  };
+  const { size, ticks } = Object.assign({}, defaults, params);
+  const drawMainGrid = makeAdaptiveGridLayer(regl, { size, ticks: ticks[0] });
+  const drawSubGrid = makeAdaptiveGridLayer(regl, { size, ticks: ticks[1] });
+
+  return (props: any) => {
+    drawMainGrid(props);
+    drawSubGrid({ ...props, color: props.subColor });
+  };
+};
+
+const rendererDrawCommands = {
+  ...drawCommands,
+  drawGrid: makeAdaptiveGridCommand,
+} as typeof drawCommands;
 
 type RenderOptions = {
   camera: typeof cameras.perspective.defaults;
@@ -271,28 +403,31 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Build a scale-reference grid under the model using the renderer's native
-   * `drawGrid` command — the same one OpenJSCAD's own viewer uses. It draws
-   * thin two-tier lines (major + sub-grid) with anti-z-fighting polygon offset,
-   * alpha blending, and optional fog fade-out, so there is no need to build a
-   * floor slab or line geometry by hand.
+   * Build a scale-reference grid under the rendered model bounds using the
+   * renderer's native `drawGrid` command.
    *
-   * - `gridSpacing` is the distance between minor lines in mm; 0 hides the grid.
-   * - `gridWidth` / `gridLength` are the grid extents in mm (X and Y), so the
-   *   grid can be rectangular.
-   * - Lines fade out toward the edges once the grid exceeds 320 mm on either
-   *   side, so large grids dissolve into the background instead of showing a
-   *   hard square boundary. Major lines fall every fifth spacing.
+   * The underlying command fades from its local origin and treats `size[0]` as
+   * the Y span and `size[1]` as the X span, so we translate the grid to the
+   * model center and swap the measured XY spans into that expected order.
    */
-  private buildGridEntity(params: Params): Entity | null {
-    const spacing = Math.max(0, params.gridSpacing);
-    if (spacing === 0) {
+  private buildGridEntity(params: Params, bounds: [Vec3Tuple, Vec3Tuple]): Entity | null {
+    if (!params.showGrid || params.gridSpacing <= 0) {
       return null;
     }
 
-    const width = Math.max(1, params.gridWidth);
-    const length = Math.max(1, params.gridLength);
-    const fadeOut = width > 320 || length > 320;
+    const spacing = params.gridSpacing;
+    const majorSpacing = spacing * 5;
+    const visiblePadding = majorSpacing * 5;
+    const fadePadding = majorSpacing;
+    const [[minX, minY], [maxX, maxY]] = bounds;
+
+    const spanX = Math.max(spacing, maxX - minX);
+    const spanY = Math.max(spacing, maxY - minY);
+    const sizeX = this.roundUpToStep(spanX + (visiblePadding + fadePadding) * 2, majorSpacing);
+    const sizeY = this.roundUpToStep(spanY + (visiblePadding + fadePadding) * 2, majorSpacing);
+    const centerX = (minX + maxX) / 2;
+    const centerY = (minY + maxY) / 2;
+    const modelRadius = Math.max(spanX, spanY) * 0.5;
 
     return {
       visuals: {
@@ -300,12 +435,23 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
         show: true,
         color: [0, 0, 0, 1],
         subColor: [0, 0, 1, 0.5],
-        fadeOut,
+        fadeOut: true,
         transparent: true,
       },
-      size: [width, length],
-      ticks: [spacing * 5, spacing],
+      model: this.buildTranslationMatrix(centerX, centerY, 0),
+      fadeCenter: [centerX, centerY],
+      fadeDistance: Math.max(sizeX, sizeY) * 0.5,
+      size: [sizeY, sizeX],
+      ticks: [majorSpacing, spacing],
     } as unknown as Entity;
+  }
+
+  private roundUpToStep(value: number, step: number): number {
+    return Math.max(step, Math.ceil(value / step) * step);
+  }
+
+  private buildTranslationMatrix(x: number, y: number, z: number): number[] {
+    return [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1];
   }
 
   private scheduleModelRender(params: Params): void {
@@ -684,7 +830,8 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
     this.model = union(result);
 
     const modelEntities = entitiesFromSolids({}, this.model) as Entity[];
-    const gridEntity = this.buildGridEntity(params);
+    const modelBounds = measureBoundingBox(this.model) as [Vec3Tuple, Vec3Tuple];
+    const gridEntity = this.buildGridEntity(params, modelBounds);
     // The grid is a reference plane sitting under the model, so list it first
     // so it draws before the solid geometry.
     const entities: Entity[] = gridEntity ? [gridEntity, ...modelEntities] : modelEntities;
@@ -698,7 +845,7 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
 
     this.renderOptions = {
       camera: this.camera,
-      drawCommands,
+      drawCommands: rendererDrawCommands,
       entities,
     };
 

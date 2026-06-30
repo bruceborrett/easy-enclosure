@@ -42,9 +42,8 @@ export type Params = {
   insertClearance: number;
   showLid: boolean;
   showBase: boolean;
+  showGrid: boolean;
   gridSpacing: number;
-  gridWidth: number;
-  gridLength: number;
   cornerRadius: number;
   holes: Hole[];
   pcbMounts: PCBMount[];
@@ -71,9 +70,8 @@ export const DEFAULT_PARAMS: Params = {
   insertClearance: 0.04,
   showLid: true,
   showBase: true,
+  showGrid: true,
   gridSpacing: 10,
-  gridWidth: 320,
-  gridLength: 320,
   cornerRadius: 3,
   holes: [
     {

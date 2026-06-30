@@ -506,40 +506,24 @@
       <span class="accordian-icon">{{ activeTab() === 9 ? '-' : '+' }}</span>
     </p>
     <div class="accordian-body">
-      <div class="input-group">
+      <div class="input-group grid-toggle-group">
+        <label>Show Grid</label>
+        <input
+          type="checkbox"
+          [checked]="params().showGrid"
+          (change)="setBooleanParam('showGrid', $any($event.target).checked)"
+        />
+      </div>
+      <div class="input-group input-group-full">
         <label>Grid Spacing (mm)</label>
         <input
           type="number"
-          min="0"
+          min="1"
           step="1"
           [value]="params().gridSpacing"
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setNumberParam('gridSpacing', $any($event.target).value)"
         />
-        <small class="hint">Distance between lines. Set to 0 to hide the grid.</small>
-      </div>
-      <div class="input-group">
-        <label>Grid Width (mm)</label>
-        <input
-          type="number"
-          min="1"
-          step="1"
-          [value]="params().gridWidth"
-          (keydown.enter)="$any($event.target).blur()"
-          (blur)="setNumberParam('gridWidth', $any($event.target).value)"
-        />
-      </div>
-      <div class="input-group">
-        <label>Grid Length (mm)</label>
-        <input
-          type="number"
-          min="1"
-          step="1"
-          [value]="params().gridLength"
-          (keydown.enter)="$any($event.target).blur()"
-          (blur)="setNumberParam('gridLength', $any($event.target).value)"
-        />
-        <small class="hint">Grid fades out past 320 mm.</small>
       </div>
     </div>
   </div>
