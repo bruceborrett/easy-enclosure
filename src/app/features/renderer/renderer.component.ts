@@ -24,6 +24,7 @@ import {
 import type { Entity } from '@jscad/regl-renderer/types/geometry-utils-V2/entity';
 
 import { base } from '../../core/enclosure/base';
+import { dinRailMountsPair } from '../../core/enclosure/dinrailmount';
 import { internalWalls } from '../../core/enclosure/internalwalls';
 import { lid } from '../../core/enclosure/lid';
 import { pcbMountsOnBase, pcbMountsOnLid } from '../../core/enclosure/pcbmount';
@@ -94,6 +95,20 @@ const mountDeps = [
   'insertClearance',
 ];
 const internalWallDeps = ['internalWalls', 'length', 'width', 'waterProof', 'floor'];
+const dinRailDeps = [
+  'dinRailMount',
+  'dinRailOrientation',
+  'dinRailMountWidth',
+  'dinRailScrewDiameter',
+  'wallMountScrewDiameter',
+  'wallMountCount',
+  'cornerRadius',
+  'length',
+  'width',
+  'wallMounts',
+  'showDinRailMount',
+  'waterProof',
+];
 const gridDeps = [
   'showGrid',
   'gridSpacing',
@@ -102,6 +117,8 @@ const gridDeps = [
   'waterProof',
   'showLid',
   'showBase',
+  'dinRailMount',
+  'showDinRailMount',
 ];
 
 const createIdentityMatrix = (): number[] => [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
@@ -236,7 +253,7 @@ type RenderOptions = {
 type Vec3Tuple = [number, number, number];
 
 type SurfaceLabel = {
-  name: 'Front' | 'Back' | 'Left' | 'Right' | 'Lid' | 'Bottom' | 'Seal';
+  name: 'Front' | 'Back' | 'Left' | 'Right' | 'Lid' | 'Bottom' | 'Seal' | 'DIN Mount';
   x: number;
   y: number;
 };
@@ -256,6 +273,7 @@ type SurfaceAnchor = {
     '(pointerdown)': 'onPointerDown($event)',
     '(pointerup)': 'onPointerUp($event)',
     '(wheel)': 'onWheel($event)',
+    '(contextmenu)': '$event.preventDefault()',
   },
   templateUrl: './renderer.component.html',
 })
@@ -291,6 +309,7 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
   private lidModel: Geom3 | null = null;
   private baseModel: Geom3 | null = null;
   private sealModel: Geom3 | null = null;
+  private dinRailModel: Geom3 | null = null;
   private mountsModel: Geom3 | null = null;
   private internalWallsModel: Geom3 | null = null;
 
@@ -305,6 +324,7 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
   private baseOrigin: Vec3Tuple = [0, 0, 0];
   private lidOrigin: Vec3Tuple = [0, 0, 0];
   private sealOrigin: Vec3Tuple = [0, 0, 0];
+  private dinRailOrigin: Vec3Tuple = [0, 0, 0];
   private wheelInteracting = false;
   private wheelInteractionHandle: ReturnType<typeof setTimeout> | null = null;
 
@@ -348,7 +368,8 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
     const dx = this.lastX - event.pageX;
     const dy = event.pageY - this.lastY;
 
-    if (event.shiftKey) {
+    // Shift orbit center / pan with Ctrl+drag, Meta+drag, Shift+drag, or middle mouse drag (button 4)
+    if (event.ctrlKey || event.metaKey || event.shiftKey || event.buttons === 4) {
       this.panDelta[0] += dx;
       this.panDelta[1] += dy;
     } else {
@@ -417,7 +438,7 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
 
     const spacing = params.gridSpacing;
     const majorSpacing = spacing * 5;
-    const visiblePadding = majorSpacing * 5;
+    const visiblePadding = majorSpacing * 2;
     const fadePadding = majorSpacing;
     const [[minX, minY], [maxX, maxY]] = bounds;
 
@@ -646,6 +667,20 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
       });
     }
 
+    if (
+      this.dinRailModel &&
+      this.state.params().dinRailMount &&
+      this.state.params().showDinRailMount
+    ) {
+      const [dinX, dinY, dinZ] = this.dinRailOrigin;
+      anchors.push({
+        name: 'DIN Mount',
+        point: [dinX, dinY, dinZ + 16],
+        normal: [0, 0, 1],
+      });
+    }
+
+
     const projected = anchors
       .filter((anchor) => this.isFacingCamera(anchor.point, anchor.normal))
       .map((anchor) => {
@@ -739,18 +774,21 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
   }
 
   private async renderModel(params: Params, diff: string[]): Promise<void> {
-    let lidPos: Vec3;
-    let basePos: Vec3;
-    let sealPos: Vec3;
-    let mountsPos: Vec3;
-
     const {
       width,
       length,
       waterProof,
       pcbMounts: pcbMountParams,
       internalWalls: internalWallParams,
+      dinRailMount: dinMountEnabled,
+      showDinRailMount,
     } = params;
+
+    let lidPos: Vec3 = [0, 0, 0];
+    let basePos: Vec3 = [0, 0, 0];
+    let mountsPos: Vec3 = [0, 0, 0];
+    let sealPos: Vec3 = [0, 0, 0];
+    let dinRailPos: Vec3 = [0, 0, 0];
 
     if (this.checkDeps(diff, lidDeps)) {
       lidPos = waterProof ? [width / 2 + SPACING, -length / 2, 0] : [SPACING / 2, -length / 2, 0];
@@ -772,6 +810,18 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
       this.sealModel = translate(sealPos, waterProofSeal(params));
     } else if (this.checkDeps(diff, sealDeps) && !waterProof) {
       this.sealModel = null;
+    }
+
+    if (this.checkDeps(diff, dinRailDeps) && dinMountEnabled && showDinRailMount) {
+      const lidX = waterProof ? width / 2 + SPACING : SPACING / 2;
+      const rawDin = dinRailMountsPair(params);
+      const dinBounds = measureBoundingBox(rawDin) as [Vec3Tuple, Vec3Tuple];
+      const minX = dinBounds[0][0];
+      dinRailPos = [lidX + width + SPACING - minX, 0, 0];
+      this.dinRailOrigin = dinRailPos;
+      this.dinRailModel = translate(dinRailPos, rawDin);
+    } else if (this.checkDeps(diff, dinRailDeps) && (!dinMountEnabled || !showDinRailMount)) {
+      this.dinRailModel = null;
     }
 
     if (this.checkDeps(diff, mountDeps) && pcbMountParams.length > 0) {
@@ -807,14 +857,17 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
     }
 
     const result: Geom3[] = [];
-    if (this.lidModel) {
+    if (this.lidModel && params.showLid) {
       result.push(this.lidModel);
     }
-    if (this.baseModel) {
+    if (this.baseModel && params.showBase) {
       result.push(this.baseModel);
     }
     if (this.sealModel && waterProof) {
       result.push(this.sealModel);
+    }
+    if (this.dinRailModel && dinMountEnabled && showDinRailMount) {
+      result.push(this.dinRailModel);
     }
     if (this.mountsModel && pcbMountParams.length > 0) {
       result.push(this.mountsModel);
@@ -832,14 +885,12 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
     const modelEntities = entitiesFromSolids({}, this.model) as Entity[];
     const modelBounds = measureBoundingBox(this.model) as [Vec3Tuple, Vec3Tuple];
     const gridEntity = this.buildGridEntity(params, modelBounds);
-    // The grid is a reference plane sitting under the model, so list it first
-    // so it draws before the solid geometry.
     const entities: Entity[] = gridEntity ? [gridEntity, ...modelEntities] : modelEntities;
 
-    // Re-frame the camera when the grid becomes visible (so it lands in view)
-    // or when its size-affecting inputs change while it is on. Leave the user's
-    // manual orbit alone when the grid is simply toggled off.
-    if (gridEntity && this.checkDeps(diff, gridDeps)) {
+    if (
+      (gridEntity && this.checkDeps(diff, gridDeps)) ||
+      this.checkDeps(diff, ['dinRailMount', 'showDinRailMount'])
+    ) {
       this.zoomToFit = true;
     }
 

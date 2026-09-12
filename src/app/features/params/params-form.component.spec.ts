@@ -76,9 +76,17 @@ describe('ParamsFormComponent', () => {
     expect(state.params().waterProof).toBeFalse();
   });
 
+  it('enables wall mounts automatically when din rail mount is enabled', () => {
+    state.patchParams({ wallMounts: false, dinRailMount: false });
+    component.onDinRailMountChange(true);
+    expect(state.params().dinRailMount).toBeTrue();
+    expect(state.params().wallMounts).toBeTrue();
+  });
+
   it('ignores empty numeric input', () => {
     const before = state.params().length;
     component.setNumberParam('length', '');
     expect(state.params().length).toBe(before);
   });
 });
+

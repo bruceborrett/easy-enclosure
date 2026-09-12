@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   ElementRef,
   ViewChild,
   inject,
@@ -12,6 +13,7 @@ import { serialize } from '@jscad/stl-serializer';
 import { saveAs } from 'file-saver';
 
 import { base } from '../../core/enclosure/base';
+import { dinRailMount } from '../../core/enclosure/dinrailmount';
 import { internalWalls } from '../../core/enclosure/internalwalls';
 import { lid } from '../../core/enclosure/lid';
 import { pcbMountsOnBase, pcbMountsOnLid } from '../../core/enclosure/pcbmount';
@@ -36,6 +38,7 @@ export class ToolsComponent {
   private readonly state = inject(EnclosureStateService);
 
   readonly isExportModalOpen = signal(false);
+  readonly hasDinRailMount = computed(() => this.state.params().dinRailMount);
 
   openFilePicker(): void {
     this.fileInput?.nativeElement.click();
@@ -111,6 +114,21 @@ export class ToolsComponent {
 
     if (currentParams.waterProof) {
       this.exportGeometry(`enclosure-waterproof-seal-${tsStr}`, waterProofSeal(currentParams));
+    }
+
+    if (currentParams.dinRailMount) {
+      this.exportGeometry(`enclosure-din-rail-mount-${tsStr}`, dinRailMount(currentParams));
+    }
+
+    this.closeExportModal();
+  }
+
+  exportDinRailMountsStl(): void {
+    const tsStr = this.formattedTimestamp();
+    const currentParams = this.state.params();
+
+    if (currentParams.dinRailMount) {
+      this.exportGeometry(`enclosure-din-rail-mount-${tsStr}`, dinRailMount(currentParams));
     }
 
     this.closeExportModal();

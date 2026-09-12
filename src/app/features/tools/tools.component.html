@@ -42,6 +42,11 @@
       <app-action-button variant="dialog" (click)="exportPcbMountsStl()">
         Export PCB Mounts
       </app-action-button>
+      @if (hasDinRailMount()) {
+        <app-action-button variant="dialog" (click)="exportDinRailMountsStl()">
+          Export DIN Mount
+        </app-action-button>
+      }
       <app-action-button variant="dialog-primary" (click)="exportStl()">
         Export Full Enclosure
       </app-action-button>

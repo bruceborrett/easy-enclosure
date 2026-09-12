@@ -144,7 +144,19 @@ export class ParamsFormComponent {
     });
   }
 
+  setStringParam<K extends keyof Params>(key: K, value: Params[K]): void {
+    this.state.updateParam(key, value);
+  }
+
+  onDinRailMountChange(checked: boolean): void {
+    this.state.patchParams({
+      dinRailMount: checked,
+      wallMounts: checked ? true : this.params().wallMounts,
+    });
+  }
+
   parseIntValue(rawValue: string): number {
     return parseInt(rawValue, 10);
   }
 }
+

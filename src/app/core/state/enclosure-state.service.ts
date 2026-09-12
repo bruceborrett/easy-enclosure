@@ -46,6 +46,7 @@ export class EnclosureStateService {
       waterProof: false,
       wallMounts: false,
       lidScrews: false,
+      dinRailMount: false,
     }));
   }
 }

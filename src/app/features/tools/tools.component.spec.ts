@@ -157,4 +157,42 @@ describe('ToolsComponent', () => {
     expect(exportGeometrySpy).not.toHaveBeenCalled();
     expect(closeSpy).toHaveBeenCalled();
   });
+
+  it('exports din rail mount STL when enabled during full enclosure export', () => {
+    const exportGeometrySpy = spyOn(component as never, 'exportGeometry' as never);
+    const closeSpy = spyOn(component, 'closeExportModal');
+
+    const params = cloneParams(state.params());
+    params.dinRailMount = true;
+    state.setParams(params);
+
+    component.exportStl();
+
+    const exportedNames = exportGeometrySpy.calls
+      .allArgs()
+      .map((args) => args[0] as string)
+      .join(' ');
+    expect(exportedNames).toContain('enclosure-din-rail-mount-');
+    expect(closeSpy).toHaveBeenCalled();
+  });
+
+  it('exports only din rail mount STL via exportDinRailMountsStl', () => {
+    const exportGeometrySpy = spyOn(component as never, 'exportGeometry' as never);
+    const closeSpy = spyOn(component, 'closeExportModal');
+
+    const params = cloneParams(state.params());
+    params.dinRailMount = true;
+    state.setParams(params);
+
+    component.exportDinRailMountsStl();
+
+    const exportedNames = exportGeometrySpy.calls
+      .allArgs()
+      .map((args) => args[0] as string)
+      .join(' ');
+    expect(exportedNames).toContain('enclosure-din-rail-mount-');
+    expect(exportedNames).not.toContain('enclosure-base-');
+    expect(exportedNames).not.toContain('enclosure-lid-');
+    expect(closeSpy).toHaveBeenCalled();
+  });
 });

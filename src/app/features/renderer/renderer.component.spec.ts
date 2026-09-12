@@ -102,4 +102,91 @@ describe('RendererComponent', () => {
       expect(result.size).toEqual([450, 650]);
     });
   });
+
+  describe('pointer interaction and CAD orbit shifting', () => {
+    it('pans (shifts orbit center) when dragging with ctrlKey', () => {
+      const fixture = TestBed.createComponent(RendererComponent);
+      component = fixture.componentInstance;
+
+      component.onPointerDown({
+        pageX: 100,
+        pageY: 100,
+        pointerId: 1,
+      } as PointerEvent);
+
+      component.onPointerMove({
+        pageX: 120,
+        pageY: 110,
+        ctrlKey: true,
+        preventDefault: () => {},
+      } as unknown as PointerEvent);
+
+      const panDelta = (component as any).panDelta;
+      const rotateDelta = (component as any).rotateDelta;
+
+      expect(panDelta[0]).toBe(-20);
+      expect(panDelta[1]).toBe(10);
+      expect(rotateDelta).toEqual([0, 0]);
+    });
+
+    it('orbits (rotates) when dragging without modifier keys', () => {
+      const fixture = TestBed.createComponent(RendererComponent);
+      component = fixture.componentInstance;
+
+      component.onPointerDown({
+        pageX: 100,
+        pageY: 100,
+        pointerId: 1,
+      } as PointerEvent);
+
+      component.onPointerMove({
+        pageX: 120,
+        pageY: 110,
+        ctrlKey: false,
+        metaKey: false,
+        shiftKey: false,
+        buttons: 1,
+        preventDefault: () => {},
+      } as unknown as PointerEvent);
+
+      const panDelta = (component as any).panDelta;
+      const rotateDelta = (component as any).rotateDelta;
+
+      expect(rotateDelta[0]).toBe(20);
+      expect(rotateDelta[1]).toBe(-10);
+      expect(panDelta).toEqual([0, 0]);
+    });
+  });
+
+  describe('renderModel with DIN rail mounts', () => {
+    it('creates dinRailModel and positions it to the right of lid in line layout', async () => {
+      const fixture = TestBed.createComponent(RendererComponent);
+      component = fixture.componentInstance;
+
+      const params = {
+        ...DEFAULT_PARAMS,
+        width: 100,
+        length: 80,
+        waterProof: false,
+        dinRailMount: true,
+        showDinRailMount: true,
+        showLid: true,
+        showBase: true,
+      };
+
+      await (component as any).renderModel(params, [
+        'dinRailMount',
+        'showDinRailMount',
+        'width',
+        'length',
+      ]);
+
+      expect((component as any).dinRailModel).not.toBeNull();
+      const dinOrigin = (component as any).dinRailOrigin;
+      const lidOrigin = (component as any).lidOrigin;
+      // In line layout, dinRailOrigin X must be greater than lidOrigin X + width
+      expect(dinOrigin[0]).toBeGreaterThan(lidOrigin[0] + params.width);
+    });
+  });
 });
+

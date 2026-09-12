@@ -44,6 +44,7 @@ describe('EnclosureStateService', () => {
     expect(service.params().waterProof).toBeFalse();
     expect(service.params().wallMounts).toBeFalse();
     expect(service.params().lidScrews).toBeFalse();
+    expect(service.params().dinRailMount).toBeFalse();
   });
 
   it('resets to full defaults', () => {
