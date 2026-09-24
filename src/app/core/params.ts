@@ -28,6 +28,8 @@ export type InternalWall = {
   rotation: number;
 };
 
+export type LidScrewHoleType = 'blind' | 'nut-pocket' | 'through';
+
 export type Params = {
   length: number;
   width: number;
@@ -54,6 +56,10 @@ export type Params = {
   lidScrews: boolean;
   lidScrewDiameter: number;
   baseLidScrewDiameter: number;
+  lidScrewHoleType: LidScrewHoleType;
+  lidScrewHoleDepth: number;
+  lidScrewNutWidth: number;
+  lidScrewNutDepth: number;
   dinRailMount: boolean;
   dinRailOrientation: 'horizontal' | 'vertical';
   dinRailMountWidth: number;
@@ -175,6 +181,10 @@ export const DEFAULT_PARAMS: Params = {
   lidScrews: true,
   lidScrewDiameter: 2.98,
   baseLidScrewDiameter: 2.88,
+  lidScrewHoleType: 'blind',
+  lidScrewHoleDepth: 10,
+  lidScrewNutWidth: 5.7,
+  lidScrewNutDepth: 2.5,
   dinRailMount: false,
   dinRailOrientation: 'horizontal',
   dinRailMountWidth: 15,

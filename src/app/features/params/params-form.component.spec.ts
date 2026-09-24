@@ -88,5 +88,21 @@ describe('ParamsFormComponent', () => {
     component.setNumberParam('length', '');
     expect(state.params().length).toBe(before);
   });
-});
 
+  it('updates lid screw hole type and dimensions', () => {
+    component.setStringParam('lidScrewHoleType', 'nut-pocket');
+    expect(state.params().lidScrewHoleType).toBe('nut-pocket');
+
+    component.setNumberParam('lidScrewNutWidth', '5.8');
+    expect(state.params().lidScrewNutWidth).toBe(5.8);
+
+    component.setNumberParam('lidScrewNutDepth', '3.0');
+    expect(state.params().lidScrewNutDepth).toBe(3.0);
+
+    component.setStringParam('lidScrewHoleType', 'blind');
+    expect(state.params().lidScrewHoleType).toBe('blind');
+
+    component.setNumberParam('lidScrewHoleDepth', '12');
+    expect(state.params().lidScrewHoleDepth).toBe(12);
+  });
+});

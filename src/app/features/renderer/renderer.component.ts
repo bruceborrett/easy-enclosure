@@ -44,6 +44,8 @@ const lidDeps = [
   'waterProof',
   'lidScrewDiameter',
   'baseLidScrewDiameter',
+  'lidScrewHoleType',
+  'lidScrewNutWidth',
   'insertThickness',
   'insertHeight',
   'insertClearance',
@@ -59,7 +61,12 @@ const baseDeps = [
   'holes',
   'wallMounts',
   'lidScrews',
+  'lidScrewDiameter',
   'baseLidScrewDiameter',
+  'lidScrewHoleType',
+  'lidScrewHoleDepth',
+  'lidScrewNutWidth',
+  'lidScrewNutDepth',
   'waterProof',
   'insertThickness',
   'insertHeight',
@@ -79,6 +86,8 @@ const sealDeps = [
   'insertThickness',
   'lidScrewDiameter',
   'baseLidScrewDiameter',
+  'lidScrewHoleType',
+  'lidScrewNutWidth',
   'lidScrews',
 ];
 const mountDeps = [
@@ -679,7 +688,6 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
         normal: [0, 0, 1],
       });
     }
-
 
     const projected = anchors
       .filter((anchor) => this.isFacingCamera(anchor.point, anchor.normal))

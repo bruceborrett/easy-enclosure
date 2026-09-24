@@ -5,7 +5,7 @@ import { holes } from './holes';
 import { flanges } from './wallmount';
 import { clover, hollowRoundCube, roundedCube } from './utils';
 import { waterProofSealCutout } from './waterproofseal';
-import { screws } from './screws';
+import { getScrewOffset, nutPockets, screws } from './screws';
 import { translate } from '@jscad/modeling/src/operations/transforms';
 
 const { subtract, union } = booleans;
@@ -20,8 +20,11 @@ export const base = (params: Params) => {
     cornerRadius,
     insertThickness,
     insertClearance,
-    lidScrewDiameter,
     baseLidScrewDiameter,
+    lidScrewHoleType,
+    lidScrewHoleDepth,
+    lidScrewNutWidth,
+    lidScrewNutDepth,
   } = params;
 
   const body = [];
@@ -33,23 +36,23 @@ export const base = (params: Params) => {
   }
 
   if (params.lidScrews) {
-    let diameterMax = Math.max(baseLidScrewDiameter, lidScrewDiameter);
+    const screwOffset = getScrewOffset(params);
     body.push(
       subtract(
         roundedCube(width, length, height, cornerRadius),
         translate(
           [_wall, _wall, floor],
-          clover(
-            width - _wall * 2,
-            length - _wall * 2,
-            height,
-            diameterMax / 2 + cornerRadius / 4 + wall / 2,
-          ),
+          clover(width - _wall * 2, length - _wall * 2, height, screwOffset),
         ),
       ),
     );
-    let screwOffset = diameterMax / 2 + cornerRadius / 4 + wall / 2;
-    subtracts.push(screws(length, width, height, screwOffset, baseLidScrewDiameter));
+
+    const holeDepth = lidScrewHoleType === 'blind' ? lidScrewHoleDepth : undefined;
+    subtracts.push(screws(length, width, height, screwOffset, baseLidScrewDiameter, holeDepth));
+
+    if (lidScrewHoleType === 'nut-pocket') {
+      subtracts.push(nutPockets(length, width, screwOffset, lidScrewNutWidth, lidScrewNutDepth));
+    }
   } else {
     body.push(hollowRoundCube(width, length, height, _wall, cornerRadius));
   }

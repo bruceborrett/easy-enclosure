@@ -2,7 +2,7 @@ import { booleans, transforms } from '@jscad/modeling';
 import { cloverFrame, roundedCube, roundedFrame } from './utils';
 
 import { Params } from '../params';
-import { screws } from './screws';
+import { getScrewOffset, screws } from './screws';
 import { subtract } from '@jscad/modeling/src/operations/booleans';
 import { holes } from './holes';
 
@@ -19,7 +19,6 @@ export const lid = (params: Params) => {
     insertThickness,
     insertHeight,
     insertClearance,
-    baseLidScrewDiameter,
     lidScrewDiameter,
   } = params;
 
@@ -29,7 +28,7 @@ export const lid = (params: Params) => {
   entities.push(roundedCube(width, length, roof, cornerRadius));
 
   if (params.lidScrews) {
-    let diameterMax = Math.max(baseLidScrewDiameter, lidScrewDiameter);
+    const screwOffset = getScrewOffset(params);
     entities.push(
       translate(
         [wall + insertClearance, wall + insertClearance, roof],
@@ -38,11 +37,10 @@ export const lid = (params: Params) => {
           length - wall * 2 - insertClearance * 2,
           insertHeight,
           insertThickness,
-          diameterMax / 2 + cornerRadius / 4 + wall / 2,
+          screwOffset,
         ),
       ),
     );
-    let screwOffset = diameterMax / 2 + cornerRadius / 4 + wall / 2;
     subtracts.push(screws(length, width, roof * 2, screwOffset, lidScrewDiameter));
   } else {
     entities.push(

@@ -1,6 +1,7 @@
 import { Params } from '../params';
 
 import { cloverFrame } from './utils';
+import { getScrewOffset } from './screws';
 
 import { translate } from '@jscad/modeling/src/operations/transforms';
 
@@ -14,12 +15,9 @@ export const waterProofSealCutout = (params: Params) => {
     insertHeight,
     sealThickness,
     insertClearance,
-    cornerRadius,
-    baseLidScrewDiameter,
-    lidScrewDiameter,
   } = params;
 
-  let diameterMax = Math.max(baseLidScrewDiameter, lidScrewDiameter);
+  const screwOffset = getScrewOffset(params);
   return translate(
     [wall, wall, height - (insertHeight + sealThickness)],
     cloverFrame(
@@ -27,29 +25,19 @@ export const waterProofSealCutout = (params: Params) => {
       length - wall * 2,
       insertHeight + sealThickness + insertClearance,
       insertThickness + insertClearance * 2,
-      diameterMax / 2 + cornerRadius / 4 + wall / 2,
+      screwOffset,
     ),
   );
 };
 
 export const waterProofSeal = (params: Params) => {
-  const {
-    length,
-    width,
-    wall,
-    baseLidScrewDiameter,
-    sealThickness,
-    insertThickness,
-    insertClearance,
-    cornerRadius,
-    lidScrewDiameter,
-  } = params;
-  let diameterMax = Math.max(baseLidScrewDiameter, lidScrewDiameter);
+  const { length, width, wall, sealThickness, insertThickness, insertClearance } = params;
+  const screwOffset = getScrewOffset(params);
   return cloverFrame(
     width - wall * 2 - insertClearance * 2,
     length - wall * 2 - insertClearance * 2,
     sealThickness,
     insertThickness,
-    diameterMax / 2 + cornerRadius / 4 + wall / 2,
+    screwOffset,
   );
 };

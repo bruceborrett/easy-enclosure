@@ -75,6 +75,46 @@ It is very time consuming and expensive to continuously test prints with all the
 
 Pull requests are also welcome!
 
+## Fastening & Screw Strategies
+
+When securing the lid to the base, EasyEnclosure provides several hole strategies to match your fastening hardware:
+
+### 1. Blind Holes (Self-Tapping Screws)
+
+- **Best for**: Compact builds, prototypes, and projects where the enclosure will rarely be opened.
+- **Pros**:
+  - Uses the **least space**: smallest corner bosses, leaving maximum internal volume for PCBs and components.
+  - Uses the least filament and prints fastest.
+  - Keeps the bottom of the enclosure completely sealed, clean, and waterproof.
+  - No special tools or extra hardware required (screws directly into the 3D-printed plastic).
+- **Cons**:
+  - Repeated assembly and disassembly will wear out the plastic threads over time.
+
+### 2. Blind Holes (Heat-Set Threaded Inserts)
+
+- **Best for**: Professional enclosures requiring frequent opening and long-term durability.
+- **Pros**:
+  - Provides strong, wear-resistant brass machine threads that can be assembled and disassembled indefinitely.
+  - Bosses are compact (smaller than hex nut pockets, though slightly larger than self-tapping pilot holes).
+  - Keeps the bottom of the enclosure solid, closed, and waterproof.
+- **Cons**:
+  - Requires brass heat-set inserts (e.g., M3) and a soldering iron to install them.
+
+### 3. Captive Hex Nut Pockets
+
+- **Best for**: Strong machine screw fastening using standard, widely available hardware without needing a soldering iron.
+- **Pros**:
+  - Strong metal-on-metal clamping using ordinary hex nuts and machine bolts.
+  - No special insertion tools needed.
+- **Cons**:
+  - Hex nuts require significantly larger corner bosses to provide adequate wall thickness, reducing internal space, using more filament, and increasing print times.
+  - Requires screws with a length matching the exact combined height of the base and lid.
+  - Leaves openings on the underside of the base.
+
+### 4. Through Holes
+
+- **Best for**: Long through-bolts with external nuts on the bottom, mounting standoffs, or clamping the entire enclosure to a surface.
+
 ## Notes
 
 - All measurements are in millimeters

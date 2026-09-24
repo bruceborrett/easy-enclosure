@@ -454,6 +454,59 @@
             (blur)="setNumberParam('baseLidScrewDiameter', $any($event.target).value)"
           />
         </div>
+
+        <div class="input-group">
+          <label>Hole Type</label>
+          <select
+            [value]="params().lidScrewHoleType"
+            (change)="setStringParam('lidScrewHoleType', $any($event.target).value)"
+          >
+            <option value="blind">Blind Hole</option>
+            <option value="nut-pocket">Captive Nut Pocket</option>
+            <option value="through">Through Hole</option>
+          </select>
+        </div>
+
+        @if (params().lidScrewHoleType === 'blind') {
+          <div class="input-group">
+            <label>Base Hole Depth</label>
+            <input
+              type="number"
+              min="1"
+              [max]="params().height"
+              step="0.5"
+              [value]="params().lidScrewHoleDepth"
+              (keydown.enter)="$any($event.target).blur()"
+              (blur)="setNumberParam('lidScrewHoleDepth', $any($event.target).value)"
+            />
+          </div>
+        }
+
+        @if (params().lidScrewHoleType === 'nut-pocket') {
+          <div class="input-group">
+            <label>Nut Width (Flats)</label>
+            <input
+              type="number"
+              min="1"
+              step="0.1"
+              [value]="params().lidScrewNutWidth"
+              (keydown.enter)="$any($event.target).blur()"
+              (blur)="setNumberParam('lidScrewNutWidth', $any($event.target).value)"
+            />
+          </div>
+
+          <div class="input-group">
+            <label>Nut Depth</label>
+            <input
+              type="number"
+              min="0.5"
+              step="0.1"
+              [value]="params().lidScrewNutDepth"
+              (keydown.enter)="$any($event.target).blur()"
+              (blur)="setNumberParam('lidScrewNutDepth', $any($event.target).value)"
+            />
+          </div>
+        }
       }
     </div>
   </div>
