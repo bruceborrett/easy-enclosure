@@ -1,24 +1,22 @@
 import { Geom3 } from '@jscad/modeling/src/geometries/types';
 import { subtract, union } from '@jscad/modeling/src/operations/booleans';
+import { extrudeLinear } from '@jscad/modeling/src/operations/extrusions';
 import { rotateX, rotateY, translate } from '@jscad/modeling/src/operations/transforms';
-import { cylinder } from '@jscad/modeling/src/primitives';
+import { circle } from '@jscad/modeling/src/primitives';
 import { degToRad } from '@jscad/modeling/src/utils';
 import { Surface } from '.';
 import { Params, PCBMount } from '../params';
 
 export const pcbMount = (mountParams: PCBMount) => {
-  return subtract(
-    cylinder({
-      height: mountParams.height,
-      radius: mountParams.outerDiameter / 2,
-      segments: 20,
-    }),
-    cylinder({
-      height: mountParams.height,
-      radius: mountParams.screwDiameter / 2,
-      segments: 20,
-    }),
-  );
+  const outer = circle({
+    radius: mountParams.outerDiameter / 2,
+    segments: 20,
+  });
+  const inner = circle({
+    radius: mountParams.screwDiameter / 2,
+    segments: 20,
+  });
+  return extrudeLinear({ height: mountParams.height }, subtract(outer, inner));
 };
 
 const placeBaseMount = (mount: PCBMount, params: Params): Geom3 => {

@@ -1,29 +1,36 @@
 import { subtract } from '@jscad/modeling/src/operations/booleans';
+import { extrudeLinear } from '@jscad/modeling/src/operations/extrusions';
 import { hull } from '@jscad/modeling/src/operations/hulls';
 import { rotateZ, translate } from '@jscad/modeling/src/operations/transforms';
-import { cuboid, cylinder } from '@jscad/modeling/src/primitives';
+import { circle, rectangle } from '@jscad/modeling/src/primitives';
 import { degToRad } from '@jscad/modeling/src/utils';
 
-export const roundedCube = (l: number, w: number, h: number, r = 8, s = 100) => {
-  const c = cylinder({
-    height: h,
+export const roundedCube2d = (l: number, w: number, r = 8, s = 100) => {
+  const c = circle({
     radius: r,
     segments: s,
-    center: [0, 0, h / 2],
   });
 
   return hull(
-    translate([r, r, 0], c),
-    translate([l - r, r, 0], c),
-    translate([r, w - r, 0], c),
-    translate([l - r, w - r, 0], c),
+    translate([r, r], c),
+    translate([l - r, r], c),
+    translate([r, w - r], c),
+    translate([l - r, w - r], c),
   );
 };
 
+export const roundedCube = (l: number, w: number, h: number, r = 8, s = 100) => {
+  return extrudeLinear({ height: h }, roundedCube2d(l, w, r, s));
+};
+
+export const roundedFrame2d = (l: number, w: number, t: number, r = 8, s = 100) => {
+  const outer = roundedCube2d(l, w, r, s);
+  const inner = roundedCube2d(l - t * 2, w - t * 2, r, s);
+  return subtract(outer, translate([t, t], inner));
+};
+
 export const roundedFrame = (l: number, w: number, h: number, t: number, r = 8, s = 100) => {
-  const outer = roundedCube(l, w, h, r, s);
-  const inner = roundedCube(l - t * 2, w - t * 2, h, r, s);
-  return subtract(outer, translate([t, t, 0], inner));
+  return extrudeLinear({ height: h }, roundedFrame2d(l, w, t, r, s));
 };
 
 export const hollowRoundCube = (l: number, w: number, h: number, t: number, r = 8, s = 100) => {
@@ -32,38 +39,47 @@ export const hollowRoundCube = (l: number, w: number, h: number, t: number, r = 
   return subtract(outer, translate([t, t, t], inner));
 };
 
-const roundedCorner = (r: number, h: number, s = 100) => {
+const roundedCorner2d = (r: number, s = 100) => {
   return subtract(
-    cuboid({ size: [r * 2, r * 2, h] }),
-    translate([r, r, 0], roundedCube(r, r, h, r, s)),
-    translate([r * 2, 0, 0], cuboid({ size: [r * 2, r * 2, h] })),
+    rectangle({ size: [r * 2, r * 2] }),
+    translate([r, r], roundedCube2d(r, r, r, s)),
+    translate([r * 2, 0], rectangle({ size: [r * 2, r * 2] })),
   );
 };
 
-export const clover = (l: number, w: number, h: number, r = 8, s = 100) => {
+export const clover2d = (l: number, w: number, r = 8, s = 100) => {
   const cornersRemoved = subtract(
-    roundedCube(l, w, h, r, s),
-    translate([0, 0, 0], roundedCube(r, r, h, r, s)),
-    translate([l - r, 0, 0], roundedCube(r, r, h, r, s)),
-    translate([0, w - r, 0], roundedCube(r, r, h, r, s)),
-    translate([l - r, w - r, 0], roundedCube(r, r, h, r, s)),
+    roundedCube2d(l, w, r, s),
+    translate([0, 0], roundedCube2d(r, r, r, s)),
+    translate([l - r, 0], roundedCube2d(r, r, r, s)),
+    translate([0, w - r], roundedCube2d(r, r, r, s)),
+    translate([l - r, w - r], roundedCube2d(r, r, r, s)),
   );
+  const rc = roundedCorner2d(r, s);
   const rounded = subtract(
     cornersRemoved,
-    translate([0, r * 2, 0], rotateZ(degToRad(0), roundedCorner(r, h * 2, s))),
-    translate([r * 2, 0, 0], rotateZ(degToRad(0), roundedCorner(r, h * 2, s))),
-    translate([l, r * 2, 0], rotateZ(degToRad(90), roundedCorner(r, h * 2, s))),
-    translate([l - r * 2, 0, 0], rotateZ(degToRad(90), roundedCorner(r, h * 2, s))),
-    translate([l, w - r * 2, 0], rotateZ(degToRad(180), roundedCorner(r, h * 2, s))),
-    translate([l - r * 2, w, 0], rotateZ(degToRad(180), roundedCorner(r, h * 2, s))),
-    translate([0, w - r * 2, 0], rotateZ(degToRad(270), roundedCorner(r, h * 2, s))),
-    translate([r * 2, w, 0], rotateZ(degToRad(270), roundedCorner(r, h * 2, s))),
+    translate([0, r * 2], rotateZ(degToRad(0), rc)),
+    translate([r * 2, 0], rotateZ(degToRad(0), rc)),
+    translate([l, r * 2], rotateZ(degToRad(90), rc)),
+    translate([l - r * 2, 0], rotateZ(degToRad(90), rc)),
+    translate([l, w - r * 2], rotateZ(degToRad(180), rc)),
+    translate([l - r * 2, w], rotateZ(degToRad(180), rc)),
+    translate([0, w - r * 2], rotateZ(degToRad(270), rc)),
+    translate([r * 2, w], rotateZ(degToRad(270), rc)),
   );
   return rounded;
 };
 
+export const clover = (l: number, w: number, h: number, r = 8, s = 100) => {
+  return extrudeLinear({ height: h }, clover2d(l, w, r, s));
+};
+
+export const cloverFrame2d = (l: number, w: number, t: number, r = 8, s = 100) => {
+  const outer = clover2d(l, w, r, s);
+  const inner = clover2d(l - t * 2, w - t * 2, r, s);
+  return subtract(outer, translate([t, t], inner));
+};
+
 export const cloverFrame = (l: number, w: number, h: number, t: number, r = 8, s = 100) => {
-  const outer = clover(l, w, h, r, s);
-  const inner = clover(l - t * 2, w - t * 2, h, r, s);
-  return subtract(outer, translate([t, t, 0], inner));
+  return extrudeLinear({ height: h }, cloverFrame2d(l, w, t, r, s));
 };
