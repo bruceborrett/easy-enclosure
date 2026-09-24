@@ -13,7 +13,7 @@
     <ng-container [ngTemplateOutlet]="content" />
   </a>
 } @else {
-  <button [type]="type()" [attr.title]="title()" [class]="buttonClass()">
+  <button [type]="type()" [attr.title]="title()" [disabled]="disabled()" [class]="buttonClass()">
     <ng-container [ngTemplateOutlet]="content" />
   </button>
 }

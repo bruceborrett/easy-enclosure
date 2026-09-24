@@ -18,10 +18,11 @@ export class ActionButtonComponent {
   readonly title = input<string | null>(null);
   readonly type = input<'button' | 'submit' | 'reset'>('button');
   readonly variant = input<ActionButtonVariant>('toolbar');
+  readonly disabled = input(false);
 
   readonly buttonClass = computed(() => {
     const shared =
-      'cursor-pointer transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/30';
+      'cursor-pointer transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/30 disabled:cursor-not-allowed disabled:opacity-50';
 
     switch (this.variant()) {
       case 'toolbar':

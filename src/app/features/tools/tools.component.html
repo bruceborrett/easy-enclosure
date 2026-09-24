@@ -22,33 +22,101 @@
 
 <dialog
   #exportDialog
-  class="fixed left-1/2 top-1/2 z-50 m-0 w-[min(32rem,calc(100vw-1.5rem))] -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-slate-300/80 bg-white/95 p-0 text-center shadow-[0_20px_56px_rgba(21,43,72,0.28)] backdrop:bg-slate-900/35"
+  class="fixed left-1/2 top-1/2 z-50 m-0 w-[min(28rem,calc(100vw-1.5rem))] -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-slate-300/80 bg-white/95 p-0 shadow-[0_20px_56px_rgba(21,43,72,0.28)] backdrop:bg-slate-900/35"
   [class.hidden]="!isExportModalOpen()"
   (close)="closeExportModal()"
 >
-  <div class="relative px-5 pb-5 pt-10">
+  <div class="relative px-6 pb-6 pt-7 text-left">
     <button
-      class="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full border border-transparent bg-transparent text-xl text-slate-500 transition hover:border-slate-300 hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/30"
+      class="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full border border-transparent bg-transparent text-xl text-slate-500 transition hover:border-slate-300 hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/30"
       type="button"
       (click)="closeExportModal()"
       aria-label="Close export modal"
     >
       &times;
     </button>
-    <p class="mx-auto mb-5 max-w-88 text-sm leading-relaxed text-slate-600">
-      Export the full enclosure or only PCB mounts for quick fit checks.
+    <h3 class="text-base font-bold text-slate-900">Export STL</h3>
+    <p class="mt-1 mb-4 text-xs leading-relaxed text-slate-600">
+      Select components to download. Multiple items will be bundled as a ZIP archive.
     </p>
-    <div class="flex flex-wrap items-center justify-center gap-2">
-      <app-action-button variant="dialog" (click)="exportPcbMountsStl()">
-        Export PCB Mounts
-      </app-action-button>
-      @if (hasDinRailMount()) {
-        <app-action-button variant="dialog" (click)="exportDinRailMountsStl()">
-          Export DIN Mount
-        </app-action-button>
+    <div
+      class="mb-5 divide-y divide-slate-200/70 rounded-xl border border-slate-200/90 bg-slate-50/70"
+    >
+      <label
+        class="flex cursor-pointer items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100/70 hover:text-slate-900 select-none"
+      >
+        <input
+          type="checkbox"
+          id="export-base-checkbox"
+          class="h-4 w-4 cursor-pointer rounded border-slate-300 text-sky-600 focus:ring-sky-500/30"
+          [checked]="exportBase()"
+          (change)="exportBase.set($any($event.target).checked)"
+        />
+        <span>Enclosure base</span>
+      </label>
+      <label
+        class="flex cursor-pointer items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100/70 hover:text-slate-900 select-none"
+      >
+        <input
+          type="checkbox"
+          id="export-lid-checkbox"
+          class="h-4 w-4 cursor-pointer rounded border-slate-300 text-sky-600 focus:ring-sky-500/30"
+          [checked]="exportLid()"
+          (change)="exportLid.set($any($event.target).checked)"
+        />
+        <span>Enclosure lid</span>
+      </label>
+      @if (hasSeal()) {
+        <label
+          class="flex cursor-pointer items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100/70 hover:text-slate-900 select-none"
+        >
+          <input
+            type="checkbox"
+            id="export-seal-checkbox"
+            class="h-4 w-4 cursor-pointer rounded border-slate-300 text-sky-600 focus:ring-sky-500/30"
+            [checked]="exportSeal()"
+            (change)="exportSeal.set($any($event.target).checked)"
+          />
+          <span>Enclosure seal</span>
+        </label>
       }
-      <app-action-button variant="dialog-primary" (click)="exportStl()">
-        Export Full Enclosure
+      @if (hasPcbMounts()) {
+        <label
+          class="flex cursor-pointer items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100/70 hover:text-slate-900 select-none"
+        >
+          <input
+            type="checkbox"
+            id="export-pcb-mounts-checkbox"
+            class="h-4 w-4 cursor-pointer rounded border-slate-300 text-sky-600 focus:ring-sky-500/30"
+            [checked]="exportPcbMounts()"
+            (change)="exportPcbMounts.set($any($event.target).checked)"
+          />
+          <span>PCB mounts only</span>
+        </label>
+      }
+      @if (hasDinRailMount()) {
+        <label
+          class="flex cursor-pointer items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100/70 hover:text-slate-900 select-none"
+        >
+          <input
+            type="checkbox"
+            id="export-din-rail-checkbox"
+            class="h-4 w-4 cursor-pointer rounded border-slate-300 text-sky-600 focus:ring-sky-500/30"
+            [checked]="exportDinRail()"
+            (change)="exportDinRail.set($any($event.target).checked)"
+          />
+          <span>DIN rail mount</span>
+        </label>
+      }
+    </div>
+    <div class="flex items-center justify-end gap-2">
+      <app-action-button variant="dialog" (click)="closeExportModal()"> Cancel </app-action-button>
+      <app-action-button
+        variant="dialog-primary"
+        [disabled]="selectedCount() === 0 || isExporting()"
+        (click)="exportSelected()"
+      >
+        {{ isExporting() ? 'Exporting...' : downloadButtonText() }}
       </app-action-button>
     </div>
   </div>
