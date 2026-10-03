@@ -52,6 +52,10 @@ export class EnclosureStateService {
         ...current.snapFit,
         enabled: false,
       },
+      pcbPreview: {
+        ...current.pcbPreview,
+        enabled: false,
+      },
     }));
   }
 }

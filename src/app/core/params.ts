@@ -47,6 +47,16 @@ export type SnapFit = {
   clearance: number;
 };
 
+export type PCBPreview = {
+  enabled: boolean;
+  width: number;
+  length: number;
+  thickness: number;
+  componentHeight: number;
+  x: number;
+  y: number;
+};
+
 export type CableClamp = {
   surface?: Surface;
   x: number;
@@ -123,6 +133,7 @@ export type Params = {
   pcbMountFilletStyle: PcbMountFilletStyle;
   pcbMountFilletSize: number;
   snapFit: SnapFit;
+  pcbPreview: PCBPreview;
 };
 
 export const DEFAULT_PARAMS: Params = {
@@ -262,6 +273,15 @@ export const DEFAULT_PARAMS: Params = {
     depth: 0.8,
     height: 1.2,
     clearance: 0.15,
+  },
+  pcbPreview: {
+    enabled: false,
+    width: 68,
+    length: 54,
+    thickness: 1.6,
+    componentHeight: 8,
+    x: 0,
+    y: 0,
   },
 };
 

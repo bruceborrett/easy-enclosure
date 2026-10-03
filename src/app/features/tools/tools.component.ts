@@ -172,6 +172,10 @@ export class ToolsComponent {
           ...(data.snapFit ?? {}),
         },
         cableClamps: data.cableClamps ?? current.cableClamps ?? [],
+        pcbPreview: {
+          ...current.pcbPreview,
+          ...(data.pcbPreview ?? {}),
+        },
       };
       this.state.setParams(merged);
     };

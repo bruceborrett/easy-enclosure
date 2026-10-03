@@ -46,6 +46,7 @@ describe('EnclosureStateService', () => {
     expect(service.params().wallMounts).toBeFalse();
     expect(service.params().lidScrews).toBeFalse();
     expect(service.params().dinRailMount).toBeFalse();
+    expect(service.params().pcbPreview.enabled).toBeFalse();
   });
 
   it('resets to full defaults', () => {

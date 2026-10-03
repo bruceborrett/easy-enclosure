@@ -77,6 +77,8 @@ describe('ToolsComponent', () => {
       expect(state.params().length).toBe(145);
       expect(state.params().waterProof).toBeFalse();
       expect(state.params().width).toBe(100);
+      expect(state.params().pcbPreview.width).toBe(68);
+      expect(state.params().pcbPreview.enabled).toBeFalse();
       expect(input.value).toBe('');
     } finally {
       (globalThis as { FileReader: typeof FileReader }).FileReader = originalFileReader;
