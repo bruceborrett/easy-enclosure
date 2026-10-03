@@ -9,12 +9,13 @@ import {
 } from '@angular/core';
 import type { Geom3 } from '@jscad/modeling/src/geometries/types';
 import { union } from '@jscad/modeling/src/operations/booleans';
-import { serialize } from '@jscad/stl-serializer';
+import { serialize as serializeStl } from '@jscad/stl-serializer';
 import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
 
 import { base } from '../../core/enclosure/base';
 import { dinRailMount } from '../../core/enclosure/dinrailmount';
+import { serialize as serializeStep } from '../../core/export/step-serializer';
 import { internalWalls } from '../../core/enclosure/internalwalls';
 import { lid } from '../../core/enclosure/lid';
 import { pcbMountsOnBase, pcbMountsOnLid } from '../../core/enclosure/pcbmount';
@@ -22,6 +23,8 @@ import { waterProofSeal } from '../../core/enclosure/waterproofseal';
 import type { Params } from '../../core/params';
 import { EnclosureStateService } from '../../core/state/enclosure-state.service';
 import { ActionButtonComponent } from '../../shared/action-button/action-button.component';
+
+export type ExportFormat = 'stl' | 'step';
 
 @Component({
   selector: 'app-tools',
@@ -40,6 +43,11 @@ export class ToolsComponent {
 
   readonly isExportModalOpen = signal(false);
   readonly isExporting = signal(false);
+  readonly exportFormat = signal<ExportFormat>('stl');
+
+  setExportFormat(format: ExportFormat): void {
+    this.exportFormat.set(format);
+  }
 
   readonly hasSeal = computed(() => this.state.params().waterProof);
   readonly hasDinRailMount = computed(() => this.state.params().dinRailMount);
@@ -81,7 +89,8 @@ export class ToolsComponent {
     if (this.selectedCount() === 0) {
       return 'Download';
     }
-    return this.willExportZip() ? 'Download ZIP' : 'Download STL';
+    const fmt = this.exportFormat().toUpperCase();
+    return this.willExportZip() ? 'Download ZIP' : `Download ${fmt}`;
   });
 
   openFilePicker(): void {
@@ -145,6 +154,7 @@ export class ToolsComponent {
     try {
       const tsStr = this.formattedTimestamp();
       const currentParams = this.state.params();
+      const ext = this.exportFormat();
       const files: { name: string; blob: Blob }[] = [];
 
       if (this.exportBase()) {
@@ -160,50 +170,56 @@ export class ToolsComponent {
         }
 
         const baseGeometry = baseParts.length > 1 ? union(baseParts) : baseParts[0];
+        const baseName = `enclosure-base-${tsStr}`;
         files.push({
-          name: `enclosure-base-${tsStr}.stl`,
-          blob: this.geometryToBlob(baseGeometry),
+          name: `${baseName}.${ext}`,
+          blob: this.geometryToBlob(baseGeometry, baseName),
         });
       }
 
       if (this.exportLid()) {
         const lidMounts = pcbMountsOnLid(currentParams);
         const lidGeometry = lidMounts ? union([lid(currentParams), lidMounts]) : lid(currentParams);
+        const lidName = `enclosure-lid-${tsStr}`;
         files.push({
-          name: `enclosure-lid-${tsStr}.stl`,
-          blob: this.geometryToBlob(lidGeometry),
+          name: `${lidName}.${ext}`,
+          blob: this.geometryToBlob(lidGeometry, lidName),
         });
       }
 
       if (this.hasSeal() && this.exportSeal()) {
+        const sealName = `enclosure-waterproof-seal-${tsStr}`;
         files.push({
-          name: `enclosure-waterproof-seal-${tsStr}.stl`,
-          blob: this.geometryToBlob(waterProofSeal(currentParams)),
+          name: `${sealName}.${ext}`,
+          blob: this.geometryToBlob(waterProofSeal(currentParams), sealName),
         });
       }
 
       if (this.hasPcbMounts() && this.exportPcbMounts()) {
         const baseMounts = pcbMountsOnBase(currentParams);
         if (baseMounts) {
+          const mountBaseName = `enclosure-pcb-mounts-base-${tsStr}`;
           files.push({
-            name: `enclosure-pcb-mounts-base-${tsStr}.stl`,
-            blob: this.geometryToBlob(baseMounts),
+            name: `${mountBaseName}.${ext}`,
+            blob: this.geometryToBlob(baseMounts, mountBaseName),
           });
         }
 
         const lidMounts = pcbMountsOnLid(currentParams);
         if (lidMounts) {
+          const mountLidName = `enclosure-pcb-mounts-lid-${tsStr}`;
           files.push({
-            name: `enclosure-pcb-mounts-lid-${tsStr}.stl`,
-            blob: this.geometryToBlob(lidMounts),
+            name: `${mountLidName}.${ext}`,
+            blob: this.geometryToBlob(lidMounts, mountLidName),
           });
         }
       }
 
       if (this.hasDinRailMount() && this.exportDinRail()) {
+        const dinRailName = `enclosure-din-rail-mount-${tsStr}`;
         files.push({
-          name: `enclosure-din-rail-mount-${tsStr}.stl`,
-          blob: this.geometryToBlob(dinRailMount(currentParams)),
+          name: `${dinRailName}.${ext}`,
+          blob: this.geometryToBlob(dinRailMount(currentParams), dinRailName),
         });
       }
 
@@ -246,14 +262,19 @@ export class ToolsComponent {
     return this.exportSelected();
   }
 
-  private geometryToBlob(geometry: Geom3): Blob {
-    const rawData = serialize({ binary: false }, geometry);
+  private geometryToBlob(geometry: Geom3, name = 'enclosure'): Blob {
+    if (this.exportFormat() === 'step') {
+      const rawData = serializeStep({ name }, geometry);
+      return new Blob([rawData], { type: 'application/octet-stream' });
+    }
+    const rawData = serializeStl({ binary: false }, geometry);
     return new Blob([rawData], { type: 'application/octet-stream' });
   }
 
   private exportGeometry(name: string, geometry: Geom3): void {
-    const blob = this.geometryToBlob(geometry);
-    this.saveFile(blob, `${name}.stl`);
+    const ext = this.exportFormat();
+    const blob = this.geometryToBlob(geometry, name);
+    this.saveFile(blob, `${name}.${ext}`);
   }
 
   private saveFile(data: Blob, fileName: string): void {

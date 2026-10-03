@@ -301,4 +301,69 @@ describe('ToolsComponent', () => {
     await component.exportSelected();
     expect(saveSpy).not.toHaveBeenCalled();
   });
+
+  it('toggles exportFormat between stl and step', () => {
+    expect(component.exportFormat()).toBe('stl');
+    component.setExportFormat('step');
+    expect(component.exportFormat()).toBe('step');
+
+    component.exportLid.set(false);
+    component.exportSeal.set(false);
+    component.exportPcbMounts.set(false);
+    component.exportDinRail.set(false);
+    expect(component.downloadButtonText()).toBe('Download STEP');
+  });
+
+  it('exports a single STEP file when format is step and only base is selected', async () => {
+    const saveSpy = spyOn(component as any, 'saveFile');
+    const closeSpy = spyOn(component, 'closeExportModal');
+
+    component.setExportFormat('step');
+    component.exportBase.set(true);
+    component.exportLid.set(false);
+    component.exportSeal.set(false);
+    component.exportPcbMounts.set(false);
+    component.exportDinRail.set(false);
+
+    await component.exportSelected();
+
+    expect(saveSpy).toHaveBeenCalledWith(
+      jasmine.any(Blob),
+      jasmine.stringMatching(/^enclosure-base-\d+\.step$/),
+    );
+    expect(closeSpy).toHaveBeenCalled();
+  });
+
+  it('bundles multiple STEP files in a ZIP when format is step', async () => {
+    const saveSpy = spyOn(component as any, 'saveFile');
+    const closeSpy = spyOn(component, 'closeExportModal');
+
+    component.setExportFormat('step');
+    const simple = cloneParams(state.params());
+    simple.pcbMounts = [];
+    simple.internalWalls = [];
+    simple.waterProof = false;
+    simple.dinRailMount = false;
+    state.setParams(simple);
+
+    component.exportBase.set(true);
+    component.exportLid.set(true);
+    component.exportSeal.set(false);
+    component.exportPcbMounts.set(false);
+    component.exportDinRail.set(false);
+
+    await component.exportSelected();
+
+    expect(saveSpy).toHaveBeenCalledWith(
+      jasmine.any(Blob),
+      jasmine.stringMatching(/^enclosure-\d+\.zip$/),
+    );
+    const savedBlob = saveSpy.calls.mostRecent().args[0] as Blob;
+    const zip = await JSZip.loadAsync(savedBlob);
+    const fileNames = Object.keys(zip.files).join(' ');
+    expect(fileNames).toContain('enclosure-lid-');
+    expect(fileNames).toContain('.step');
+    expect(fileNames).toContain('enclosure-base-');
+    expect(closeSpy).toHaveBeenCalled();
+  });
 });

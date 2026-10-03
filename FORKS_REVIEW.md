@@ -23,7 +23,7 @@ All 29 forks were fetched and audited at the git ref level.
 | **P0 (Bug)** | Lid screw hole height when insert > roof | `536338958` (`main`) | **Applied & Verified** | Low risk | Used `roof + insertHeight` in `lid.ts` |
 | **P0 (Bug)** | Blind hole floor piercing & clamp | `536338958` (`main`) | **Applied & Verified** | Low risk | Clamped blind depth to `height - floor` in `base.ts` & `screws.ts` |
 | **P0 (Perf)**| Reduce CSG circle segments (100 -> 48) | `536338958` (`main`) | **Applied & Verified** | Very low | ~50% CSG rebuild speedup; default 48 in `utils.ts` |
-| **P1 (Gem)** | **Dependency-free STEP AP214 Exporter** | `tyeth-ai-assisted` (`feature/step-export`) | **Pull with review** | Low | Clean standalone module (`step-serializer.ts`) |
+| **P1 (Gem)** | **Dependency-free STEP AP214 Exporter** | `tyeth-ai-assisted` (`feature/step-export`) | **Applied & Verified** | Low | Clean standalone module (`step-serializer.ts`) |
 | **P1 (Feat)**| **Snap-Fit Enclosure Lids** | `536338958` (`main`) | **Pull with review** | Low/Med | Standalone module (`snapfit.ts`) |
 | **P1 (Feat)**| **PCB Standoff Root Fillet / Chamfer** | `536338958` (`main`) | **Pull with review** | Low | High mechanical value for FDM prints |
 | **P1 (Feat)**| **Cable Clamp Strain-Relief** | `maraid` (`main`) | **Pull with review** | Low | Clean standalone module (`clamp.ts`) |
