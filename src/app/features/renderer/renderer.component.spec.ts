@@ -188,4 +188,90 @@ describe('RendererComponent', () => {
       expect(dinOrigin[0]).toBeGreaterThan(lidOrigin[0] + params.width);
     });
   });
+
+  describe('PCB preview and collision detection', () => {
+    it('returns empty entities and clears collision when pcbPreview is disabled', () => {
+      const fixture = TestBed.createComponent(RendererComponent);
+      component = fixture.componentInstance;
+
+      const params = {
+        ...DEFAULT_PARAMS,
+        pcbPreview: {
+          ...DEFAULT_PARAMS.pcbPreview,
+          enabled: false,
+        },
+      };
+
+      const entities = (component as any).buildPcbEntities(params);
+      expect(entities).toEqual([]);
+      expect(component.pcbCollision().collides).toBeFalse();
+    });
+
+    it('builds board and component entities when enabled and fits without collision', () => {
+      const fixture = TestBed.createComponent(RendererComponent);
+      component = fixture.componentInstance;
+
+      const params = {
+        ...DEFAULT_PARAMS,
+        internalWalls: [],
+        pcbPreview: {
+          enabled: true,
+          width: 30,
+          length: 30,
+          thickness: 1.6,
+          componentHeight: 5,
+          x: 0,
+          y: 0,
+        },
+      };
+
+      const entities = (component as any).buildPcbEntities(params);
+      expect(entities.length).toBe(2);
+      expect(component.pcbCollision().collides).toBeFalse();
+    });
+
+    it('flags collision and sets pcbCollision signal when PCB overlaps walls', () => {
+      const fixture = TestBed.createComponent(RendererComponent);
+      component = fixture.componentInstance;
+
+      const params = {
+        ...DEFAULT_PARAMS,
+        pcbPreview: {
+          enabled: true,
+          width: 200,
+          length: 200,
+          thickness: 1.6,
+          componentHeight: 5,
+          x: 0,
+          y: 0,
+        },
+      };
+
+      const entities = (component as any).buildPcbEntities(params);
+      expect(entities.length).toBe(2);
+      expect(component.pcbCollision().collides).toBeTrue();
+      expect(component.pcbCollision().hitsWalls).toBeTrue();
+    });
+
+    it('renders collision alert overlay in DOM when collision is active', () => {
+      const fixture = TestBed.createComponent(RendererComponent);
+      component = fixture.componentInstance;
+
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelector('.border-red-300')).toBeNull();
+
+      component.pcbCollision.set({
+        collides: true,
+        hitsWalls: true,
+        hitsCeiling: false,
+        overlapVolume: 42.5,
+      });
+
+      fixture.detectChanges();
+      const alertEl = fixture.nativeElement.querySelector('.border-red-300');
+      expect(alertEl).not.toBeNull();
+      expect(alertEl.textContent).toContain('PCB Collision');
+      expect(alertEl.textContent).toContain('42.5 mm³');
+    });
+  });
 });

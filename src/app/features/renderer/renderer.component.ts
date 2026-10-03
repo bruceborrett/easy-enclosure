@@ -12,6 +12,7 @@ import {
 import type { Geom3 } from '@jscad/modeling/src/geometries/types';
 import type { Vec3 } from '@jscad/modeling/src/maths/types';
 import measureBoundingBox from '@jscad/modeling/src/measurements/measureBoundingBox';
+import { colorize } from '@jscad/modeling/src/colors';
 import { union } from '@jscad/modeling/src/operations/booleans';
 import { translate } from '@jscad/modeling/src/operations/transforms';
 import {
@@ -29,6 +30,12 @@ import { dinRailMountsPair } from '../../core/enclosure/dinrailmount';
 import { internalWalls } from '../../core/enclosure/internalwalls';
 import { lid } from '../../core/enclosure/lid';
 import { pcbMountsOnBase, pcbMountsOnLid } from '../../core/enclosure/pcbmount';
+import {
+  pcbBoard,
+  pcbCollision,
+  pcbComponentZone,
+  type PCBCollisionResult,
+} from '../../core/enclosure/pcbpreview';
 import { waterProofSeal } from '../../core/enclosure/waterproofseal';
 import type { Params } from '../../core/params';
 import { EnclosureStateService } from '../../core/state/enclosure-state.service';
@@ -345,11 +352,19 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
 
   private lidModel: Geom3 | null = null;
   private baseModel: Geom3 | null = null;
+  private baseModelLocal: Geom3 | null = null;
   private sealModel: Geom3 | null = null;
   private dinRailModel: Geom3 | null = null;
   private mountsModel: Geom3 | null = null;
   private internalWallsModel: Geom3 | null = null;
   private cableClampsModel: Geom3 | null = null;
+
+  readonly pcbCollision = signal<PCBCollisionResult>({
+    collides: false,
+    hitsWalls: false,
+    hitsCeiling: false,
+    overlapVolume: 0,
+  });
 
   private model: Geom3 | null = null;
   private renderOptions: RenderOptions | null = null;
@@ -511,6 +526,41 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
 
   private buildTranslationMatrix(x: number, y: number, z: number): number[] {
     return [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1];
+  }
+
+  private buildPcbEntities(params: Params): Entity[] {
+    if (!params.pcbPreview.enabled) {
+      this.pcbCollision.set({
+        collides: false,
+        hitsWalls: false,
+        hitsCeiling: false,
+        overlapVolume: 0,
+      });
+      return [];
+    }
+
+    const collision = pcbCollision(params, this.baseModelLocal ?? undefined);
+    this.pcbCollision.set(collision);
+
+    const boardColor: [number, number, number, number] = collision.collides
+      ? [0.9, 0.15, 0.15, 0.85]
+      : [0.15, 0.6, 0.28, 0.85];
+    const zoneColor: [number, number, number, number] = collision.collides
+      ? [0.9, 0.3, 0.3, 0.12]
+      : [0.2, 0.65, 0.35, 0.12];
+
+    const entities: Entity[] = [];
+
+    const board = translate(this.baseOrigin, pcbBoard(params));
+    entities.push(...(entitiesFromSolids({}, colorize(boardColor, board)) as Entity[]));
+
+    const zone = pcbComponentZone(params);
+    if (zone) {
+      const placedZone = translate(this.baseOrigin, zone);
+      entities.push(...(entitiesFromSolids({}, colorize(zoneColor, placedZone)) as Entity[]));
+    }
+
+    return entities;
   }
 
   private scheduleModelRender(params: Params): void {
@@ -838,7 +888,8 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
         ? [-width / 2, -length / 2, 0]
         : [-(width + SPACING / 2), -length / 2, 0];
       this.baseOrigin = basePos;
-      this.baseModel = translate(basePos, base(params));
+      this.baseModelLocal = base(params);
+      this.baseModel = translate(basePos, this.baseModelLocal);
     }
 
     if (this.checkDeps(diff, sealDeps) && waterProof) {
@@ -927,6 +978,13 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
     }
 
     if (result.length === 0) {
+      this.model = null;
+      this.pcbCollision.set({
+        collides: false,
+        hitsWalls: false,
+        hitsCeiling: false,
+        overlapVolume: 0,
+      });
       return;
     }
 
@@ -936,6 +994,11 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
     const modelBounds = measureBoundingBox(this.model) as [Vec3Tuple, Vec3Tuple];
     const gridEntity = this.buildGridEntity(params, modelBounds);
     const entities: Entity[] = gridEntity ? [gridEntity, ...modelEntities] : modelEntities;
+
+    const pcbEntities = this.buildPcbEntities(params);
+    if (pcbEntities.length > 0 && params.showBase) {
+      entities.push(...pcbEntities);
+    }
 
     if (
       (gridEntity && this.checkDeps(diff, gridDeps)) ||
