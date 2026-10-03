@@ -129,6 +129,20 @@
           <span>DIN rail mount</span>
         </label>
       }
+      @if (hasCableClamps()) {
+        <label
+          class="flex cursor-pointer items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100/70 hover:text-slate-900 select-none"
+        >
+          <input
+            type="checkbox"
+            id="export-cable-clamps-checkbox"
+            class="h-4 w-4 cursor-pointer rounded border-slate-300 text-sky-600 focus:ring-sky-500/30"
+            [checked]="exportCableClamps()"
+            (change)="exportCableClamps.set($any($event.target).checked)"
+          />
+          <span>Cable clamp straps</span>
+        </label>
+      }
     </div>
     <div class="flex items-center justify-end gap-2">
       <app-action-button variant="dialog" (click)="closeExportModal()"> Cancel </app-action-button>

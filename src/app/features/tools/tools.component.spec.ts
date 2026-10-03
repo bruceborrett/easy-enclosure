@@ -90,11 +90,13 @@ describe('ToolsComponent', () => {
     expect(component.exportSeal()).toBeTrue();
     expect(component.exportPcbMounts()).toBeTrue();
     expect(component.exportDinRail()).toBeTrue();
+    expect(component.exportCableClamps()).toBeTrue();
   });
 
   it('resets all checklist items to checked by default when opening export modal', () => {
     component.exportBase.set(false);
     component.exportLid.set(false);
+    component.exportCableClamps.set(false);
     component.openExportModal();
 
     expect(component.exportBase()).toBeTrue();
@@ -102,6 +104,7 @@ describe('ToolsComponent', () => {
     expect(component.exportSeal()).toBeTrue();
     expect(component.exportPcbMounts()).toBeTrue();
     expect(component.exportDinRail()).toBeTrue();
+    expect(component.exportCableClamps()).toBeTrue();
   });
 
   it('exports multiple STL artifacts bundled in a ZIP when multiple options are checked', async () => {
@@ -432,5 +435,82 @@ describe('ToolsComponent', () => {
     } finally {
       exportFormatService.resetFormats();
     }
+  });
+
+  it('exports cable clamp straps bundled into ZIP when cable clamps are defined', async () => {
+    const saveSpy = spyOn(component as any, 'saveFile');
+    const closeSpy = spyOn(component, 'closeExportModal');
+
+    const params = cloneParams(state.params());
+    params.cableClamps = [
+      {
+        surface: 'bottom',
+        x: 0,
+        y: 0,
+        length: 15,
+        wallHeight: 5,
+        wallThickness: 4,
+        mountScrewDiameter: 2,
+        mountOuterDiameter: 6,
+        mountHeight: 8,
+        rotation: 0,
+        topHeight: 2.5,
+        topScrewDiameter: 2.6,
+        ridges: true,
+      },
+    ];
+    params.pcbMounts = [];
+    params.internalWalls = [];
+    params.waterProof = false;
+    params.dinRailMount = false;
+    state.setParams(params);
+
+    component.exportBase.set(true);
+    component.exportLid.set(false);
+    component.exportCableClamps.set(true);
+
+    await component.exportSelected();
+
+    expect(saveSpy).toHaveBeenCalledWith(
+      jasmine.any(Blob),
+      jasmine.stringMatching(/^enclosure-\d+\.zip$/),
+    );
+    const savedBlob = saveSpy.calls.mostRecent().args[0] as Blob;
+    const zip = await JSZip.loadAsync(savedBlob);
+    const fileNames = Object.keys(zip.files).join(' ');
+    expect(fileNames).toContain('enclosure-base-');
+    expect(fileNames).toContain('enclosure-cable-clamp-straps-');
+    expect(closeSpy).toHaveBeenCalled();
+  });
+
+  it('exports single cable clamp straps artifact via exportCableClampsOnly()', async () => {
+    const saveSpy = spyOn(component as any, 'saveFile');
+
+    const params = cloneParams(state.params());
+    params.cableClamps = [
+      {
+        surface: 'bottom',
+        x: 0,
+        y: 0,
+        length: 15,
+        wallHeight: 5,
+        wallThickness: 4,
+        mountScrewDiameter: 2,
+        mountOuterDiameter: 6,
+        mountHeight: 8,
+        rotation: 0,
+        topHeight: 2.5,
+        topScrewDiameter: 2.6,
+        ridges: true,
+      },
+    ];
+    state.setParams(params);
+
+    await component.exportCableClampsOnly('stl');
+
+    expect(saveSpy).toHaveBeenCalledWith(
+      jasmine.any(Blob),
+      jasmine.stringMatching(/^enclosure-cable-clamp-straps-\d+\.stl$/),
+    );
   });
 });

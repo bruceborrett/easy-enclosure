@@ -24,6 +24,7 @@ import {
 import type { Entity } from '@jscad/regl-renderer/types/geometry-utils-V2/entity';
 
 import { base } from '../../core/enclosure/base';
+import { cableClamps } from '../../core/enclosure/clamp';
 import { dinRailMountsPair } from '../../core/enclosure/dinrailmount';
 import { internalWalls } from '../../core/enclosure/internalwalls';
 import { lid } from '../../core/enclosure/lid';
@@ -116,6 +117,20 @@ const mountDeps = [
   'insertClearance',
 ];
 const internalWallDeps = ['internalWalls', 'length', 'width', 'waterProof', 'floor'];
+const cableClampDeps = [
+  'cableClamps',
+  'length',
+  'width',
+  'height',
+  'floor',
+  'roof',
+  'wall',
+  'waterProof',
+  'lidScrews',
+  'insertThickness',
+  'insertClearance',
+  'insertHeight',
+];
 const dinRailDeps = [
   'dinRailMount',
   'dinRailOrientation',
@@ -140,6 +155,7 @@ const gridDeps = [
   'showBase',
   'dinRailMount',
   'showDinRailMount',
+  'cableClamps',
 ];
 
 const createIdentityMatrix = (): number[] => [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
@@ -333,6 +349,7 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
   private dinRailModel: Geom3 | null = null;
   private mountsModel: Geom3 | null = null;
   private internalWallsModel: Geom3 | null = null;
+  private cableClampsModel: Geom3 | null = null;
 
   private model: Geom3 | null = null;
   private renderOptions: RenderOptions | null = null;
@@ -876,6 +893,16 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
       this.internalWallsModel = translate(mountsPos, internalWalls(params));
     }
 
+    if (this.checkDeps(diff, cableClampDeps) && (params.cableClamps?.length ?? 0) > 0) {
+      const clampsPos: Vec3 = waterProof
+        ? [-width / 2, -length / 2, 0]
+        : [-(width + SPACING / 2), -length / 2, 0];
+      const rawClamps = cableClamps(params);
+      this.cableClampsModel = rawClamps ? translate(clampsPos, rawClamps) : null;
+    } else if (this.checkDeps(diff, cableClampDeps)) {
+      this.cableClampsModel = null;
+    }
+
     const result: Geom3[] = [];
     if (this.lidModel && params.showLid) {
       result.push(this.lidModel);
@@ -894,6 +921,9 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
     }
     if (this.internalWallsModel && internalWallParams.length > 0) {
       result.push(this.internalWallsModel);
+    }
+    if (this.cableClampsModel && (params.cableClamps?.length ?? 0) > 0) {
+      result.push(this.cableClampsModel);
     }
 
     if (result.length === 0) {
