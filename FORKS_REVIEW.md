@@ -18,28 +18,28 @@ All 29 forks were fetched and audited at the git ref level.
 
 ### Pre-Pull Decision Matrix
 
-| Priority      | Feature / Fix                                     | Source Fork & Branch                        | Status          | Commit / Notes                                                                 |
-| :------------ | :------------------------------------------------ | :------------------------------------------ | :-------------- | :----------------------------------------------------------------------------- |
-| **P0 (Bug)**  | Flange `rotateY` radians vs degrees               | `536338958` (`main`)                        | **COMPLETED**   | Fixed with `degToRad(45)` in `wallmount.ts` (`a1eec20`)                        |
-| **P0 (Bug)**  | Nut-pocket seal cutout breaks cavity wall         | `536338958` (`main`)                        | **COMPLETED**   | Clamped `getSealReliefRadius` in `waterproofseal.ts` (`a1eec20`)               |
-| **P0 (Bug)**  | Lid screw hole height when insert > roof          | `536338958` (`main`)                        | **COMPLETED**   | Used `roof + insertHeight` in `lid.ts` (`a1eec20`)                             |
-| **P0 (Bug)**  | Blind hole floor piercing & clamp                 | `536338958` (`main`)                        | **COMPLETED**   | Clamped blind depth to `height - floor` in `base.ts` & `screws.ts` (`a1eec20`) |
-| **P0 (Perf)** | Reduce CSG circle segments (100 -> 48)            | `536338958` (`main`)                        | **COMPLETED**   | ~50% CSG rebuild speedup; default 48 in `utils.ts` (`a1eec20`)                 |
-| **P0 (Feat)** | Lid screw head recesses (counterbore/countersunk) | Custom / Community                          | **COMPLETED**   | Added recess types, dimensions, and tests (`a1eec20`)                          |
-| **P1 (Gem)**  | **Dependency-free STEP AP214 Exporter**           | `tyeth-ai-assisted` (`feature/step-export`) | **COMPLETED**   | Standalone module `step-serializer.ts` with T-junction healing (`fa66dfa`)     |
-| **P1 (Arch)** | **Extensible Export Format Registry**             | Architecture refinement                     | **COMPLETED**   | Strategy pattern in `export-format.service.ts` (closes #38, `4597d0c`)         |
-| **P1 (Feat)** | **PCB Standoff Root Fillet / Chamfer**            | `536338958` (`main`)                        | **COMPLETED**   | Rotational extrusion reinforcement (closes #18, `b9d173a`)                     |
-| **P1 (Feat)** | **Snap-Fit Enclosure Lids**                       | `536338958` (`main`)                        | **COMPLETED**   | Standalone `snapfit.ts` with wall safety clamp (closes #47, `844e8db`)         |
-| **P1 (Feat)** | **Cable Clamp Strain-Relief**                     | `maraid` (`main`)                           | **Outstanding** | Clean standalone module (`clamp.ts`)                                           |
-| **P2 (Feat)** | **PCB 3D Preview & Collision Detection**          | `536338958` (`main`)                        | **Outstanding** | Viewport PCB mesh & CSG intersection clash detection                           |
-| **P2 (Feat)** | **OLED / LCD Retaining Socket**                   | `JeshwanthNG` (`Lcd_Mount`)                 | **Outstanding** | Socket pocket perimeter option for display mounts                              |
-| **P2 (UX)**   | **3D Dimension Leader-Line Overlay**              | `nedimat` (`main`)                          | **Outstanding** | Port `project3DTo2D` from React to Angular canvas overlay                      |
-| **P3 (Feat)** | **Ventilation Slots & Weatherproof Louvers**      | `536338958` / `tyeth-ai-assisted`           | **Outstanding** | Simple slots (`536338958`) vs angled louvers (`tyeth`)                         |
-| **P3 (Arch)** | Centralized `dimensions.ts` & Specs               | `536338958` (`main`)                        | **Outstanding** | Consolidates duplicated geometry math into shared helpers                      |
-| **Reject**    | DIN Rail Mounts                                   | `vZhurbenko`, `JeshwanthNG`                 | **Rejected**    | Already implemented in `dinrailmount.ts`                                       |
-| **Reject**    | Brass Inserts                                     | `alex-j-butler`                             | **Rejected**    | Superseded by `lidScrewHoleType: 'blind'`                                      |
-| **Reject**    | Circular / Oval Enclosure Body                    | `JeshwanthNG` (`Development`)               | **Rejected**    | Brittle math; breaks seals and corner radiuses                                 |
-| **Reject**    | React Form Refactor                               | `erikarenhill` (`refactor/...`)             | **Rejected**    | Obsolete React component refactor                                              |
+| Priority      | Feature / Fix                                     | Source Fork & Branch                        | Status          | Commit / Notes                                                                             |
+| :------------ | :------------------------------------------------ | :------------------------------------------ | :-------------- | :----------------------------------------------------------------------------------------- |
+| **P0 (Bug)**  | Flange `rotateY` radians vs degrees               | `536338958` (`main`)                        | **COMPLETED**   | Fixed with `degToRad(45)` in `wallmount.ts` (`a1eec20`)                                    |
+| **P0 (Bug)**  | Nut-pocket seal cutout breaks cavity wall         | `536338958` (`main`)                        | **COMPLETED**   | Clamped `getSealReliefRadius` in `waterproofseal.ts` (`a1eec20`)                           |
+| **P0 (Bug)**  | Lid screw hole height when insert > roof          | `536338958` (`main`)                        | **COMPLETED**   | Used `roof + insertHeight` in `lid.ts` (`a1eec20`)                                         |
+| **P0 (Bug)**  | Blind hole floor piercing & clamp                 | `536338958` (`main`)                        | **COMPLETED**   | Clamped blind depth to `height - floor` in `base.ts` & `screws.ts` (`a1eec20`)             |
+| **P0 (Perf)** | Reduce CSG circle segments (100 -> 48)            | `536338958` (`main`)                        | **COMPLETED**   | ~50% CSG rebuild speedup; default 48 in `utils.ts` (`a1eec20`)                             |
+| **P0 (Feat)** | Lid screw head recesses (counterbore/countersunk) | Custom / Community                          | **COMPLETED**   | Added recess types, dimensions, and tests (`a1eec20`)                                      |
+| **P1 (Gem)**  | **Dependency-free STEP AP214 Exporter**           | `tyeth-ai-assisted` (`feature/step-export`) | **COMPLETED**   | Standalone module `step-serializer.ts` with T-junction healing (`fa66dfa`)                 |
+| **P1 (Arch)** | **Extensible Export Format Registry**             | Architecture refinement                     | **COMPLETED**   | Strategy pattern in `export-format.service.ts` (closes #38, `4597d0c`)                     |
+| **P1 (Feat)** | **PCB Standoff Root Fillet / Chamfer**            | `536338958` (`main`)                        | **COMPLETED**   | Rotational extrusion reinforcement (closes #18, `b9d173a`)                                 |
+| **P1 (Feat)** | **Snap-Fit Enclosure Lids**                       | `536338958` (`main`)                        | **COMPLETED**   | Standalone `snapfit.ts` with wall safety clamp (closes #47, `844e8db`)                     |
+| **P1 (Feat)** | **Cable Clamp Strain-Relief**                     | `maraid` (`main`)                           | **COMPLETED**   | Standalone `clamp.ts` with grip ridges, top strap export (`f458bff`, `af490e1`, `db236c0`) |
+| **P2 (Feat)** | **PCB 3D Preview & Collision Detection**          | `536338958` (`main`)                        | **Outstanding** | Viewport PCB mesh & CSG intersection clash detection                                       |
+| **P2 (Feat)** | **OLED / LCD Retaining Socket**                   | `JeshwanthNG` (`Lcd_Mount`)                 | **Outstanding** | Socket pocket perimeter option for display mounts                                          |
+| **P2 (UX)**   | **3D Dimension Leader-Line Overlay**              | `nedimat` (`main`)                          | **Outstanding** | Port `project3DTo2D` from React to Angular canvas overlay                                  |
+| **P3 (Feat)** | **Ventilation Slots & Weatherproof Louvers**      | `536338958` / `tyeth-ai-assisted`           | **Outstanding** | Simple slots (`536338958`) vs angled louvers (`tyeth`)                                     |
+| **P3 (Arch)** | Centralized `dimensions.ts` & Specs               | `536338958` (`main`)                        | **Outstanding** | Consolidates duplicated geometry math into shared helpers                                  |
+| **Reject**    | DIN Rail Mounts                                   | `vZhurbenko`, `JeshwanthNG`                 | **Rejected**    | Already implemented in `dinrailmount.ts`                                                   |
+| **Reject**    | Brass Inserts                                     | `alex-j-butler`                             | **Rejected**    | Superseded by `lidScrewHoleType: 'blind'`                                                  |
+| **Reject**    | Circular / Oval Enclosure Body                    | `JeshwanthNG` (`Development`)               | **Rejected**    | Brittle math; breaks seals and corner radiuses                                             |
+| **Reject**    | React Form Refactor                               | `erikarenhill` (`refactor/...`)             | **Rejected**    | Obsolete React component refactor                                                          |
 
 ---
 
@@ -173,23 +173,36 @@ All 29 forks were fetched and audited at the git ref level.
 
 ---
 
+### 3.8 Parametric Internal Cable Clamp & Strain-Relief Module (Commits `f458bff`, `af490e1`, `db236c0`)
+
+- **Feature**: Parametric internal cable clamps with dual screw mounting posts, a central saddle cradle with raised grip teeth, and matching printable top clamp straps with through-holes for strain relief (`src/app/core/enclosure/clamp.ts`).
+- **Mathematical & Structural Alignment Invariants**:
+  - The base clamp sits on the interior floor (`Z = baseFloor`) and extends up to `mountHeight`.
+  - The saddle bed sits at `Z = saddleHeight` ($< \text{mountHeight}$), creating a cable retention channel of depth $\text{mountHeight} - \text{wallHeight}$.
+  - Grip teeth: Transverse ribbed beads raised along the saddle bed and clamp strap bite into the cable jacket to prevent pulling strain from dislodging soldered wire joints.
+  - In-place viewport preview: The top strap is positioned at `Z = mountHeight` directly over the posts in the 3D viewport.
+- **Findings & Traps Avoided**:
+  - **Z-Origin Protrusion Trap in Fork**: In `maraid`'s original code, `internalWall` was centered at $Z = 0$, causing half of the saddle to extend below $Z = 0$ into negative space, which would bore through the enclosure floor. Resolved by anchoring the saddle base at $Z = 0$ (`center: [0, 0, saddleHeight / 2]`).
+  - **Supportless 3D Printing of Strap**: The top clamp strap has a completely flat bottom face when placed on the print bed ($Z = 0$), printing rapidly with zero supports required.
+  - **Export Pipeline Separation Invariant**: The base clamp is fused with the enclosure base model for printing as a monolithic solid, while the top clamp straps are exported as a separate accessory (`enclosure-cable-clamp-straps-${tsStr}.${format.extension}`) bundled in the ZIP archive or downloaded individually via `cableClampTops()`.
+
+---
+
 ## 4. Deep-Dive Scrutiny of Outstanding Candidates
 
 ---
 
-### Candidate 1: Internal Cable Clamp Strain-Relief Module (Source: `maraid`)
+### Candidate 1: Internal Cable Clamp Strain-Relief Module (Source: `maraid`) - **ADOPTED & COMPLETED**
 
-- **File**: `src/app/core/enclosure/clamp.ts` (~72 lines).
+- **File**: `src/app/core/enclosure/clamp.ts` (~175 lines).
 - **Functionality**:
   Parametric internal cable clamps consisting of:
   - Two screw mounting posts on the enclosure floor.
   - An internal saddle/cradle between posts with ribbed teeth for cable grip.
   - A separate matching top clamp strap with through-holes that screws down over the cable to provide strain relief.
 - **Parameters**:
-  - `clampWidth`, `clampWallHeight`, `clampMountScrewDiameter`, `clampOuterDiameter`.
-- **Scrutiny**:
-  - **Pros**: Compact, clean code (~70 lines). Solves a common problem in project boxes where cables pulled from the outside rip solder joints off internal terminal blocks.
-  - **Recommendation**: **Adopt**. Can be implemented under Internal Features with export of the top clamp strap as an accessory in the ZIP bundle.
+  - `length`, `mountHeight`, `mountOuterDiameter`, `mountScrewDiameter`, `wallHeight`, `wallThickness`, `rotation`, `topHeight`, `topScrewDiameter`, `ridges`, `surface`, `x`, `y`.
+- **Status**: **Completed** (Commits `f458bff`, `af490e1`, `db236c0`). Dedicated Cable Clamps tab in sidebar, live 3D preview, base fusion, and top strap export in ZIP bundle.
 
 ---
 
@@ -291,7 +304,7 @@ graph TD
     P2B["Extensible Export Format Registry (#38)"]:::completed
     P2C["PCB Standoff Root Fillets & Chamfers (#18)"]:::completed
     P2D["Parametric Snap-Fit Clippable Lids (#47)"]:::completed
-    P2E["Internal Cable Clamps (clamp.ts)"]:::pending
+    P2E["Internal Cable Clamps (clamp.ts)"]:::completed
     P2F["Ventilation Slots (ventilation.ts)"]:::pending
     P2G["OLED/LCD Display Retaining Socket"]:::pending
   end
@@ -310,7 +323,6 @@ graph TD
 ### Next Steps for Future Work
 
 1. **Select Next Phase 2 Feature**:
-   - **Internal Cable / Strain Relief Clamps** (`clamp.ts` from `maraid`): High utility for boxes with external wiring harnesses.
    - **Ventilation Slots** (`ventilation.ts` from `536338958`): Clean, low-complexity parametric heat ventilation cutouts.
    - **OLED / LCD Retaining Socket** (`pcbmount.ts` from `JeshwanthNG`): Display cradle for DIY ESP32 / Arduino projects.
 2. **Phase 3 Preview & Clearance**:
