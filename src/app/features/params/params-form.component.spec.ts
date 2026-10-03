@@ -34,9 +34,26 @@ describe('ParamsFormComponent', () => {
     expect(state.params().holes.length).toBe(0);
     expect(state.params().pcbMounts.length).toBe(0);
     expect(state.params().internalWalls.length).toBe(0);
+    expect(state.params().cableClamps.length).toBe(0);
     expect(state.params().waterProof).toBeFalse();
     expect(state.params().lidScrews).toBeFalse();
     expect(state.params().snapFit.enabled).toBeFalse();
+  });
+
+  it('supports dynamic cable clamp CRUD operations', () => {
+    const initialCount = state.params().cableClamps.length;
+
+    component.addCableClamp();
+    expect(state.params().cableClamps.length).toBe(initialCount + 1);
+    expect(state.params().cableClamps[initialCount].length).toBe(15);
+
+    component.updateCableClamp(initialCount, { length: 22, mountHeight: 12, ridges: false });
+    expect(state.params().cableClamps[initialCount].length).toBe(22);
+    expect(state.params().cableClamps[initialCount].mountHeight).toBe(12);
+    expect(state.params().cableClamps[initialCount].ridges).toBeFalse();
+
+    component.removeCableClamp(initialCount);
+    expect(state.params().cableClamps.length).toBe(initialCount);
   });
 
   it('supports dynamic holes CRUD operations', () => {

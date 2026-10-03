@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 
-import type { Hole, InternalWall, PCBMount, Params, SnapFit } from '../../core/params';
+import type { CableClamp, Hole, InternalWall, PCBMount, Params, SnapFit } from '../../core/params';
+import { DEFAULT_CABLE_CLAMP } from '../../core/params';
 import { EnclosureStateService } from '../../core/state/enclosure-state.service';
 
 type Surface = 'top' | 'bottom' | 'left' | 'right' | 'front' | 'back';
@@ -125,6 +126,30 @@ export class ParamsFormComponent {
     const current = this.params();
     this.state.patchParams({
       internalWalls: current.internalWalls.map((item, i) =>
+        i === index ? { ...item, ...patch } : item,
+      ),
+    });
+  }
+
+  addCableClamp(): void {
+    const current = this.params();
+    const next: CableClamp = {
+      ...DEFAULT_CABLE_CLAMP,
+    };
+    this.state.patchParams({ cableClamps: [...(current.cableClamps ?? []), next] });
+  }
+
+  removeCableClamp(index: number): void {
+    const current = this.params();
+    this.state.patchParams({
+      cableClamps: (current.cableClamps ?? []).filter((_, i) => i !== index),
+    });
+  }
+
+  updateCableClamp(index: number, patch: Partial<CableClamp>): void {
+    const current = this.params();
+    this.state.patchParams({
+      cableClamps: (current.cableClamps ?? []).map((item, i) =>
         i === index ? { ...item, ...patch } : item,
       ),
     });

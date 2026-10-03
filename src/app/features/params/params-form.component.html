@@ -687,8 +687,161 @@
 
   <div class="accordian" [class.active]="activeTab() === 6">
     <p class="accordian-header" (click)="setActiveTab(6)">
-      Wall Mounts
+      Cable Clamps
       <span class="accordian-icon">{{ activeTab() === 6 ? '-' : '+' }}</span>
+    </p>
+    <div class="accordian-body">
+      @for (clamp of params().cableClamps; track $index) {
+        <div class="sub-params">
+          <button class="remove-btn" type="button" (click)="removeCableClamp($index)">X</button>
+          <p>
+            <b>Clamp {{ $index + 1 }}</b>
+          </p>
+
+          <div class="input-group">
+            <label>Surface</label>
+            <select
+              [value]="clamp.surface || 'bottom'"
+              (change)="updateCableClamp($index, { surface: $any($event.target).value })"
+            >
+              <option value="bottom">Base (Bottom)</option>
+              <option value="top">Lid (Top)</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>X</label>
+            <input
+              type="number"
+              [value]="clamp.x"
+              (keydown.enter)="$any($event.target).blur()"
+              (blur)="updateCableClamp($index, { x: +$any($event.target).value })"
+            />
+          </div>
+          <div class="input-group">
+            <label>Y</label>
+            <input
+              type="number"
+              [value]="clamp.y"
+              (keydown.enter)="$any($event.target).blur()"
+              (blur)="updateCableClamp($index, { y: +$any($event.target).value })"
+            />
+          </div>
+          <div class="input-group">
+            <label>Post Distance (Span)</label>
+            <input
+              type="number"
+              min="5"
+              step="0.5"
+              [value]="clamp.length"
+              (keydown.enter)="$any($event.target).blur()"
+              (blur)="updateCableClamp($index, { length: +$any($event.target).value })"
+            />
+          </div>
+          <div class="input-group">
+            <label>Post Height</label>
+            <input
+              type="number"
+              min="1"
+              step="0.5"
+              [value]="clamp.mountHeight"
+              (keydown.enter)="$any($event.target).blur()"
+              (blur)="updateCableClamp($index, { mountHeight: +$any($event.target).value })"
+            />
+          </div>
+          <div class="input-group">
+            <label>Saddle Height</label>
+            <input
+              type="number"
+              min="0.5"
+              step="0.5"
+              [value]="clamp.wallHeight"
+              (keydown.enter)="$any($event.target).blur()"
+              (blur)="updateCableClamp($index, { wallHeight: +$any($event.target).value })"
+            />
+          </div>
+          <div class="input-group">
+            <label>Clamp Depth (Thickness)</label>
+            <input
+              type="number"
+              min="1"
+              step="0.5"
+              [value]="clamp.wallThickness"
+              (keydown.enter)="$any($event.target).blur()"
+              (blur)="updateCableClamp($index, { wallThickness: +$any($event.target).value })"
+            />
+          </div>
+          <div class="input-group">
+            <label>Post Outer Diameter</label>
+            <input
+              type="number"
+              min="2"
+              step="0.5"
+              [value]="clamp.mountOuterDiameter"
+              (keydown.enter)="$any($event.target).blur()"
+              (blur)="updateCableClamp($index, { mountOuterDiameter: +$any($event.target).value })"
+            />
+          </div>
+          <div class="input-group">
+            <label>Base Screw Diameter (Pilot)</label>
+            <input
+              type="number"
+              min="0.5"
+              step="0.1"
+              [value]="clamp.mountScrewDiameter"
+              (keydown.enter)="$any($event.target).blur()"
+              (blur)="updateCableClamp($index, { mountScrewDiameter: +$any($event.target).value })"
+            />
+          </div>
+          <div class="input-group">
+            <label>Top Strap Thickness</label>
+            <input
+              type="number"
+              min="0.5"
+              step="0.5"
+              [value]="clamp.topHeight"
+              (keydown.enter)="$any($event.target).blur()"
+              (blur)="updateCableClamp($index, { topHeight: +$any($event.target).value })"
+            />
+          </div>
+          <div class="input-group">
+            <label>Top Screw Diameter (Clearance)</label>
+            <input
+              type="number"
+              min="0.5"
+              step="0.1"
+              [value]="clamp.topScrewDiameter"
+              (keydown.enter)="$any($event.target).blur()"
+              (blur)="updateCableClamp($index, { topScrewDiameter: +$any($event.target).value })"
+            />
+          </div>
+          <div class="input-group">
+            <label>Rotation</label>
+            <input
+              type="number"
+              step="1"
+              [value]="clamp.rotation"
+              (keydown.enter)="$any($event.target).blur()"
+              (blur)="updateCableClamp($index, { rotation: +$any($event.target).value })"
+            />
+          </div>
+          <div class="input-group checkbox-group">
+            <label>Grip Ridges</label>
+            <input
+              type="checkbox"
+              [checked]="clamp.ridges !== false"
+              (change)="updateCableClamp($index, { ridges: $any($event.target).checked })"
+            />
+          </div>
+        </div>
+      }
+      <button type="button" class="add-btn" (click)="addCableClamp()">ADD NEW CABLE CLAMP</button>
+    </div>
+  </div>
+
+  <div class="accordian" [class.active]="activeTab() === 7">
+    <p class="accordian-header" (click)="setActiveTab(7)">
+      Wall Mounts
+      <span class="accordian-icon">{{ activeTab() === 7 ? '-' : '+' }}</span>
     </p>
     <div class="accordian-body">
       <div class="input-group checkbox-group">
@@ -727,10 +880,10 @@
     </div>
   </div>
 
-  <div class="accordian" [class.active]="activeTab() === 7">
-    <p class="accordian-header" (click)="setActiveTab(7)">
+  <div class="accordian" [class.active]="activeTab() === 8">
+    <p class="accordian-header" (click)="setActiveTab(8)">
       DIN Rail Mounts
-      <span class="accordian-icon">{{ activeTab() === 7 ? '-' : '+' }}</span>
+      <span class="accordian-icon">{{ activeTab() === 8 ? '-' : '+' }}</span>
     </p>
     <div class="accordian-body">
       <div class="input-group checkbox-group">
@@ -782,10 +935,10 @@
     </div>
   </div>
 
-  <div class="accordian" [class.active]="activeTab() === 8">
-    <p class="accordian-header" (click)="setActiveTab(8)">
+  <div class="accordian" [class.active]="activeTab() === 9">
+    <p class="accordian-header" (click)="setActiveTab(9)">
       Grid
-      <span class="accordian-icon">{{ activeTab() === 8 ? '-' : '+' }}</span>
+      <span class="accordian-icon">{{ activeTab() === 9 ? '-' : '+' }}</span>
     </p>
     <div class="accordian-body">
       <div class="input-group checkbox-group">
