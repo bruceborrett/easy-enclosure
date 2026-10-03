@@ -4,11 +4,7 @@ import { intersect } from '@jscad/modeling/src/operations/booleans';
 import { translate } from '@jscad/modeling/src/operations/transforms';
 import { DEFAULT_PARAMS, cloneParams } from '../params';
 import { clover, roundedCube } from './utils';
-import {
-  getSealReliefRadius,
-  waterProofSeal,
-  waterProofSealCutout,
-} from './waterproofseal';
+import { getSealReliefRadius, waterProofSeal, waterProofSealCutout } from './waterproofseal';
 
 describe('waterproof seal enclosure', () => {
   it('clamps seal relief radius to prevent breaching the inner cavity wall', () => {
@@ -18,8 +14,7 @@ describe('waterproof seal enclosure', () => {
     params.lidScrewNutWidth = 6.0;
 
     const relief = getSealReliefRadius(params);
-    const maxAllowedRelief =
-      params.insertThickness + params.insertClearance * 2 + params.wall;
+    const maxAllowedRelief = params.insertThickness + params.insertClearance * 2 + params.wall;
 
     expect(relief).toBeLessThanOrEqual(maxAllowedRelief);
   });
@@ -51,8 +46,7 @@ describe('waterproof seal enclosure', () => {
 
     const cutout = waterProofSealCutout(params);
 
-    const _wall =
-      params.wall * 2 + params.insertClearance * 2 + params.insertThickness;
+    const _wall = params.wall * 2 + params.insertClearance * 2 + params.insertThickness;
     const cavity = translate(
       [_wall, _wall, params.floor],
       clover(

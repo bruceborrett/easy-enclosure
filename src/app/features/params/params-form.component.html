@@ -611,8 +611,104 @@
 
   <div class="accordian" [class.active]="activeTab() === 8">
     <p class="accordian-header" (click)="setActiveTab(8)">
-      Wall Mounts
+      Snap Fit (Clippable Lid)
       <span class="accordian-icon">{{ activeTab() === 8 ? '-' : '+' }}</span>
+    </p>
+    <div class="accordian-body">
+      <div class="input-group checkbox-group">
+        <label>Enable Snap Fit</label>
+        <input
+          type="checkbox"
+          [checked]="params().snapFit.enabled"
+          (change)="setSnapFitEnabled($any($event.target).checked)"
+        />
+      </div>
+
+      @if (params().snapFit.enabled) {
+        <div class="input-group">
+          <label>Snap Points Preset</label>
+          <select
+            [value]="params().snapFit.preset"
+            (change)="setSnapFitPreset($any($event.target).value)"
+          >
+            <option value="4">4 Points (2 per long side)</option>
+            <option value="6">6 Points (2 long + 1 short)</option>
+            <option value="8">8 Points (2 per all 4 sides)</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label>Corner Offset (%)</label>
+          <input
+            type="number"
+            min="5"
+            max="45"
+            step="1"
+            [value]="params().snapFit.endPercent"
+            (keydown.enter)="$any($event.target).blur()"
+            (blur)="setSnapFitNumber('endPercent', $any($event.target).value)"
+          />
+        </div>
+
+        <div class="input-group">
+          <label>Bead Width (mm)</label>
+          <input
+            type="number"
+            min="2"
+            max="30"
+            step="0.5"
+            [value]="params().snapFit.width"
+            (keydown.enter)="$any($event.target).blur()"
+            (blur)="setSnapFitNumber('width', $any($event.target).value)"
+          />
+        </div>
+
+        <div class="input-group">
+          <label>Engagement Depth (mm)</label>
+          <input
+            type="number"
+            min="0.2"
+            max="2"
+            step="0.1"
+            [value]="params().snapFit.depth"
+            (keydown.enter)="$any($event.target).blur()"
+            (blur)="setSnapFitNumber('depth', $any($event.target).value)"
+          />
+        </div>
+
+        <div class="input-group">
+          <label>Bead Height (mm)</label>
+          <input
+            type="number"
+            min="0.4"
+            max="4"
+            step="0.1"
+            [value]="params().snapFit.height"
+            (keydown.enter)="$any($event.target).blur()"
+            (blur)="setSnapFitNumber('height', $any($event.target).value)"
+          />
+        </div>
+
+        <div class="input-group">
+          <label>Pocket Clearance (mm)</label>
+          <input
+            type="number"
+            min="0"
+            max="0.5"
+            step="0.05"
+            [value]="params().snapFit.clearance"
+            (keydown.enter)="$any($event.target).blur()"
+            (blur)="setSnapFitNumber('clearance', $any($event.target).value)"
+          />
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="accordian" [class.active]="activeTab() === 9">
+    <p class="accordian-header" (click)="setActiveTab(9)">
+      Wall Mounts
+      <span class="accordian-icon">{{ activeTab() === 9 ? '-' : '+' }}</span>
     </p>
     <div class="accordian-body">
       <div class="input-group checkbox-group">
@@ -651,10 +747,10 @@
     </div>
   </div>
 
-  <div class="accordian" [class.active]="activeTab() === 9">
-    <p class="accordian-header" (click)="setActiveTab(9)">
+  <div class="accordian" [class.active]="activeTab() === 10">
+    <p class="accordian-header" (click)="setActiveTab(10)">
       DIN Rail Mounts
-      <span class="accordian-icon">{{ activeTab() === 9 ? '-' : '+' }}</span>
+      <span class="accordian-icon">{{ activeTab() === 10 ? '-' : '+' }}</span>
     </p>
     <div class="accordian-body">
       <div class="input-group checkbox-group">
@@ -706,10 +802,10 @@
     </div>
   </div>
 
-  <div class="accordian" [class.active]="activeTab() === 10">
-    <p class="accordian-header" (click)="setActiveTab(10)">
+  <div class="accordian" [class.active]="activeTab() === 11">
+    <p class="accordian-header" (click)="setActiveTab(11)">
       Grid
-      <span class="accordian-icon">{{ activeTab() === 10 ? '-' : '+' }}</span>
+      <span class="accordian-icon">{{ activeTab() === 11 ? '-' : '+' }}</span>
     </p>
     <div class="accordian-body">
       <div class="input-group checkbox-group">

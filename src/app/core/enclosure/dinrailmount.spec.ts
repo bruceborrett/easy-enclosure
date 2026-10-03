@@ -92,12 +92,11 @@ describe('dinrailmount', () => {
     const pair = dinRailMountsPair(params);
     expect(pair).toBeDefined();
 
-    const [[, minY, ], [, maxY, ]] = measureBoundingBox(pair);
+    const [[, minY], [, maxY]] = measureBoundingBox(pair);
     // In vertical orientation, clips are rotated 90deg, so width 15 is along Y.
     // Two mounts of width 15 placed next to each other with 8mm gap: 15 * 2 + 8 = 38mm total Y span
     expect(maxY - minY).toBeCloseTo(38, 0);
   });
-
 
   it('dinRailMountGeometry returns a single mount for export', () => {
     const params = cloneParams(DEFAULT_PARAMS);
@@ -109,4 +108,3 @@ describe('dinrailmount', () => {
     expect(maxX - minX).toBeCloseTo(15, 0);
   });
 });
-

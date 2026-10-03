@@ -157,11 +157,16 @@ export class ToolsComponent {
     const fileReader = new FileReader();
     fileReader.onload = () => {
       const data = JSON.parse(fileReader.result as string) as Partial<Params>;
-      const merged = {
-        ...this.state.params(),
+      const current = this.state.params();
+      const merged: Params = {
+        ...current,
         ...data,
+        snapFit: {
+          ...current.snapFit,
+          ...(data.snapFit ?? {}),
+        },
       };
-      this.state.setParams(merged as Params);
+      this.state.setParams(merged);
     };
     fileReader.readAsText(input.files[0], 'UTF-8');
 

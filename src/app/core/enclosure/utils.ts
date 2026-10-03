@@ -5,6 +5,16 @@ import { rotateZ, translate } from '@jscad/modeling/src/operations/transforms';
 import { circle, rectangle } from '@jscad/modeling/src/primitives';
 import { degToRad } from '@jscad/modeling/src/utils';
 
+export const innerWallInset = (params: {
+  wall: number;
+  waterProof: boolean;
+  insertThickness: number;
+  insertClearance: number;
+}): number => {
+  const { wall, waterProof, insertThickness, insertClearance } = params;
+  return waterProof ? wall * 2 + insertClearance * 2 + insertThickness : wall;
+};
+
 export const roundedCube2d = (l: number, w: number, r = 8, s = 48) => {
   const c = circle({
     radius: r,

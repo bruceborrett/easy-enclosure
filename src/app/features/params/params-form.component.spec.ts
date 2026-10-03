@@ -36,6 +36,7 @@ describe('ParamsFormComponent', () => {
     expect(state.params().internalWalls.length).toBe(0);
     expect(state.params().waterProof).toBeFalse();
     expect(state.params().lidScrews).toBeFalse();
+    expect(state.params().snapFit.enabled).toBeFalse();
   });
 
   it('supports dynamic holes CRUD operations', () => {
@@ -129,5 +130,29 @@ describe('ParamsFormComponent', () => {
 
     component.setStringParam('pcbMountFilletStyle', 'none');
     expect(state.params().pcbMountFilletStyle).toBe('none');
+  });
+
+  it('updates snap-fit parameters and presets', () => {
+    component.setSnapFitEnabled(true);
+    expect(state.params().snapFit.enabled).toBeTrue();
+
+    component.setSnapFitPreset('6');
+    expect(state.params().snapFit.preset).toBe(6);
+
+    component.setSnapFitPreset('8');
+    expect(state.params().snapFit.preset).toBe(8);
+
+    component.setSnapFitNumber('depth', '0.45');
+    expect(state.params().snapFit.depth).toBe(0.45);
+
+    component.setSnapFitNumber('width', '10');
+    expect(state.params().snapFit.width).toBe(10);
+
+    component.setSnapFitNumber('clearance', '0.12');
+    expect(state.params().snapFit.clearance).toBe(0.12);
+
+    // Empty input should not overwrite
+    component.setSnapFitNumber('clearance', '');
+    expect(state.params().snapFit.clearance).toBe(0.12);
   });
 });

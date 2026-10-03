@@ -47,6 +47,10 @@ export class EnclosureStateService {
       wallMounts: false,
       lidScrews: false,
       dinRailMount: false,
+      snapFit: {
+        ...current.snapFit,
+        enabled: false,
+      },
     }));
   }
 }

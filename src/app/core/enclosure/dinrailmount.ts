@@ -10,15 +10,17 @@ const RIDGEWIDTH = 2;
 
 // Standard 35mm DIN rail (TH35/IEC 60715) dimensions
 const DIN_RAIL_WIDTH = 35.0; // 35mm overall rail width
-const DIN_RAIL_DEPTH = 7.5;  // 7.5mm rail depth
-const DIN_LIP_WIDTH = 5.0;   // 5mm lip on each side
+const DIN_RAIL_DEPTH = 7.5; // 7.5mm rail depth
+const DIN_LIP_WIDTH = 5.0; // 5mm lip on each side
 const DIN_LIP_THICKNESS = 1.0;
 
 /**
  * Calculates the exact hole spacing and positions for the DIN rail mount
  * so that they line up perfectly with the enclosure's wall mounts.
  */
-export const calculateDinRailHoles = (params: Params): {
+export const calculateDinRailHoles = (
+  params: Params,
+): {
   spacing: number;
   positions: number[];
   outerWidth: number;
@@ -133,10 +135,7 @@ export const dinRailMount = (params: Params): Geom3 => {
 
   // 5. Lead-in chamfer for snap latch (angled cut so it pushes onto rail easily)
   cuts.push(
-    translate(
-      [0, halfRail, 0],
-      rotateX(Math.PI / 4, cuboid({ size: [mountWidth + 4, 3, 3] })),
-    ),
+    translate([0, halfRail, 0], rotateX(Math.PI / 4, cuboid({ size: [mountWidth + 4, 3, 3] }))),
   );
 
   // 6. Undercuts beyond the 35mm rail channel towards the ends (lattice / rib pockets)
@@ -205,10 +204,7 @@ export const dinRailMount = (params: Params): Geom3 => {
  * Generates a pair of DIN rail mounts placed next to each other for 3D printing.
  */
 export const dinRailMountsPair = (params: Params): Geom3 => {
-  const {
-    dinRailMountWidth = 15,
-    dinRailOrientation,
-  } = params;
+  const { dinRailMountWidth = 15, dinRailOrientation } = params;
   const mountWidth = Math.max(10, dinRailMountWidth);
   const PAIR_GAP = 8;
 

@@ -11,6 +11,7 @@ EasyEnclosure is an open-source 3D modeling software tailored specifically for d
 - User-Friendly Interface
 - Real-Time 3D Preview
 - Export to STL (Mesh) and STEP (Solid CAD) Formats
+- Parametric Snap-Fit Clippable Lids (screwless assembly)
 - High-strength PCB standoffs with parametric root fillets/chamfers
 - Save and load parameter presets as JSON
 
@@ -124,6 +125,17 @@ When securing the lid to the base, EasyEnclosure provides several hole strategie
 ### 4. Through Holes
 
 - **Best for**: Long through-bolts with external nuts on the bottom, mounting standoffs, or clamping the entire enclosure to a surface.
+
+### 5. Snap-Fit (Screwless Clippable Lids)
+
+- **Best for**: Tool-free assembly, quick access battery compartments, sensor housings, and compact enclosures without screws.
+- **Mechanism**: Parametric horizontal retention beads extruded along the lid insert rim snap into mating detent pockets cut into the interior base walls. Bead profiles use smooth elliptical arcs for easy insertion and positive retention without layer delamination.
+- **Snap Configurations**:
+  - **4 Clips** (Default): 2 clips on each of the two longer sides.
+  - **6 Clips**: 2 clips on each longer side + 1 centered clip on each shorter side.
+  - **8 Clips**: 2 clips distributed on all four sides.
+- **Tunable Parameters**: Bead width along the edge, protrusion depth, bead height, mating pocket clearance, and corner setback percentage.
+- **Safety Safeguard**: Snap bead projection depth is automatically clamped to $80\%$ of enclosure wall thickness to ensure outer wall integrity. Can be combined with or used instead of corner lid screws.
 
 ### Screw Head Recesses & Lid Thickness
 

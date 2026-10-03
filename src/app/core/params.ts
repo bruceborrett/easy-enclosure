@@ -35,6 +35,18 @@ export type InternalWall = {
 export type LidScrewHoleType = 'blind' | 'nut-pocket' | 'through';
 export type LidScrewRecessType = 'none' | 'counterbore' | 'countersunk';
 
+export type SnapFitPreset = 4 | 6 | 8;
+
+export type SnapFit = {
+  enabled: boolean;
+  preset: SnapFitPreset;
+  endPercent: number;
+  width: number;
+  depth: number;
+  height: number;
+  clearance: number;
+};
+
 export type Params = {
   length: number;
   width: number;
@@ -75,6 +87,7 @@ export type Params = {
   showDinRailMount: boolean;
   pcbMountFilletStyle: PcbMountFilletStyle;
   pcbMountFilletSize: number;
+  snapFit: SnapFit;
 };
 
 export const DEFAULT_PARAMS: Params = {
@@ -205,6 +218,15 @@ export const DEFAULT_PARAMS: Params = {
   showDinRailMount: true,
   pcbMountFilletStyle: 'round',
   pcbMountFilletSize: 1,
+  snapFit: {
+    enabled: false,
+    preset: 4,
+    endPercent: 20,
+    width: 8,
+    depth: 0.8,
+    height: 1.2,
+    clearance: 0.15,
+  },
 };
 
 export const cloneParams = (params: Params): Params => {

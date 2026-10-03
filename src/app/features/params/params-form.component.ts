@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 
-import type { Hole, InternalWall, PCBMount, Params } from '../../core/params';
+import type { Hole, InternalWall, PCBMount, Params, SnapFit } from '../../core/params';
 import { EnclosureStateService } from '../../core/state/enclosure-state.service';
 
 type Surface = 'top' | 'bottom' | 'left' | 'right' | 'front' | 'back';
@@ -158,5 +158,43 @@ export class ParamsFormComponent {
   parseIntValue(rawValue: string): number {
     return parseInt(rawValue, 10);
   }
-}
 
+  setSnapFitEnabled(enabled: boolean): void {
+    const current = this.params();
+    this.state.patchParams({
+      snapFit: {
+        ...current.snapFit,
+        enabled,
+      },
+    });
+  }
+
+  setSnapFitPreset(rawValue: string): void {
+    const preset = parseInt(rawValue, 10);
+    if (preset === 4 || preset === 6 || preset === 8) {
+      const current = this.params();
+      this.state.patchParams({
+        snapFit: {
+          ...current.snapFit,
+          preset,
+        },
+      });
+    }
+  }
+
+  setSnapFitNumber<K extends keyof SnapFit>(key: K, rawValue: string): void {
+    if (!rawValue) {
+      return;
+    }
+    const parsed = parseFloat(rawValue);
+    if (!Number.isNaN(parsed)) {
+      const current = this.params();
+      this.state.patchParams({
+        snapFit: {
+          ...current.snapFit,
+          [key]: parsed,
+        },
+      });
+    }
+  }
+}

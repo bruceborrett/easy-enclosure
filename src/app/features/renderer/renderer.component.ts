@@ -53,6 +53,7 @@ const lidDeps = [
   'insertHeight',
   'insertClearance',
   'holes',
+  'snapFit',
 ];
 const baseDeps = [
   'length',
@@ -80,6 +81,7 @@ const baseDeps = [
   'wallMountScrewDiameter',
   'wallMountCount',
   'insertClearance',
+  'snapFit',
 ];
 const sealDeps = [
   'length',

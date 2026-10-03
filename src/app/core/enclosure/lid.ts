@@ -5,6 +5,7 @@ import { Params } from '../params';
 import { getScrewOffset, lidScrewRecesses, screws } from './screws';
 import { subtract } from '@jscad/modeling/src/operations/booleans';
 import { holes } from './holes';
+import { lidSnapBumps } from './snapfit';
 
 const { union } = booleans;
 const { translate } = transforms;
@@ -73,6 +74,11 @@ export const lid = (params: Params) => {
 
   if (holeCount > 0) {
     subtracts.push(holes(params, ['top']));
+  }
+
+  const bumps = lidSnapBumps(params);
+  if (bumps) {
+    entities.push(bumps);
   }
 
   if (subtracts.length > 0) {

@@ -6,6 +6,7 @@ import { flanges } from './wallmount';
 import { clover, hollowRoundCube, roundedCube } from './utils';
 import { waterProofSealCutout } from './waterproofseal';
 import { getScrewOffset, nutPockets, screws } from './screws';
+import { baseSnapPockets } from './snapfit';
 import { translate } from '@jscad/modeling/src/operations/transforms';
 
 const { subtract, union } = booleans;
@@ -73,6 +74,11 @@ export const base = (params: Params) => {
 
   if (holeCount > 0) {
     subtracts.push(holes(params));
+  }
+
+  const snapPockets = baseSnapPockets(params);
+  if (snapPockets) {
+    subtracts.push(snapPockets);
   }
 
   if (subtracts.length > 0) {
