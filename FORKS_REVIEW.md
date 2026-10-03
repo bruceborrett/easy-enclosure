@@ -164,6 +164,15 @@ All 29 forks were fetched and audited at the git ref level.
 
 ---
 
+### 3.7 Consolidated "Lid" Parameters Tab
+
+- **UX Optimization**:
+  - Previously, lid-related options were scattered across four separate accordion tabs (Tab 2: Lid Insert, Tab 6: Waterproofing, Tab 7: Lid Screws, Tab 8: Snap Fit).
+  - Consolidated all four sections into a single **"Lid"** accordion tab with clean uppercase subheadings: **Insert Rim**, **Snap Fit**, **Lid Screws**, and **Waterproofing**.
+  - Streamlines the sidebar accordion hierarchy from 11 tabs down to 8 cohesive categories without altering any underlying model parameters or state logic.
+
+---
+
 ## 4. Deep-Dive Scrutiny of Outstanding Candidates
 
 ---

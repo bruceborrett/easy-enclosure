@@ -137,6 +137,21 @@ label {
   text-align: center;
 }
 
+.sub-section-title {
+  margin: 14px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(108, 130, 156, 0.18);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.sub-section-title:first-child {
+  margin-top: 4px;
+}
+
 .sub-params {
   margin-right: 4px;
   margin-bottom: 10px;

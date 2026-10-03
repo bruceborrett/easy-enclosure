@@ -84,10 +84,11 @@
 
   <div class="accordian" [class.active]="activeTab() === 2">
     <p class="accordian-header" (click)="setActiveTab(2)">
-      Lid Insert
+      Lid
       <span class="accordian-icon">{{ activeTab() === 2 ? '-' : '+' }}</span>
     </p>
     <div class="accordian-body">
+      <div class="sub-section-title">Insert Rim</div>
       <div class="input-group">
         <label>Insert Thickness</label>
         <input
@@ -121,6 +122,251 @@
           (blur)="setNumberParam('insertClearance', $any($event.target).value)"
         />
       </div>
+
+      <div class="sub-section-title">Snap Fit</div>
+      <div class="input-group checkbox-group">
+        <label>Enable Snap Fit</label>
+        <input
+          type="checkbox"
+          [checked]="params().snapFit.enabled"
+          (change)="setSnapFitEnabled($any($event.target).checked)"
+        />
+      </div>
+
+      @if (params().snapFit.enabled) {
+        <div class="input-group">
+          <label>Snap Points Preset</label>
+          <select
+            [value]="params().snapFit.preset"
+            (change)="setSnapFitPreset($any($event.target).value)"
+          >
+            <option value="4">4 Points (2 per long side)</option>
+            <option value="6">6 Points (2 long + 1 short)</option>
+            <option value="8">8 Points (2 per all 4 sides)</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label>Corner Offset (%)</label>
+          <input
+            type="number"
+            min="5"
+            max="45"
+            step="1"
+            [value]="params().snapFit.endPercent"
+            (keydown.enter)="$any($event.target).blur()"
+            (blur)="setSnapFitNumber('endPercent', $any($event.target).value)"
+          />
+        </div>
+
+        <div class="input-group">
+          <label>Bead Width (mm)</label>
+          <input
+            type="number"
+            min="2"
+            max="30"
+            step="0.5"
+            [value]="params().snapFit.width"
+            (keydown.enter)="$any($event.target).blur()"
+            (blur)="setSnapFitNumber('width', $any($event.target).value)"
+          />
+        </div>
+
+        <div class="input-group">
+          <label>Engagement Depth (mm)</label>
+          <input
+            type="number"
+            min="0.2"
+            max="2"
+            step="0.1"
+            [value]="params().snapFit.depth"
+            (keydown.enter)="$any($event.target).blur()"
+            (blur)="setSnapFitNumber('depth', $any($event.target).value)"
+          />
+        </div>
+
+        <div class="input-group">
+          <label>Bead Height (mm)</label>
+          <input
+            type="number"
+            min="0.4"
+            max="4"
+            step="0.1"
+            [value]="params().snapFit.height"
+            (keydown.enter)="$any($event.target).blur()"
+            (blur)="setSnapFitNumber('height', $any($event.target).value)"
+          />
+        </div>
+
+        <div class="input-group">
+          <label>Pocket Clearance (mm)</label>
+          <input
+            type="number"
+            min="0"
+            max="0.5"
+            step="0.05"
+            [value]="params().snapFit.clearance"
+            (keydown.enter)="$any($event.target).blur()"
+            (blur)="setSnapFitNumber('clearance', $any($event.target).value)"
+          />
+        </div>
+      }
+
+      <div class="sub-section-title">Lid Screws</div>
+      <div class="input-group checkbox-group">
+        <label>Include Lid Screws</label>
+        <input
+          type="checkbox"
+          [checked]="params().lidScrews"
+          (change)="onLidScrewsChange($any($event.target).checked)"
+        />
+      </div>
+
+      @if (params().lidScrews) {
+        <div class="input-group">
+          <label>Lid Hole Diameter</label>
+          <input
+            type="number"
+            min="1"
+            step="0.01"
+            [value]="params().lidScrewDiameter"
+            (keydown.enter)="$any($event.target).blur()"
+            (blur)="setNumberParam('lidScrewDiameter', $any($event.target).value)"
+          />
+        </div>
+
+        <div class="input-group">
+          <label>Base Hole Diameter</label>
+          <input
+            type="number"
+            min="1"
+            step="0.01"
+            [value]="params().baseLidScrewDiameter"
+            (keydown.enter)="$any($event.target).blur()"
+            (blur)="setNumberParam('baseLidScrewDiameter', $any($event.target).value)"
+          />
+        </div>
+
+        <div class="input-group">
+          <label>Screw Head Recess</label>
+          <select
+            [value]="params().lidScrewRecessType"
+            (change)="setStringParam('lidScrewRecessType', $any($event.target).value)"
+          >
+            <option value="none">None (Flush Top Hole)</option>
+            <option value="counterbore">Counterbore</option>
+            <option value="countersunk">Countersunk</option>
+          </select>
+        </div>
+
+        @if (
+          params().lidScrewRecessType === 'counterbore' ||
+          params().lidScrewRecessType === 'countersunk'
+        ) {
+          <div class="input-group">
+            <label>Recess Diameter</label>
+            <input
+              type="number"
+              min="1"
+              step="0.1"
+              [value]="params().lidScrewRecessDiameter"
+              (keydown.enter)="$any($event.target).blur()"
+              (blur)="setNumberParam('lidScrewRecessDiameter', $any($event.target).value)"
+            />
+          </div>
+        }
+
+        @if (params().lidScrewRecessType === 'counterbore') {
+          <div class="input-group">
+            <label>Recess Depth</label>
+            <input
+              type="number"
+              min="0.5"
+              step="0.1"
+              [value]="params().lidScrewRecessDepth"
+              (keydown.enter)="$any($event.target).blur()"
+              (blur)="setNumberParam('lidScrewRecessDepth', $any($event.target).value)"
+            />
+          </div>
+        }
+
+        <div class="input-group">
+          <label>Hole Type</label>
+          <select
+            [value]="params().lidScrewHoleType"
+            (change)="setStringParam('lidScrewHoleType', $any($event.target).value)"
+          >
+            <option value="blind">Blind Hole</option>
+            <option value="nut-pocket">Captive Nut Pocket</option>
+            <option value="through">Through Hole</option>
+          </select>
+        </div>
+
+        @if (params().lidScrewHoleType === 'blind') {
+          <div class="input-group">
+            <label>Base Hole Depth</label>
+            <input
+              type="number"
+              min="1"
+              [max]="params().height"
+              step="0.5"
+              [value]="params().lidScrewHoleDepth"
+              (keydown.enter)="$any($event.target).blur()"
+              (blur)="setNumberParam('lidScrewHoleDepth', $any($event.target).value)"
+            />
+          </div>
+        }
+
+        @if (params().lidScrewHoleType === 'nut-pocket') {
+          <div class="input-group">
+            <label>Nut Width (Flats)</label>
+            <input
+              type="number"
+              min="1"
+              step="0.1"
+              [value]="params().lidScrewNutWidth"
+              (keydown.enter)="$any($event.target).blur()"
+              (blur)="setNumberParam('lidScrewNutWidth', $any($event.target).value)"
+            />
+          </div>
+
+          <div class="input-group">
+            <label>Nut Depth</label>
+            <input
+              type="number"
+              min="0.5"
+              step="0.1"
+              [value]="params().lidScrewNutDepth"
+              (keydown.enter)="$any($event.target).blur()"
+              (blur)="setNumberParam('lidScrewNutDepth', $any($event.target).value)"
+            />
+          </div>
+        }
+      }
+
+      <div class="sub-section-title">Waterproofing</div>
+      <div class="input-group checkbox-group">
+        <label>Waterproof</label>
+        <input
+          type="checkbox"
+          [checked]="params().waterProof"
+          (change)="onWaterproofChange($any($event.target).checked)"
+        />
+      </div>
+
+      @if (params().waterProof) {
+        <div class="input-group">
+          <label>Seal Thickness</label>
+          <input
+            type="number"
+            min="1"
+            step="0.01"
+            [value]="params().sealThickness"
+            (keydown.enter)="$any($event.target).blur()"
+            (blur)="setNumberParam('sealThickness', $any($event.target).value)"
+          />
+        </div>
+      }
     </div>
   </div>
 
@@ -441,274 +687,8 @@
 
   <div class="accordian" [class.active]="activeTab() === 6">
     <p class="accordian-header" (click)="setActiveTab(6)">
-      Waterproofing
-      <span class="accordian-icon">{{ activeTab() === 6 ? '-' : '+' }}</span>
-    </p>
-    <div class="accordian-body">
-      <div class="input-group checkbox-group">
-        <label>Waterproof</label>
-        <input
-          type="checkbox"
-          [checked]="params().waterProof"
-          (change)="onWaterproofChange($any($event.target).checked)"
-        />
-      </div>
-
-      @if (params().waterProof) {
-        <div class="input-group">
-          <label>Seal Thickness</label>
-          <input
-            type="number"
-            min="1"
-            step="0.01"
-            [value]="params().sealThickness"
-            (keydown.enter)="$any($event.target).blur()"
-            (blur)="setNumberParam('sealThickness', $any($event.target).value)"
-          />
-        </div>
-      }
-    </div>
-  </div>
-
-  <div class="accordian" [class.active]="activeTab() === 7">
-    <p class="accordian-header" (click)="setActiveTab(7)">
-      Lid Screws
-      <span class="accordian-icon">{{ activeTab() === 7 ? '-' : '+' }}</span>
-    </p>
-    <div class="accordian-body">
-      <div class="input-group checkbox-group">
-        <label>Include Lid Screws</label>
-        <input
-          type="checkbox"
-          [checked]="params().lidScrews"
-          (change)="onLidScrewsChange($any($event.target).checked)"
-        />
-      </div>
-
-      @if (params().lidScrews) {
-        <div class="input-group">
-          <label>Lid Hole Diameter</label>
-          <input
-            type="number"
-            min="1"
-            step="0.01"
-            [value]="params().lidScrewDiameter"
-            (keydown.enter)="$any($event.target).blur()"
-            (blur)="setNumberParam('lidScrewDiameter', $any($event.target).value)"
-          />
-        </div>
-
-        <div class="input-group">
-          <label>Base Hole Diameter</label>
-          <input
-            type="number"
-            min="1"
-            step="0.01"
-            [value]="params().baseLidScrewDiameter"
-            (keydown.enter)="$any($event.target).blur()"
-            (blur)="setNumberParam('baseLidScrewDiameter', $any($event.target).value)"
-          />
-        </div>
-
-        <div class="input-group">
-          <label>Screw Head Recess</label>
-          <select
-            [value]="params().lidScrewRecessType"
-            (change)="setStringParam('lidScrewRecessType', $any($event.target).value)"
-          >
-            <option value="none">None (Flush Top Hole)</option>
-            <option value="counterbore">Counterbore</option>
-            <option value="countersunk">Countersunk</option>
-          </select>
-        </div>
-
-        @if (
-          params().lidScrewRecessType === 'counterbore' ||
-          params().lidScrewRecessType === 'countersunk'
-        ) {
-          <div class="input-group">
-            <label>Recess Diameter</label>
-            <input
-              type="number"
-              min="1"
-              step="0.1"
-              [value]="params().lidScrewRecessDiameter"
-              (keydown.enter)="$any($event.target).blur()"
-              (blur)="setNumberParam('lidScrewRecessDiameter', $any($event.target).value)"
-            />
-          </div>
-        }
-
-        @if (params().lidScrewRecessType === 'counterbore') {
-          <div class="input-group">
-            <label>Recess Depth</label>
-            <input
-              type="number"
-              min="0.5"
-              step="0.1"
-              [value]="params().lidScrewRecessDepth"
-              (keydown.enter)="$any($event.target).blur()"
-              (blur)="setNumberParam('lidScrewRecessDepth', $any($event.target).value)"
-            />
-          </div>
-        }
-
-        <div class="input-group">
-          <label>Hole Type</label>
-          <select
-            [value]="params().lidScrewHoleType"
-            (change)="setStringParam('lidScrewHoleType', $any($event.target).value)"
-          >
-            <option value="blind">Blind Hole</option>
-            <option value="nut-pocket">Captive Nut Pocket</option>
-            <option value="through">Through Hole</option>
-          </select>
-        </div>
-
-        @if (params().lidScrewHoleType === 'blind') {
-          <div class="input-group">
-            <label>Base Hole Depth</label>
-            <input
-              type="number"
-              min="1"
-              [max]="params().height"
-              step="0.5"
-              [value]="params().lidScrewHoleDepth"
-              (keydown.enter)="$any($event.target).blur()"
-              (blur)="setNumberParam('lidScrewHoleDepth', $any($event.target).value)"
-            />
-          </div>
-        }
-
-        @if (params().lidScrewHoleType === 'nut-pocket') {
-          <div class="input-group">
-            <label>Nut Width (Flats)</label>
-            <input
-              type="number"
-              min="1"
-              step="0.1"
-              [value]="params().lidScrewNutWidth"
-              (keydown.enter)="$any($event.target).blur()"
-              (blur)="setNumberParam('lidScrewNutWidth', $any($event.target).value)"
-            />
-          </div>
-
-          <div class="input-group">
-            <label>Nut Depth</label>
-            <input
-              type="number"
-              min="0.5"
-              step="0.1"
-              [value]="params().lidScrewNutDepth"
-              (keydown.enter)="$any($event.target).blur()"
-              (blur)="setNumberParam('lidScrewNutDepth', $any($event.target).value)"
-            />
-          </div>
-        }
-      }
-    </div>
-  </div>
-
-  <div class="accordian" [class.active]="activeTab() === 8">
-    <p class="accordian-header" (click)="setActiveTab(8)">
-      Snap Fit (Clippable Lid)
-      <span class="accordian-icon">{{ activeTab() === 8 ? '-' : '+' }}</span>
-    </p>
-    <div class="accordian-body">
-      <div class="input-group checkbox-group">
-        <label>Enable Snap Fit</label>
-        <input
-          type="checkbox"
-          [checked]="params().snapFit.enabled"
-          (change)="setSnapFitEnabled($any($event.target).checked)"
-        />
-      </div>
-
-      @if (params().snapFit.enabled) {
-        <div class="input-group">
-          <label>Snap Points Preset</label>
-          <select
-            [value]="params().snapFit.preset"
-            (change)="setSnapFitPreset($any($event.target).value)"
-          >
-            <option value="4">4 Points (2 per long side)</option>
-            <option value="6">6 Points (2 long + 1 short)</option>
-            <option value="8">8 Points (2 per all 4 sides)</option>
-          </select>
-        </div>
-
-        <div class="input-group">
-          <label>Corner Offset (%)</label>
-          <input
-            type="number"
-            min="5"
-            max="45"
-            step="1"
-            [value]="params().snapFit.endPercent"
-            (keydown.enter)="$any($event.target).blur()"
-            (blur)="setSnapFitNumber('endPercent', $any($event.target).value)"
-          />
-        </div>
-
-        <div class="input-group">
-          <label>Bead Width (mm)</label>
-          <input
-            type="number"
-            min="2"
-            max="30"
-            step="0.5"
-            [value]="params().snapFit.width"
-            (keydown.enter)="$any($event.target).blur()"
-            (blur)="setSnapFitNumber('width', $any($event.target).value)"
-          />
-        </div>
-
-        <div class="input-group">
-          <label>Engagement Depth (mm)</label>
-          <input
-            type="number"
-            min="0.2"
-            max="2"
-            step="0.1"
-            [value]="params().snapFit.depth"
-            (keydown.enter)="$any($event.target).blur()"
-            (blur)="setSnapFitNumber('depth', $any($event.target).value)"
-          />
-        </div>
-
-        <div class="input-group">
-          <label>Bead Height (mm)</label>
-          <input
-            type="number"
-            min="0.4"
-            max="4"
-            step="0.1"
-            [value]="params().snapFit.height"
-            (keydown.enter)="$any($event.target).blur()"
-            (blur)="setSnapFitNumber('height', $any($event.target).value)"
-          />
-        </div>
-
-        <div class="input-group">
-          <label>Pocket Clearance (mm)</label>
-          <input
-            type="number"
-            min="0"
-            max="0.5"
-            step="0.05"
-            [value]="params().snapFit.clearance"
-            (keydown.enter)="$any($event.target).blur()"
-            (blur)="setSnapFitNumber('clearance', $any($event.target).value)"
-          />
-        </div>
-      }
-    </div>
-  </div>
-
-  <div class="accordian" [class.active]="activeTab() === 9">
-    <p class="accordian-header" (click)="setActiveTab(9)">
       Wall Mounts
-      <span class="accordian-icon">{{ activeTab() === 9 ? '-' : '+' }}</span>
+      <span class="accordian-icon">{{ activeTab() === 6 ? '-' : '+' }}</span>
     </p>
     <div class="accordian-body">
       <div class="input-group checkbox-group">
@@ -747,10 +727,10 @@
     </div>
   </div>
 
-  <div class="accordian" [class.active]="activeTab() === 10">
-    <p class="accordian-header" (click)="setActiveTab(10)">
+  <div class="accordian" [class.active]="activeTab() === 7">
+    <p class="accordian-header" (click)="setActiveTab(7)">
       DIN Rail Mounts
-      <span class="accordian-icon">{{ activeTab() === 10 ? '-' : '+' }}</span>
+      <span class="accordian-icon">{{ activeTab() === 7 ? '-' : '+' }}</span>
     </p>
     <div class="accordian-body">
       <div class="input-group checkbox-group">
@@ -802,10 +782,10 @@
     </div>
   </div>
 
-  <div class="accordian" [class.active]="activeTab() === 11">
-    <p class="accordian-header" (click)="setActiveTab(11)">
+  <div class="accordian" [class.active]="activeTab() === 8">
+    <p class="accordian-header" (click)="setActiveTab(8)">
       Grid
-      <span class="accordian-icon">{{ activeTab() === 11 ? '-' : '+' }}</span>
+      <span class="accordian-icon">{{ activeTab() === 8 ? '-' : '+' }}</span>
     </p>
     <div class="accordian-body">
       <div class="input-group checkbox-group">
