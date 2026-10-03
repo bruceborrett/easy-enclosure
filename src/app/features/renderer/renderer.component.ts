@@ -100,6 +100,8 @@ const sealDeps = [
 ];
 const mountDeps = [
   'pcbMounts',
+  'pcbMountFilletStyle',
+  'pcbMountFilletSize',
   'waterProof',
   'wall',
   'floor',

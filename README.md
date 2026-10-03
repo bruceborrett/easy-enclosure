@@ -11,6 +11,7 @@ EasyEnclosure is an open-source 3D modeling software tailored specifically for d
 - User-Friendly Interface
 - Real-Time 3D Preview
 - Export to STL (Mesh) and STEP (Solid CAD) Formats
+- High-strength PCB standoffs with parametric root fillets/chamfers
 - Save and load parameter presets as JSON
 
 ## Export Formats
@@ -139,6 +140,16 @@ When enabling screw head recesses (**Counterbore** or **Countersunk**), the rece
   - Recommended Lid Thickness (`roof`): **$2.5 - 3.0\text{ mm}$** with a $1.7\text{ mm}$ recess depth.
 
 > **Tip**: Increasing the lid roof thickness by $1 - 1.5\text{ mm}$ uses very little filament (just a thin flat layer), while keeping the four vertical base corner posts compact to maximize usable internal space for your PCB.
+
+### PCB Mount Standoff Reinforcement
+
+Standard cylindrical standoffs printed vertically along the Z-axis in FDM 3D prints are vulnerable to shearing off at the first layer where they meet the enclosure floor or lid due to stress concentration under screw insertion torque. EasyEnclosure provides parametric root reinforcement:
+
+- **Fillet (Concave Arc)** _(Default)_: A smooth circular transition ($360^\circ$ annular radius) that eliminates the sharp internal corner notch, providing maximum isotropic strength against both lateral shear and screw tightening torque while staying within standard circular PCB keep-out rings.
+- **Chamfer (45° Flare)**: A straight conical transition widening the base footprint.
+- **None**: Traditional straight cylindrical standoff.
+
+Root reinforcement can be configured globally in the PCB Mounts tab or overridden per standoff for tight component clearance constraints.
 
 ## Notes
 

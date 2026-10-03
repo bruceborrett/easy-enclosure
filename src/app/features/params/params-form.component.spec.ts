@@ -119,4 +119,15 @@ describe('ParamsFormComponent', () => {
     component.setStringParam('lidScrewRecessType', 'countersunk');
     expect(state.params().lidScrewRecessType).toBe('countersunk');
   });
+
+  it('updates PCB mount fillet style and size', () => {
+    component.setStringParam('pcbMountFilletStyle', 'chamfer');
+    expect(state.params().pcbMountFilletStyle).toBe('chamfer');
+
+    component.setNumberParam('pcbMountFilletSize', '1.5');
+    expect(state.params().pcbMountFilletSize).toBe(1.5);
+
+    component.setStringParam('pcbMountFilletStyle', 'none');
+    expect(state.params().pcbMountFilletStyle).toBe('none');
+  });
 });

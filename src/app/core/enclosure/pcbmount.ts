@@ -1,29 +1,83 @@
-import { Geom3 } from '@jscad/modeling/src/geometries/types';
-import { subtract, union } from '@jscad/modeling/src/operations/booleans';
-import { extrudeLinear } from '@jscad/modeling/src/operations/extrusions';
+import { geom2 } from '@jscad/modeling/src/geometries';
+import type { Geom3 } from '@jscad/modeling/src/geometries/types';
+import { union } from '@jscad/modeling/src/operations/booleans';
+import { extrudeRotate } from '@jscad/modeling/src/operations/extrusions';
 import { rotateX, rotateY, translate } from '@jscad/modeling/src/operations/transforms';
-import { circle } from '@jscad/modeling/src/primitives';
 import { degToRad } from '@jscad/modeling/src/utils';
-import { Surface } from '.';
-import { Params, PCBMount } from '../params';
 
-export const pcbMount = (mountParams: PCBMount) => {
-  const outer = circle({
-    radius: mountParams.outerDiameter / 2,
-    segments: 20,
-  });
-  const inner = circle({
-    radius: mountParams.screwDiameter / 2,
-    segments: 20,
-  });
-  return extrudeLinear({ height: mountParams.height }, subtract(outer, inner));
+import type { Surface } from '.';
+import type { Params, PCBMount, PcbMountFilletStyle } from '../params';
+
+export const MIN_MOUNT_FILLET = 0.2;
+export const MAX_MOUNT_FILLET = 3.0;
+
+export const calculateMountFilletSize = (
+  style: PcbMountFilletStyle,
+  requestedSize: number,
+  height: number,
+  outerDiameter: number,
+): number => {
+  if (style === 'none' || requestedSize <= 0) {
+    return 0;
+  }
+  const maxAllowed = Math.min(height * 0.45, outerDiameter * 0.75, MAX_MOUNT_FILLET);
+  if (maxAllowed < MIN_MOUNT_FILLET) {
+    return 0;
+  }
+  return Math.min(Math.max(requestedSize, MIN_MOUNT_FILLET), maxAllowed);
+};
+
+export const pcbMount = (mountParams: PCBMount, params?: Partial<Params>): Geom3 => {
+  const h = Math.max(0.5, mountParams.height);
+  const ro = Math.max(mountParams.outerDiameter / 2, 0.5);
+  const rawScrew = Math.max(0, mountParams.screwDiameter / 2);
+  const ri = Math.min(rawScrew, ro - 0.2);
+
+  const rawStyle = mountParams.filletStyle;
+  const style: PcbMountFilletStyle =
+    rawStyle && rawStyle !== 'default' ? rawStyle : (params?.pcbMountFilletStyle ?? 'round');
+
+  const rawSize = mountParams.filletSize ?? params?.pcbMountFilletSize ?? 1.0;
+
+  const fillet = calculateMountFilletSize(style, rawSize, h, mountParams.outerDiameter);
+
+  const points: [number, number][] = [];
+
+  points.push([ri, 0]);
+
+  if (fillet > 0) {
+    points.push([ro + fillet, 0]);
+
+    if (style === 'chamfer') {
+      points.push([ro, fillet]);
+    } else {
+      const cx = ro + fillet;
+      const cy = fillet;
+      const steps = 8;
+      for (let i = 1; i < steps; i++) {
+        const theta = (3 * Math.PI) / 2 - (Math.PI / 2) * (i / steps);
+        points.push([cx + fillet * Math.cos(theta), cy + fillet * Math.sin(theta)]);
+      }
+      points.push([ro, fillet]);
+    }
+  } else {
+    points.push([ro, 0]);
+  }
+
+  points.push([ro, h]);
+  points.push([ri, h]);
+
+  const profile = geom2.fromPoints(points);
+  const revolved = extrudeRotate({ segments: 32 }, profile);
+
+  return translate([0, 0, -h / 2], revolved);
 };
 
 const placeBaseMount = (mount: PCBMount, params: Params): Geom3 => {
   const { length, width, height, floor, wall, waterProof, insertThickness, insertClearance } =
     params;
   const surface: Surface = mount.surface ?? 'bottom';
-  const mountBody = pcbMount(mount);
+  const mountBody = pcbMount(mount, params);
   const innerWall = waterProof ? wall * 2 + insertClearance * 2 + insertThickness : wall;
   const baseFloor = params.lidScrews ? floor : innerWall;
   const bottomX = width / 2 - mount.x;
@@ -67,7 +121,7 @@ const placeLidMount = (mount: PCBMount, params: Params): Geom3 => {
   const { length, width, roof } = params;
   return translate(
     [width / 2 - mount.x, length / 2 - mount.y, roof + mount.height / 2],
-    pcbMount(mount),
+    pcbMount(mount, params),
   );
 };
 
