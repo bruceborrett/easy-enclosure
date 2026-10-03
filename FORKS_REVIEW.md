@@ -18,25 +18,28 @@ All 29 forks were fetched and audited at the git ref level.
 
 ### Pre-Pull Decision Matrix
 
-| Priority | Feature / Fix | Source Fork & Branch | Recommendation | Risk Level | Upstream Fit |
-| **P0 (Bug)** | Flange `rotateY` radians vs degrees | `536338958` (`main`) | **Applied & Verified** | Zero risk | Fixed with `degToRad(45)` in `wallmount.ts` |
-| **P0 (Bug)** | Nut-pocket seal cutout breaks cavity wall | `536338958` (`main`) | **Applied & Verified** | Low risk | Clamped `getSealReliefRadius` in `waterproofseal.ts` |
-| **P0 (Bug)** | Lid screw hole height when insert > roof | `536338958` (`main`) | **Applied & Verified** | Low risk | Used `roof + insertHeight` in `lid.ts` |
-| **P0 (Bug)** | Blind hole floor piercing & clamp | `536338958` (`main`) | **Applied & Verified** | Low risk | Clamped blind depth to `height - floor` in `base.ts` & `screws.ts` |
-| **P0 (Perf)**| Reduce CSG circle segments (100 -> 48) | `536338958` (`main`) | **Applied & Verified** | Very low | ~50% CSG rebuild speedup; default 48 in `utils.ts` |
-| **P1 (Gem)** | **Dependency-free STEP AP214 Exporter** | `tyeth-ai-assisted` (`feature/step-export`) | **Applied & Verified** | Low | Clean standalone module (`step-serializer.ts`) |
-| **P1 (Feat)**| **Snap-Fit Enclosure Lids** | `536338958` (`main`) | **Pull with review** | Low/Med | Standalone module (`snapfit.ts`) |
-| **P1 (Feat)**| **PCB Standoff Root Fillet / Chamfer** | `536338958` (`main`) | **Pull with review** | Low | High mechanical value for FDM prints |
-| **P1 (Feat)**| **Cable Clamp Strain-Relief** | `maraid` (`main`) | **Pull with review** | Low | Clean standalone module (`clamp.ts`) |
-| **P2 (Feat)**| **PCB 3D Preview & Collision Detection** | `536338958` (`main`) | **Pull with review** | Med | Great UX, adds boolean intersection check |
-| **P2 (Feat)**| **OLED / LCD Retaining Socket** | `JeshwanthNG` (`Lcd_Mount`) | **Pull with review** | Low | Adds socket pocket option to `pcbmount.ts` |
-| **P2 (UX)** | **3D Dimension Leader-Line Overlay** | `nedimat` (`main`) | **Port math to Angular**| Med | Port `project3DTo2D` from React to Angular |
-| **P3 (Arch)**| Centralized `dimensions.ts` & Specs | `536338958` (`main`) | **Adopt incrementally** | Med | Consolidates duplicated geometry math |
-| **P3 (Feat)**| Parametric Weatherproof Vent Panels | `tyeth-ai-assisted` (`feature/vent-panels`)| **Discuss / Defer** | High | Large (~1,000 lines); very specialized |
-| **Reject** | DIN Rail Mounts | `vZhurbenko`, `JeshwanthNG` | **Reject / Skip** | N/A | Already implemented in `dinrailmount.ts` |
-| **Reject** | Brass Inserts | `alex-j-butler` | **Reject / Skip** | N/A | Superseded by `lidScrewHoleType: 'blind'` |
-| **Reject** | Circular / Oval Enclosure Body | `JeshwanthNG` (`Development`)| **Reject / Skip** | High | Brittle math; breaks seals and corner radiuses |
-| **Reject** | React Form Refactor | `erikarenhill` (`refactor/...`) | **Reject / Skip** | N/A | Obsolete React component refactor |
+| Priority      | Feature / Fix                                     | Source Fork & Branch                        | Status          | Commit / Notes                                                                 |
+| :------------ | :------------------------------------------------ | :------------------------------------------ | :-------------- | :----------------------------------------------------------------------------- |
+| **P0 (Bug)**  | Flange `rotateY` radians vs degrees               | `536338958` (`main`)                        | **COMPLETED**   | Fixed with `degToRad(45)` in `wallmount.ts` (`a1eec20`)                        |
+| **P0 (Bug)**  | Nut-pocket seal cutout breaks cavity wall         | `536338958` (`main`)                        | **COMPLETED**   | Clamped `getSealReliefRadius` in `waterproofseal.ts` (`a1eec20`)               |
+| **P0 (Bug)**  | Lid screw hole height when insert > roof          | `536338958` (`main`)                        | **COMPLETED**   | Used `roof + insertHeight` in `lid.ts` (`a1eec20`)                             |
+| **P0 (Bug)**  | Blind hole floor piercing & clamp                 | `536338958` (`main`)                        | **COMPLETED**   | Clamped blind depth to `height - floor` in `base.ts` & `screws.ts` (`a1eec20`) |
+| **P0 (Perf)** | Reduce CSG circle segments (100 -> 48)            | `536338958` (`main`)                        | **COMPLETED**   | ~50% CSG rebuild speedup; default 48 in `utils.ts` (`a1eec20`)                 |
+| **P0 (Feat)** | Lid screw head recesses (counterbore/countersunk) | Custom / Community                          | **COMPLETED**   | Added recess types, dimensions, and tests (`a1eec20`)                          |
+| **P1 (Gem)**  | **Dependency-free STEP AP214 Exporter**           | `tyeth-ai-assisted` (`feature/step-export`) | **COMPLETED**   | Standalone module `step-serializer.ts` with T-junction healing (`fa66dfa`)     |
+| **P1 (Arch)** | **Extensible Export Format Registry**             | Architecture refinement                     | **COMPLETED**   | Strategy pattern in `export-format.service.ts` (closes #38, `4597d0c`)         |
+| **P1 (Feat)** | **PCB Standoff Root Fillet / Chamfer**            | `536338958` (`main`)                        | **COMPLETED**   | Rotational extrusion reinforcement (closes #18, `b9d173a`)                     |
+| **P1 (Feat)** | **Snap-Fit Enclosure Lids**                       | `536338958` (`main`)                        | **COMPLETED**   | Standalone `snapfit.ts` with wall safety clamp (closes #47, `844e8db`)         |
+| **P1 (Feat)** | **Cable Clamp Strain-Relief**                     | `maraid` (`main`)                           | **Outstanding** | Clean standalone module (`clamp.ts`)                                           |
+| **P2 (Feat)** | **PCB 3D Preview & Collision Detection**          | `536338958` (`main`)                        | **Outstanding** | Viewport PCB mesh & CSG intersection clash detection                           |
+| **P2 (Feat)** | **OLED / LCD Retaining Socket**                   | `JeshwanthNG` (`Lcd_Mount`)                 | **Outstanding** | Socket pocket perimeter option for display mounts                              |
+| **P2 (UX)**   | **3D Dimension Leader-Line Overlay**              | `nedimat` (`main`)                          | **Outstanding** | Port `project3DTo2D` from React to Angular canvas overlay                      |
+| **P3 (Feat)** | **Ventilation Slots & Weatherproof Louvers**      | `536338958` / `tyeth-ai-assisted`           | **Outstanding** | Simple slots (`536338958`) vs angled louvers (`tyeth`)                         |
+| **P3 (Arch)** | Centralized `dimensions.ts` & Specs               | `536338958` (`main`)                        | **Outstanding** | Consolidates duplicated geometry math into shared helpers                      |
+| **Reject**    | DIN Rail Mounts                                   | `vZhurbenko`, `JeshwanthNG`                 | **Rejected**    | Already implemented in `dinrailmount.ts`                                       |
+| **Reject**    | Brass Inserts                                     | `alex-j-butler`                             | **Rejected**    | Superseded by `lidScrewHoleType: 'blind'`                                      |
+| **Reject**    | Circular / Oval Enclosure Body                    | `JeshwanthNG` (`Development`)               | **Rejected**    | Brittle math; breaks seals and corner radiuses                                 |
+| **Reject**    | React Form Refactor                               | `erikarenhill` (`refactor/...`)             | **Rejected**    | Obsolete React component refactor                                              |
 
 ---
 
@@ -76,181 +79,126 @@ All 29 forks were fetched and audited at the git ref level.
 
 ---
 
-## 3. Deep-Dive Scrutiny of High-Value Forks & Candidates
+## 3. Completed Implementations & Findings Log
+
+### 3.1 P0 Geometry Bug Fixes & Tessellation Optimization (Commit `a1eec20`)
+
+- **Wall Mounting Flange Rotation (`wallmount.ts`)**:
+  - **Issue**: `@jscad/modeling` transform operations (`rotateY`) expect angles in **radians**. Passing `rotateY(45, ...)` rotated the flange by 45 radians ($\approx 2578.3^\circ \equiv 58.3^\circ$), collapsing mounting tabs into distorted slivers.
+  - **Resolution**: Wrapped the angle with `degToRad(45)`.
+  - **Finding / Gotcha**: JSCAD does not warn or throw when raw degree numbers are passed to rotation operations; always explicitly import and use `degToRad()`.
+
+- **Waterproof Seal Groove Cavity Breakthrough (`waterproofseal.ts`)**:
+  - **Issue**: In `cloverFrame()`, `screwOffset` was previously derived using the circumscribed diameter of the screw/nut. When captive nut pockets were added, this shifted `screwOffset` inward by $>1.8\text{ mm}$, causing the seal cutout channel to plunge directly into the enclosure's interior hollow cavity.
+  - **Resolution**: Decoupled `sealReliefRadius` from screw hardware diameter, clamping it strictly to the outer corner post protrusion boundary.
+  - **Finding / Gotcha**: Seal channels must always track the structural outer boundary of the corner post, never the internal fastener hardware diameter.
+
+- **Lid Screw Hole Clearance Cylinder Height (`lid.ts`)**:
+  - **Issue**: Screw clearance holes in the lid were extruded using `roof * 2`. If `insertHeight` (the lid rim projecting into the base) was greater than `roof`, the cutout cylinder failed to pierce the bottom of the rim, leaving holes blanked off.
+  - **Resolution**: Set cylinder height to `roof + insertHeight + 2` with symmetric through-positioning.
+
+- **Blind Hole Floor Piercing Guard (`screws.ts`, `base.ts`)**:
+  - **Issue**: Specifying `lidScrewHoleDepth` greater than `height - floor` caused the blind hole cutter to bore completely through the bottom surface of the enclosure.
+  - **Resolution**: Clamped blind depth to `Math.max(0, Math.min(lidScrewHoleDepth, height - floor))`.
+
+- **CSG Tessellation Circle Segments (100 $\rightarrow$ 48 in `utils.ts`)**:
+  - **Optimization**: Reduced default circle/cylinder segments from 100 to 48.
+  - **Finding / Gotcha**: JSCAD BSP tree CSG operations scale at $O(N^2)$ in worst cases. At a corner radius of $R = 3\text{ mm}$, reducing $N$ from 100 to 48 yields a chordal error of only $6.4\,\mu\text{m}$ (undetectable on a $0.4\text{ mm}$ FDM nozzle with $20\text{--}50\,\mu\text{m}$ repeatability), while cutting CSG rebuild times by **$\sim 50\%$**.
 
 ---
 
-### Candidate 1: Critical Bug Fixes (Source: `536338958`)
+### 3.2 Lid Screw Head Recesses (Commit `a1eec20`)
 
-#### 1.1 `rotateY` Radians Bug in Wall Mounting Flange (`src/app/core/enclosure/wallmount.ts`)
-
-- **Problem**: In `@jscad/modeling`, all transform operations (`rotateX`, `rotateY`, `rotateZ`) take angles in **radians**, not degrees. In `src/app/core/enclosure/wallmount.ts`:
-  ```ts
-  // CURRENT (BUGGY) CODE:
-  translate([-outerWidth, 0, outerWidth], rotateY(45, cube({ size: outerWidth * 2 })));
-  ```
-  Passing raw `45` causes JSCAD to treat the angle as 45 radians ($45 \times \frac{180}{\pi} \approx 2578.31^\circ \equiv 58.31^\circ$). The chamfer plane is angled incorrectly.
-- **Fix**:
-  ```ts
-  import { degToRad } from '@jscad/modeling/src/utils';
-  // FIXED:
-  translate([-outerWidth, 0, outerWidth], rotateY(degToRad(45), cube({ size: outerWidth * 2 })));
-  ```
-  _Optionally_, `536338958` also exposes this as a configurable parameter: `wallMountChamferAngle` (clamped between 45° and 70°).
-- **Scrutiny**: 100% bug fix. Zero risk.
+- **Feature**: Parametric counterbore (socket head / button head) and $90^\circ$ countersunk head recesses cut into the top surface of the lid.
+- **Form Controls**: Added recess type selector, diameter, and depth fields with instant 3D viewport update.
+- **Finding / Gotcha**: Clamping shoulder preservation: if recess depth $\ge \text{roof}$ thickness, the recess bores completely through the lid roof, leaving zero material to clamp against the base. Recommended lid roof thickness is documented as $\ge \text{recessDepth} + 0.8\text{ mm}$.
 
 ---
 
-#### 1.2 Nut-Pocket Breaking Through Waterproof Seal Groove (`src/app/core/enclosure/waterproofseal.ts`)
+### 3.3 Dependency-Free STEP AP214 Exporter (Commit `fa66dfa`)
 
-- **Problem**: Commit `c7945b2` added `lidScrewHoleType: 'nut-pocket'` and `lidScrewNutWidth`. In `src/app/core/enclosure/screws.ts`, `getScrewDiameterMax` calculates the circumscribed diameter of the nut:
-  $$\text{nutDiameter} = \frac{\text{nutWidth}}{\sqrt{3}} \times 2 \approx 6.58\text{ mm (for M3)}$$
-  `getScrewOffset` computes:
-  $$\text{screwOffset} = \frac{\text{diameterMax}}{2} + \frac{\text{cornerRadius}}{4} + \frac{\text{wall}}{2}$$
-  Because `diameterMax` increased from 3.0mm to 6.58mm, `screwOffset` shifts inward by >1.8mm.
-  However, in `src/app/core/enclosure/waterproofseal.ts`:
-  ```ts
-  export const waterProofSealCutout = (params: Params) => {
-    ...
-    const screwOffset = getScrewOffset(params);
-    return translate(
-      [wall, wall, height - (insertHeight + sealThickness)],
-      cloverFrame(
-        width - wall * 2,
-        length - wall * 2,
-        insertHeight + sealThickness + insertClearance,
-        insertThickness + insertClearance * 2,
-        screwOffset, // <-- USES NUT-POCKET OFFSET!
-      ),
-    );
-  };
-  ```
-  The seal channel corner cutout swings much deeper inward than the corner post, cutting straight through the inner wall into the main enclosure cavity.
-- **Fix**:
-  Decouple the **screw post protrusion** (the physical corner post geometry) from the **screw hole/nut pocket position**. In `dimensions.ts` / `waterproofseal.ts`:
-  ```ts
-  export const sealReliefRadius = (params: Params): number => screwPostProtrusion(params);
-  ```
-  The seal channel tracks the corner post protrusion, ensuring the seal groove never pierces the cavity wall regardless of nut pocket size.
-- **Scrutiny**: Critical defect fix. Directly fixes an active regression in current `main`.
+- **Feature**: Standalone ISO-10303-21 (AP214) STEP boundary representation serializer (`src/app/core/export/step-serializer.ts`), with zero npm dependencies.
+- **T-Junction Repair (`healTJunctions`)**:
+  - JSCAD boolean CSG outputs faceted polygon soups with T-junctions (where an edge of one polygon is subdivided into multiple collinear edges by neighboring facets).
+  - STEP `MANIFOLD_SOLID_BREP` requires strictly closed 2-manifold shells (`CLOSED_SHELL`).
+  - Implemented Newell's method for exact polygon loop normals and automatic edge splitting at collinear vertices, generating valid watertight topological solids for FreeCAD, Fusion 360, and SolidWorks.
+- **Finding / Gotcha**: Full topological healing on large assemblies with numerous screw holes is CPU-intensive. Serializing asynchronously via the export service keeps the main UI thread responsive.
 
 ---
 
-#### 1.3 Lid Screw Hole Through-Depth on Lid (`src/app/core/enclosure/lid.ts`)
+### 3.4 Extensible Export Format Registry (Commit `4597d0c`, Closes Issue #38)
 
-- **Problem**: `lid.ts` cuts screw clearance holes using `roof * 2` as the cylinder height. If `insertHeight` (the rim projecting down into the base) exceeds `roof`, the cylinder does not extend all the way through the insert rim, leaving the bottom of the screw hole sealed shut.
-- **Fix**:
-  ```ts
-  const screwHoleHeight = roof + insertHeight + tolerance;
-  ```
-- **Scrutiny**: 100% bug fix.
+- **Architecture Refactoring**:
+  - Replaced hardcoded `exportSelected()` switch logic in `tools.component.ts` with a modular Strategy Pattern (`ExportFormat` interface and `ExportFormatService` registry).
+  - Encapsulated MIME types, file extensions, single-part downloads, and multi-part ZIP bundling per format.
+- **Finding / Gotcha**: Decoupling format serialization from the Angular view component allows dropping in future formats (such as 3MF, OBJ, or DXF) by simply calling `registry.register()` without modifying any existing UI or state classes.
 
 ---
 
-#### 1.4 Blind Hole Bottom Pierce Clamp (`src/app/core/enclosure/screws.ts` & `dimensions.ts`)
+### 3.5 High-Strength PCB Standoff Root Fillets & Chamfers (Commit `b9d173a`, Closes Issue #18)
 
-- **Problem**: When `lidScrewHoleType === 'blind'`, if a user specifies `lidScrewHoleDepth` greater than `height - floor`, the cylinder cuts all the way through the bottom floor of the enclosure, defeating the purpose of a blind hole.
-- **Fix**:
-  ```ts
-  export const lidScrewBlindDepth = (params: Params): number => {
-    const maxDepth = Math.max(params.height - params.floor, 0);
-    return Math.min(Math.max(params.lidScrewHoleDepth, 0), maxDepth);
-  };
-  ```
-- **Scrutiny**: Simple, robust clamp. Prevents invalid geometry.
+- **Feature**: Added parametric 360° annular root reinforcement (`round` concave arc and `chamfer` 45° flare) at the junction between PCB standoffs and the enclosure floor or lid.
+- **Geometry Implementation**: Rotational profile extrusion (`extrudeRotate` on 2D profile points) to form smooth, seamless transitions without mesh artifacts.
+- **Findings & Constraints**:
+  - Standard FDM 3D prints are weakest between layers along the Z-axis. Straight cylindrical standoffs shear at the base layer under self-tapping screw insertion torque. A 1.0mm fillet eliminates the sharp stress-concentration notch.
+  - Fillet radii must not expand beyond standard circular keep-out zones around PCB mounting holes, and standoffs placed close to inner walls must be checked so the root flare doesn't intersect the cavity wall.
+  - Per-standoff override capability allows tight component clearance when adjacent SMT components are positioned close to a standoff.
 
 ---
 
-### Candidate 2: CSG Performance Optimization (Source: `536338958`)
+### 3.6 Parametric Snap-Fit Clippable Lids (Commit `844e8db`, Closes Issue #47)
 
-- **Change**: Reduce circle and cylinder tessellation segment counts from `100` down to `48` (e.g. `segments: 48`).
-- **Why it matters**:
-  JSCAD CSG boolean operations (`subtract`, `union`) use BSP trees with $O(N \log N)$ to $O(N^2)$ polygon scaling. In the `clover()` shape alone, each corner post contributes curved cylinders and rounded corners.
-  - **Chordal Error Analysis**:
-    For a typical corner radius $R = 3\text{ mm}$ with $N = 48$ segments:
-    $$e = R \cdot \left(1 - \cos\left(\frac{180^\circ}{N}\right)\right) = 3 \cdot \left(1 - \cos(3.75^\circ)\right) \approx 0.0064\text{ mm} = 6.4\,\mu\text{m}$$
-    Standard 0.4mm nozzle FDM 3D printing has a positional repeatability of $\sim 20\text{–}50\,\mu\text{m}$. A chordal error of $6.4\,\mu\text{m}$ is completely invisible and unprintable.
-  - **Performance Result**: Reduces model computation and CSG rebuild times by **~45%–55%**.
-- **Scrutiny**: High benefit, imperceptible visual difference. Recommend adopting 48 segments as the standard default.
-
----
-
-### Candidate 3: Dependency-Free STEP AP214 Exporter (Source: `tyeth-ai-assisted`, branch `feature/step-export`)
-
-- **File**: `src/app/core/export/step-serializer.ts` (351 lines, 0 external npm dependencies).
-- **The Engineering Problem**:
-  `easy-enclosure` exports STL files (triangulated polygon meshes). CAD packages (FreeCAD, Fusion 360, SolidWorks, Onshape) struggle with STLs because meshes cannot easily be dimensioned, mated, or modified.
-  However, exporting STEP (`ISO-10303-21 AP214`) from JSCAD boolean results is notoriously hard: JSCAD produces _faceted polygon soups_ with **T-junctions** (where an edge of one polygon is subdivided into multiple collinear edges on adjacent polygons). STEP `MANIFOLD_SOLID_BREP` requires strict topological closure (`CLOSED_SHELL`).
-- **How `tyeth-ai-assisted` solved it**:
-  1. Implements `buildLoops(geometry: Geom3)`: Extracts polygon vertex loops and normal vectors using Newell's method.
-  2. Implements `healTJunctions(loops: Loop[])`: Detects unmatched boundary edges and splits longer edges where adjacent vertices touch them, creating a topologically watertight combinatorial mesh.
-  3. Writes standard STEP entities: `CARTESIAN_POINT`, `DIRECTION`, `VECTOR`, `VERTEX_POINT`, `EDGE_CURVE`, `ORIENTED_EDGE`, `EDGE_LOOP`, `FACE_OUTER_BOUND`, `ADVANCED_FACE`, `CLOSED_SHELL`, and `MANIFOLD_SOLID_BREP`.
-- **Scrutiny**:
-  - **Pros**: Outstanding feature. Pure TypeScript with zero third-party packages. Tested and outputs valid STEP AP214 models that open cleanly in FreeCAD and Fusion 360.
-  - **Cons/Risks**: STEP generation is CPU-bound; on very large, complex models with many screw holes, `healTJunctions` can take 1–3 seconds.
-  - **Recommendation**: **Adopt**. Add "Export STEP" option to the Tools dropdown alongside STL and ZIP exports.
+- **Feature**: Screwless enclosure closure using parametric horizontal elliptical retention beads extruded along the lid insert rim, mating with detent cavities cut into the interior base walls (`src/app/core/enclosure/snapfit.ts`).
+- **Mathematical Alignment Invariant**:
+  - Lid bump vertical center: $Z_{\text{lid}} = \text{roof} + \text{insertHeight} \times 0.6$.
+  - Base pocket vertical center: $Z_{\text{base}} = \text{height} - \text{insertHeight} \times 0.6$.
+  - When the lid is flipped and installed into the base, the bump and pocket align with exact axial symmetry.
+- **Wall Thickness Safeguard**:
+  - Large user-entered bump depths can cut through the outer wall of the enclosure.
+  - The bump and pocket depth is strictly clamped:
+    $$\text{effectiveDepth} = \min\left(\text{depth}, \max(0.2, \text{wall} \times 0.8)\right)$$
+    This guarantees that at least $20\%$ of the wall thickness remains intact as an outer barrier.
+- **Preset Backward Compatibility Trap**:
+  - Loading older JSON presets that lack the `snapFit` property could cause runtime `undefined` errors.
+  - `loadParamsFile()` in `tools.component.ts` now deep-merges the `snapFit` object with `DEFAULT_PARAMS`.
 
 ---
 
-### Candidate 4: Snap-Fit Enclosure Lids (Source: `536338958`)
+## 4. Deep-Dive Scrutiny of Outstanding Candidates
 
-- **File**: `src/app/core/enclosure/snapfit.ts` (156 lines + 146 lines tests).
+---
+
+### Candidate 1: Internal Cable Clamp Strain-Relief Module (Source: `maraid`)
+
+- **File**: `src/app/core/enclosure/clamp.ts` (~72 lines).
 - **Functionality**:
-  Allows creating enclosures without lid screws. Adds cantilever or friction beads/ridges along the inside of the base wall and corresponding latch ridges on the lid insert rim.
-- **Parameters Introduced**:
-  - `snapFit: boolean`
-  - `snapFitType: 'friction' | 'cantilever'`
-  - `snapFitBeadRadius: number`
-  - `snapFitCount: number` (per side)
+  Parametric internal cable clamps consisting of:
+  - Two screw mounting posts on the enclosure floor.
+  - An internal saddle/cradle between posts with ribbed teeth for cable grip.
+  - A separate matching top clamp strap with through-holes that screws down over the cable to provide strain relief.
+- **Parameters**:
+  - `clampWidth`, `clampWallHeight`, `clampMountScrewDiameter`, `clampOuterDiameter`.
 - **Scrutiny**:
-  - **Pros**: One of the top requested features for 3D-printed electronics enclosures (eliminates screws entirely for small sensor nodes).
-  - **Cons**: Requires calibrated 3D printer tolerances; snap-fit beads can be too tight if clearance is insufficient.
-  - **Recommendation**: **Adopt**. Ensure defaults have conservative clearances ($0.2\text{ mm}$).
+  - **Pros**: Compact, clean code (~70 lines). Solves a common problem in project boxes where cables pulled from the outside rip solder joints off internal terminal blocks.
+  - **Recommendation**: **Adopt**. Can be implemented under Internal Features with export of the top clamp strap as an accessory in the ZIP bundle.
 
 ---
 
-### Candidate 5: PCB 3D Preview & Collision Detection (Source: `536338958`)
+### Candidate 2: PCB 3D Preview & Collision Detection (Source: `536338958`)
 
 - **File**: `src/app/core/enclosure/pcbpreview.ts` (124 lines + 160 lines tests).
 - **Functionality**:
   1. Computes `pcbRestZ()`: Determines exact resting height of the PCB on top of bottom standoffs or the cavity floor.
-  2. Renders a translucent green/blue 3D PCB board inside the enclosure.
+  2. Renders a translucent 3D PCB board model in the viewport.
   3. Uses `@jscad/modeling` `intersect` and `measureVolume` to detect if the PCB volume overlaps with the base walls, internal partitions, or screw posts, alerting the user in the UI: _"PCB collides with enclosure walls by X mm³"_.
 - **Scrutiny**:
-  - **Pros**: Exceptional UX for designers ensuring their hardware fits before 3D printing a 5-hour enclosure.
+  - **Pros**: Outstanding UX for designers verifying board fit before 3D printing a multi-hour enclosure.
   - **Cons**: `measureVolume(intersect(pcb, enclosure))` is an extra CSG operation; should only be evaluated when PCB Preview is enabled.
   - **Recommendation**: **Adopt**. Guard the volume calculation behind an active toggle so it doesn't incur overhead during regular parameter dragging.
 
 ---
 
-### Candidate 6: Cable Clamp Strain-Relief Module (Source: `maraid`)
-
-- **File**: `src/app/core/enclosure/clamp.ts` (72 lines).
-- **Functionality**:
-  Parametric internal cable clamps consisting of:
-  - Two screw mounting posts on the enclosure floor.
-  - An internal barrier/cradle between posts.
-  - A separate matching top clamp bar with screw holes that screws down over the cable to provide strain relief.
-- **Parameters**:
-  - `clampWidth`, `clampWallHeight`, `clampMountScrewDiameter`, `clampOuterDiameter`.
-- **Scrutiny**:
-  - **Pros**: Compact, clean code (~70 lines). Solves a very real problem in project boxes where cables pulled from the outside rip solder joints off the internal PCB.
-  - **Recommendation**: **Adopt**. Can be added as a sub-feature under Internal Features or as a standalone accessory exportable in the ZIP bundle.
-
----
-
-### Candidate 7: PCB Mount Root Fillet / Chamfer (Source: `536338958`)
-
-- **File**: `src/app/core/enclosure/pcbmount.ts`.
-- **Functionality**:
-  Adds a 45° conical chamfer or radius fillet at the base of cylindrical standoffs where they join the enclosure floor.
-- **Why it matters**:
-  On FDM 3D prints, cylindrical standoffs printed vertically in the Z direction frequently sheer off at the first layer above the floor under screw insertion torque due to notch stress concentration. A 1.0mm conical fillet drastically increases shear strength.
-- **Scrutiny**: Zero regression risk. High physical utility for 3D printing. **Adopt immediately**.
-
----
-
-### Candidate 8: OLED / LCD Display Retaining Socket (Source: `JeshwanthNG`, branch `Lcd_Mount`)
+### Candidate 3: OLED / LCD Display Retaining Socket (Source: `JeshwanthNG`, branch `Lcd_Mount`)
 
 - **File**: `src/app/core/enclosure/pcbmount.ts`.
 - **Functionality**:
@@ -262,31 +210,45 @@ All 29 forks were fetched and audited at the git ref level.
 
 ---
 
-### Candidate 9: 3D Dimension Leader-Line Overlay (Source: `nedimat`)
+### Candidate 4: 3D Dimension Leader-Line Overlay (Source: `nedimat` / `t3rm1n4l`)
 
 - **File**: `src/lib/enclosure/dimensions.ts` & `src/ui/DimensionOverlay.tsx`.
 - **Functionality**:
   Takes camera view and projection matrices, projects the 3D bounding box coordinates to 2D canvas coordinates via `project3DTo2D()`, and draws leader lines with arrowheads and measurement text (`"120 mm"`, `"80 mm"`, `"45 mm"`).
 - **Scrutiny**:
   - **Pros**: Instant visual feedback without needing a manual ruler tool.
-  - **Cons**: Was written in React; needs to be adapted into an Angular component or rendered into an HTML5 2D canvas overlay on top of the Regl 3D canvas.
-  - **Recommendation**: **Port math to Angular**. The projection math is pure matrix algebra and easy to reuse.
+  - **Cons**: Originally written in React; needs to be adapted into an Angular component or rendered into an HTML5 2D canvas overlay on top of the Regl 3D canvas.
+  - **Recommendation**: **Port math to Angular**. The projection math is pure matrix algebra and straightforward to implement as an overlay canvas.
 
 ---
 
-### Candidate 10: Parametric Outside Weatherproof Vent Panels (Source: `tyeth-ai-assisted`, branch `feature/vent-panels`)
+### Candidate 5: Ventilation Slots & Weatherproof Louvers (Source: `536338958` & `tyeth-ai-assisted`)
 
-- **File**: `src/app/core/enclosure/ventpanel.ts` (999 lines + 164 lines tests).
+- **Files**:
+  - Simple slots: `536338958` (`src/app/core/enclosure/ventilation.ts`, 140 lines).
+  - Weatherproof louvers: `tyeth-ai-assisted` (`src/app/core/enclosure/ventpanel.ts`, 999 lines).
 - **Functionality**:
-  Parametric angled louvres (rain deflection slats), internal insect mesh grids, rain collar deflection trims, fan mounting ducts, and through-wall screw bosses.
+  - `536338958`: Parametric slotted cutouts arrayed on specified walls for passive airflow and heat dissipation.
+  - `tyeth`: Angled louvres (rain deflection slats), internal insect mesh grids, rain collar deflection trims, fan mounting ducts, and through-wall screw bosses.
 - **Scrutiny**:
-  - **Pros**: Incredibly sophisticated engineering for outdoor weather-resistant enclosures.
-  - **Cons**: High complexity (~1,000 lines). Substantially increases codebase size.
-  - **Recommendation**: **Discuss / Defer**. Consider whether `easy-enclosure` wants a full weatherproof outdoor panel generator or a simpler ventilation slot pattern generator (like `536338958`'s 140-line `ventilation.ts`).
+  - `536338958`'s slotted ventilation is compact, elegant, and directly useful for 90% of maker project boxes.
+  - `tyeth`'s outdoor louvers are extremely complex (~1,000 lines) and best suited for dedicated IP-rated outdoor sensor boxes.
+  - **Recommendation**: **Adopt the simpler `ventilation.ts` first**, deferring the 1,000-line weatherproof louver generator.
 
 ---
 
-## 4. Features Reviewed and Rejected / Skipped
+### Candidate 6: Centralized Derived Geometry Architecture (`dimensions.ts`) (Source: `536338958`)
+
+- **Concept**:
+  - Centralizes derived geometry formulas (inner length, inner width, inner height, screw post positions, seal relief radius, insert clearance offsets) into a single functional module `src/app/core/enclosure/dimensions.ts`.
+  - Replaces repeated inline calculations across `base.ts`, `lid.ts`, `screws.ts`, `waterproofseal.ts`, and `snapfit.ts`.
+- **Scrutiny**:
+  - **Pros**: Improves maintainability, eliminates mathematical drift between base and lid, and makes unit testing geometric invariants trivial.
+  - **Recommendation**: **Adopt incrementally during feature additions**.
+
+---
+
+## 5. Features Reviewed and Rejected / Skipped
 
 1. **DIN Rail Mounts (`vZhurbenko`, `JeshwanthNG`)**:
    - **Reason**: Upstream `main` already has [`dinrailmount.ts`](src/app/core/enclosure/dinrailmount.ts) implemented by Bruce (closes issue #37), complete with spring latch and screwdriver release pocket.
@@ -299,39 +261,50 @@ All 29 forks were fetched and audited at the git ref level.
 
 ---
 
-## 5. Proposed Phased Pull / Implementation Roadmap
+## 6. Updated Implementation Roadmap & Next Steps
 
 ```mermaid
 graph TD
-  subgraph Phase 1: Urgent Bug Fixes & Perf
-    P1A["Fix rotateY radians bug (wallmount.ts)"]
-    P1B["Fix nut-pocket seal breakthrough (waterproofseal.ts)"]
-    P1C["Fix lid screw hole through-depth (lid.ts)"]
-    P1D["Clamp blind hole depth to height - floor"]
-    P1E["Reduce CSG circle segments 100 -> 48"]
+  classDef completed fill:#2e7d32,stroke:#1b5e20,color:#fff;
+  classDef pending fill:#1565c0,stroke:#0d47a1,color:#fff;
+
+  subgraph Phase 1: Bug Fixes, Perf & Recesses (COMPLETED)
+    P1A["Fix rotateY radians bug (wallmount.ts)"]:::completed
+    P1B["Fix nut-pocket seal breakthrough (waterproofseal.ts)"]:::completed
+    P1C["Fix lid screw hole through-depth (lid.ts)"]:::completed
+    P1D["Clamp blind hole depth to height - floor"]:::completed
+    P1E["Reduce CSG circle segments 100 -> 48"]:::completed
+    P1F["Lid screw head recesses (counterbore/countersunk)"]:::completed
   end
 
-  subgraph Phase 2: Standalone Geometry Gems
-    P2A["Port step-serializer.ts (AP214 STEP export)"]
-    P2B["Add Snap-Fit Lids (snapfit.ts)"]
-    P2C["Add Cable Clamps (clamp.ts)"]
-    P2D["Add PCB Standoff Root Fillets (pcbmount.ts)"]
-    P2E["Add OLED/LCD Socket Mount (pcbmount.ts)"]
+  subgraph Phase 2: Standalone Geometry Gems (IN PROGRESS)
+    P2A["Dependency-free STEP AP214 Exporter"]:::completed
+    P2B["Extensible Export Format Registry (#38)"]:::completed
+    P2C["PCB Standoff Root Fillets & Chamfers (#18)"]:::completed
+    P2D["Parametric Snap-Fit Clippable Lids (#47)"]:::completed
+    P2E["Internal Cable Clamps (clamp.ts)"]:::pending
+    P2F["Ventilation Slots (ventilation.ts)"]:::pending
+    P2G["OLED/LCD Display Retaining Socket"]:::pending
   end
 
   subgraph Phase 3: UX & Architecture
-    P3A["PCB 3D Preview & Collision Detection (pcbpreview.ts)"]
-    P3B["3D Dimension Annotations Overlay"]
-    P3C["Consolidate derived geometry into dimensions.ts"]
-    P3D["Expand Unit Test Suite from 54 to 180+ specs"]
+    P3A["PCB 3D Preview & Collision Detection (pcbpreview.ts)"]:::pending
+    P3B["3D Dimension Annotations Viewport Overlay"]:::pending
+    P3C["Consolidate derived geometry into dimensions.ts"]:::pending
+    P3D["Weatherproof Outdoor Louver Panels (Discuss/Defer)"]:::pending
   end
 
   Phase 1 --> Phase 2
   Phase 2 --> Phase 3
 ```
 
-### Next Steps for the Team
+### Next Steps for Future Work
 
-1. Review the P0 bug fixes in [`src/app/core/enclosure/wallmount.ts`](file:///home/bruce/Projects/easy-enclosure/src/app/core/enclosure/wallmount.ts) and [`src/app/core/enclosure/waterproofseal.ts`](file:///home/bruce/Projects/easy-enclosure/src/app/core/enclosure/waterproofseal.ts).
-2. Test the pure TypeScript STEP serializer (`tyeth-ai-assisted/feature/step-export`).
-3. Decide on whether to include Snap-Fit lids (`536338958`) and Cable Clamps (`maraid`) in the next minor release.
+1. **Select Next Phase 2 Feature**:
+   - **Internal Cable / Strain Relief Clamps** (`clamp.ts` from `maraid`): High utility for boxes with external wiring harnesses.
+   - **Ventilation Slots** (`ventilation.ts` from `536338958`): Clean, low-complexity parametric heat ventilation cutouts.
+   - **OLED / LCD Retaining Socket** (`pcbmount.ts` from `JeshwanthNG`): Display cradle for DIY ESP32 / Arduino projects.
+2. **Phase 3 Preview & Clearance**:
+   - Port PCB 3D dummy volume preview and overlap boolean collision check (`pcbpreview.ts` from `536338958`).
+3. **Phase 3 Viewport Dimensions**:
+   - Port 3D bounding box coordinate projection math to an Angular overlay for live dimension callouts.
