@@ -5,7 +5,7 @@ import { rotateZ, translate } from '@jscad/modeling/src/operations/transforms';
 import { circle, rectangle } from '@jscad/modeling/src/primitives';
 import { degToRad } from '@jscad/modeling/src/utils';
 
-export const roundedCube2d = (l: number, w: number, r = 8, s = 100) => {
+export const roundedCube2d = (l: number, w: number, r = 8, s = 48) => {
   const c = circle({
     radius: r,
     segments: s,
@@ -19,27 +19,27 @@ export const roundedCube2d = (l: number, w: number, r = 8, s = 100) => {
   );
 };
 
-export const roundedCube = (l: number, w: number, h: number, r = 8, s = 100) => {
+export const roundedCube = (l: number, w: number, h: number, r = 8, s = 48) => {
   return extrudeLinear({ height: h }, roundedCube2d(l, w, r, s));
 };
 
-export const roundedFrame2d = (l: number, w: number, t: number, r = 8, s = 100) => {
+export const roundedFrame2d = (l: number, w: number, t: number, r = 8, s = 48) => {
   const outer = roundedCube2d(l, w, r, s);
   const inner = roundedCube2d(l - t * 2, w - t * 2, r, s);
   return subtract(outer, translate([t, t], inner));
 };
 
-export const roundedFrame = (l: number, w: number, h: number, t: number, r = 8, s = 100) => {
+export const roundedFrame = (l: number, w: number, h: number, t: number, r = 8, s = 48) => {
   return extrudeLinear({ height: h }, roundedFrame2d(l, w, t, r, s));
 };
 
-export const hollowRoundCube = (l: number, w: number, h: number, t: number, r = 8, s = 100) => {
+export const hollowRoundCube = (l: number, w: number, h: number, t: number, r = 8, s = 48) => {
   const outer = roundedCube(l, w, h, r, s);
   const inner = roundedCube(l - t * 2, w - t * 2, h, r, s);
   return subtract(outer, translate([t, t, t], inner));
 };
 
-const roundedCorner2d = (r: number, s = 100) => {
+const roundedCorner2d = (r: number, s = 48) => {
   return subtract(
     rectangle({ size: [r * 2, r * 2] }),
     translate([r, r], roundedCube2d(r, r, r, s)),
@@ -47,7 +47,7 @@ const roundedCorner2d = (r: number, s = 100) => {
   );
 };
 
-export const clover2d = (l: number, w: number, r = 8, s = 100) => {
+export const clover2d = (l: number, w: number, r = 8, s = 48) => {
   const cornersRemoved = subtract(
     roundedCube2d(l, w, r, s),
     translate([0, 0], roundedCube2d(r, r, r, s)),
@@ -70,16 +70,16 @@ export const clover2d = (l: number, w: number, r = 8, s = 100) => {
   return rounded;
 };
 
-export const clover = (l: number, w: number, h: number, r = 8, s = 100) => {
+export const clover = (l: number, w: number, h: number, r = 8, s = 48) => {
   return extrudeLinear({ height: h }, clover2d(l, w, r, s));
 };
 
-export const cloverFrame2d = (l: number, w: number, t: number, r = 8, s = 100) => {
+export const cloverFrame2d = (l: number, w: number, t: number, r = 8, s = 48) => {
   const outer = clover2d(l, w, r, s);
   const inner = clover2d(l - t * 2, w - t * 2, r, s);
   return subtract(outer, translate([t, t], inner));
 };
 
-export const cloverFrame = (l: number, w: number, h: number, t: number, r = 8, s = 100) => {
+export const cloverFrame = (l: number, w: number, h: number, t: number, r = 8, s = 48) => {
   return extrudeLinear({ height: h }, cloverFrame2d(l, w, t, r, s));
 };

@@ -105,4 +105,18 @@ describe('ParamsFormComponent', () => {
     component.setNumberParam('lidScrewHoleDepth', '12');
     expect(state.params().lidScrewHoleDepth).toBe(12);
   });
+
+  it('updates lid screw recess type and dimensions', () => {
+    component.setStringParam('lidScrewRecessType', 'counterbore');
+    expect(state.params().lidScrewRecessType).toBe('counterbore');
+
+    component.setNumberParam('lidScrewRecessDiameter', '6.5');
+    expect(state.params().lidScrewRecessDiameter).toBe(6.5);
+
+    component.setNumberParam('lidScrewRecessDepth', '3.5');
+    expect(state.params().lidScrewRecessDepth).toBe(3.5);
+
+    component.setStringParam('lidScrewRecessType', 'countersunk');
+    expect(state.params().lidScrewRecessType).toBe('countersunk');
+  });
 });

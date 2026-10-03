@@ -2,6 +2,7 @@ import { subtract, union } from '@jscad/modeling/src/operations/booleans';
 import { hull } from '@jscad/modeling/src/operations/hulls';
 import { mirrorX, rotateY, translate } from '@jscad/modeling/src/operations/transforms';
 import { cube, cuboid, cylinder } from '@jscad/modeling/src/primitives';
+import { degToRad } from '@jscad/modeling/src/utils';
 
 import { Params } from '../params';
 
@@ -42,7 +43,7 @@ export const flange = (screwDiameter: number) => {
   return subtract(
     outer,
     translate([RIDGEWIDTH, 0, FLOOR], inner),
-    translate([-outerWidth, 0, outerWidth], rotateY(45, cube({ size: outerWidth * 2 }))),
+    translate([-outerWidth, 0, outerWidth], rotateY(degToRad(45), cube({ size: outerWidth * 2 }))),
     translate([-outerWidth / 2, 0, 0], cylinder({ height: outerWidth, radius: screwDiameter / 2 })),
   );
 };

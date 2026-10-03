@@ -46,6 +46,9 @@ const lidDeps = [
   'baseLidScrewDiameter',
   'lidScrewHoleType',
   'lidScrewNutWidth',
+  'lidScrewRecessType',
+  'lidScrewRecessDiameter',
+  'lidScrewRecessDepth',
   'insertThickness',
   'insertHeight',
   'insertClearance',
@@ -67,6 +70,9 @@ const baseDeps = [
   'lidScrewHoleDepth',
   'lidScrewNutWidth',
   'lidScrewNutDepth',
+  'lidScrewRecessType',
+  'lidScrewRecessDiameter',
+  'lidScrewRecessDepth',
   'waterProof',
   'insertThickness',
   'insertHeight',
@@ -88,6 +94,8 @@ const sealDeps = [
   'baseLidScrewDiameter',
   'lidScrewHoleType',
   'lidScrewNutWidth',
+  'lidScrewRecessType',
+  'lidScrewRecessDiameter',
   'lidScrews',
 ];
 const mountDeps = [

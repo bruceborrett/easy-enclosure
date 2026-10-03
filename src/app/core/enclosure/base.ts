@@ -47,7 +47,9 @@ export const base = (params: Params) => {
       ),
     );
 
-    const holeDepth = lidScrewHoleType === 'blind' ? lidScrewHoleDepth : undefined;
+    const maxBlindDepth = Math.max(0.5, height - floor);
+    const holeDepth =
+      lidScrewHoleType === 'blind' ? Math.min(lidScrewHoleDepth, maxBlindDepth) : undefined;
     subtracts.push(screws(length, width, height, screwOffset, baseLidScrewDiameter, holeDepth));
 
     if (lidScrewHoleType === 'nut-pocket') {

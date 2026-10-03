@@ -1,6 +1,12 @@
 import measureBoundingBox from '@jscad/modeling/src/measurements/measureBoundingBox';
 import { DEFAULT_PARAMS, cloneParams } from '../params';
-import { getScrewDiameterMax, getScrewOffset, nutPockets, screws } from './screws';
+import {
+  getScrewDiameterMax,
+  getScrewOffset,
+  lidScrewRecesses,
+  nutPockets,
+  screws,
+} from './screws';
 import { base } from './base';
 import { lid } from './lid';
 
@@ -86,5 +92,108 @@ describe('screws enclosure', () => {
 
     expect(baseModel).toBeDefined();
     expect(lidModel).toBeDefined();
+  });
+
+  it('creates counterbore cutters from top surface into the lid', () => {
+    const params = cloneParams(DEFAULT_PARAMS);
+    params.roof = 4.0;
+    params.lidScrewRecessType = 'counterbore';
+    params.lidScrewRecessDepth = 3.0;
+
+    const recesses = lidScrewRecesses(params)!;
+    const [[, , zMin], [, , zMax]] = measureBoundingBox(recesses);
+
+    expect(zMin).toBeLessThanOrEqual(0);
+    expect(zMax).toBeCloseTo(3.0, 1);
+  });
+
+  it('clamps counterbore depth to protect the roof when roof thickness is thin', () => {
+    const params = cloneParams(DEFAULT_PARAMS);
+    params.roof = 2.0;
+    params.lidScrewRecessType = 'counterbore';
+    params.lidScrewRecessDepth = 3.0;
+
+    const recesses = lidScrewRecesses(params)!;
+    const [[, , zMin], [, , zMax]] = measureBoundingBox(recesses);
+
+    expect(zMin).toBeLessThanOrEqual(0);
+    expect(zMax).toBeCloseTo(1.6, 1);
+  });
+
+  it('creates countersunk cone cutters from top surface into the lid', () => {
+    const params = cloneParams(DEFAULT_PARAMS);
+    params.lidScrewRecessType = 'countersunk';
+    params.lidScrewRecessDiameter = 6.0;
+    params.lidScrewDiameter = 3.0;
+
+    const recesses = lidScrewRecesses(params)!;
+    const [[, , zMin], [, , zMax]] = measureBoundingBox(recesses);
+
+    const expectedDepth = (6.0 - 3.0) / 2; // 1.5mm
+    expect(zMin).toBeLessThanOrEqual(0);
+    expect(zMax).toBeCloseTo(expectedDepth, 1);
+  });
+
+  it('generates valid lid and base when counterbore recess is enabled', () => {
+    const params = cloneParams(DEFAULT_PARAMS);
+    params.lidScrews = true;
+    params.lidScrewRecessType = 'counterbore';
+    params.lidScrewRecessDiameter = 6.2;
+    params.lidScrewRecessDepth = 3.0;
+
+    const lidModel = lid(params);
+    const baseModel = base(params);
+
+    expect(lidModel).toBeDefined();
+    expect(baseModel).toBeDefined();
+  });
+
+  it('generates valid lid and base when countersunk recess is enabled', () => {
+    const params = cloneParams(DEFAULT_PARAMS);
+    params.lidScrews = true;
+    params.lidScrewRecessType = 'countersunk';
+    params.lidScrewRecessDiameter = 6.0;
+
+    const lidModel = lid(params);
+    const baseModel = base(params);
+
+    expect(lidModel).toBeDefined();
+    expect(baseModel).toBeDefined();
+  });
+
+  it('adjusts screw offset to maintain outer wall margin when recesses are enabled', () => {
+    const paramsWithoutRecess = cloneParams(DEFAULT_PARAMS);
+    const paramsWithRecess = cloneParams(DEFAULT_PARAMS);
+    paramsWithRecess.lidScrewRecessType = 'counterbore';
+    paramsWithRecess.lidScrewRecessDiameter = 6.2;
+
+    expect(getScrewOffset(paramsWithRecess)).toBeGreaterThan(getScrewOffset(paramsWithoutRecess));
+  });
+
+  it('clamps blind hole depth in base so the bottom floor is never pierced', () => {
+    const params = cloneParams(DEFAULT_PARAMS);
+    params.lidScrews = true;
+    params.lidScrewHoleType = 'blind';
+    params.height = 30;
+    params.floor = 3;
+    // User sets excessive depth greater than box height
+    params.lidScrewHoleDepth = 50;
+
+    const baseModel = base(params);
+    const [[, , zMin], [, , zMax]] = measureBoundingBox(baseModel);
+    expect(zMin).toBe(0);
+    expect(zMax).toBe(30);
+  });
+
+  it('cuts screw clearance hole through the entire lid height including insert rim', () => {
+    const params = cloneParams(DEFAULT_PARAMS);
+    params.lidScrews = true;
+    params.roof = 2.0;
+    params.insertHeight = 5.0;
+
+    const lidModel = lid(params);
+    const [[, , zMin], [, , zMax]] = measureBoundingBox(lidModel);
+    expect(zMin).toBe(0);
+    expect(zMax).toBe(params.roof + params.insertHeight);
   });
 });

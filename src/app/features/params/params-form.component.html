@@ -456,6 +456,49 @@
         </div>
 
         <div class="input-group">
+          <label>Screw Head Recess</label>
+          <select
+            [value]="params().lidScrewRecessType"
+            (change)="setStringParam('lidScrewRecessType', $any($event.target).value)"
+          >
+            <option value="none">None (Flush Top Hole)</option>
+            <option value="counterbore">Counterbore</option>
+            <option value="countersunk">Countersunk</option>
+          </select>
+        </div>
+
+        @if (
+          params().lidScrewRecessType === 'counterbore' ||
+          params().lidScrewRecessType === 'countersunk'
+        ) {
+          <div class="input-group">
+            <label>Recess Diameter</label>
+            <input
+              type="number"
+              min="1"
+              step="0.1"
+              [value]="params().lidScrewRecessDiameter"
+              (keydown.enter)="$any($event.target).blur()"
+              (blur)="setNumberParam('lidScrewRecessDiameter', $any($event.target).value)"
+            />
+          </div>
+        }
+
+        @if (params().lidScrewRecessType === 'counterbore') {
+          <div class="input-group">
+            <label>Recess Depth</label>
+            <input
+              type="number"
+              min="0.5"
+              step="0.1"
+              [value]="params().lidScrewRecessDepth"
+              (keydown.enter)="$any($event.target).blur()"
+              (blur)="setNumberParam('lidScrewRecessDepth', $any($event.target).value)"
+            />
+          </div>
+        }
+
+        <div class="input-group">
           <label>Hole Type</label>
           <select
             [value]="params().lidScrewHoleType"

@@ -29,6 +29,7 @@ export type InternalWall = {
 };
 
 export type LidScrewHoleType = 'blind' | 'nut-pocket' | 'through';
+export type LidScrewRecessType = 'none' | 'counterbore' | 'countersunk';
 
 export type Params = {
   length: number;
@@ -60,6 +61,9 @@ export type Params = {
   lidScrewHoleDepth: number;
   lidScrewNutWidth: number;
   lidScrewNutDepth: number;
+  lidScrewRecessType: LidScrewRecessType;
+  lidScrewRecessDiameter: number;
+  lidScrewRecessDepth: number;
   dinRailMount: boolean;
   dinRailOrientation: 'horizontal' | 'vertical';
   dinRailMountWidth: number;
@@ -185,6 +189,9 @@ export const DEFAULT_PARAMS: Params = {
   lidScrewHoleDepth: 10,
   lidScrewNutWidth: 5.7,
   lidScrewNutDepth: 2.5,
+  lidScrewRecessType: 'none',
+  lidScrewRecessDiameter: 6.2,
+  lidScrewRecessDepth: 3.0,
   dinRailMount: false,
   dinRailOrientation: 'horizontal',
   dinRailMountWidth: 15,

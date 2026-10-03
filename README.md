@@ -115,6 +115,22 @@ When securing the lid to the base, EasyEnclosure provides several hole strategie
 
 - **Best for**: Long through-bolts with external nuts on the bottom, mounting standoffs, or clamping the entire enclosure to a surface.
 
+### Screw Head Recesses & Lid Thickness
+
+When enabling screw head recesses (**Counterbore** or **Countersunk**), the recess is cut directly into the top of the lid. Ensure that your **Lid Thickness (`roof`)** in the Dimensions tab is greater than the recess depth so a solid clamping shoulder remains:
+
+- **Countersunk Screws (DIN 7991 / ISO 10642)**:
+  - M3 countersunk heads are $\approx 1.7\text{ mm}$ deep ($90^\circ$ cone).
+  - Recommended Lid Thickness (`roof`): **$2.5 - 3.0\text{ mm}$**, which leaves $0.8 - 1.3\text{ mm}$ of solid plastic to bear screw clamping force.
+- **Counterbore (Socket Head Cap Screws - DIN 912)**:
+  - Standard M3 socket cap screw heads are $\approx 3.0\text{ mm}$ tall and $\approx 5.5\text{ mm}$ in diameter.
+  - Recommended Lid Thickness (`roof`): **$4.0 - 4.5\text{ mm}$** with a $3.0\text{ mm}$ recess depth.
+- **Counterbore (Low-Profile Button Head Screws - ISO 7380)**:
+  - Button head screws have a head height of only $\approx 1.65\text{ mm}$.
+  - Recommended Lid Thickness (`roof`): **$2.5 - 3.0\text{ mm}$** with a $1.7\text{ mm}$ recess depth.
+
+> **Tip**: Increasing the lid roof thickness by $1 - 1.5\text{ mm}$ uses very little filament (just a thin flat layer), while keeping the four vertical base corner posts compact to maximize usable internal space for your PCB.
+
 ## Notes
 
 - All measurements are in millimeters
