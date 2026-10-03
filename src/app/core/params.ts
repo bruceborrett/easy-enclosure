@@ -47,6 +47,40 @@ export type SnapFit = {
   clearance: number;
 };
 
+export type CableClamp = {
+  surface?: Surface;
+  x: number;
+  y: number;
+  length: number;
+  wallHeight: number;
+  wallThickness: number;
+  mountScrewDiameter: number;
+  mountOuterDiameter: number;
+  mountHeight: number;
+  rotation: number;
+  topHeight: number;
+  topScrewDiameter: number;
+  ridges?: boolean;
+  ridgeCount?: number;
+};
+
+export const DEFAULT_CABLE_CLAMP: CableClamp = {
+  surface: 'bottom',
+  x: 0,
+  y: 0,
+  length: 15,
+  wallHeight: 5,
+  wallThickness: 5,
+  mountScrewDiameter: 2,
+  mountOuterDiameter: 6,
+  mountHeight: 8,
+  rotation: 0,
+  topHeight: 2.5,
+  topScrewDiameter: 2.6,
+  ridges: true,
+  ridgeCount: 2,
+};
+
 export type Params = {
   length: number;
   width: number;
@@ -67,6 +101,7 @@ export type Params = {
   holes: Hole[];
   pcbMounts: PCBMount[];
   internalWalls: InternalWall[];
+  cableClamps: CableClamp[];
   wallMounts: boolean;
   wallMountCount: number;
   wallMountScrewDiameter: number;
@@ -198,6 +233,7 @@ export const DEFAULT_PARAMS: Params = {
       rotation: 0,
     },
   ],
+  cableClamps: [],
   wallMounts: true,
   wallMountCount: 4,
   wallMountScrewDiameter: 3.98,

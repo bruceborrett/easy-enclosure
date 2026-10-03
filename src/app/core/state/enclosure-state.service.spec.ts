@@ -41,6 +41,7 @@ describe('EnclosureStateService', () => {
     expect(service.params().holes).toEqual([]);
     expect(service.params().pcbMounts).toEqual([]);
     expect(service.params().internalWalls).toEqual([]);
+    expect(service.params().cableClamps).toEqual([]);
     expect(service.params().waterProof).toBeFalse();
     expect(service.params().wallMounts).toBeFalse();
     expect(service.params().lidScrews).toBeFalse();
