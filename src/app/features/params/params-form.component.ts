@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 
-import type { CableClamp, Hole, InternalWall, PCBMount, Params, SnapFit } from '../../core/params';
+import type { CableClamp, Hole, InternalWall, PCBMount, Params, PCBPreview, SnapFit } from '../../core/params';
 import { DEFAULT_CABLE_CLAMP } from '../../core/params';
 import { EnclosureStateService } from '../../core/state/enclosure-state.service';
 
@@ -217,6 +217,35 @@ export class ParamsFormComponent {
       this.state.patchParams({
         snapFit: {
           ...current.snapFit,
+          [key]: parsed,
+        },
+      });
+    }
+  }
+
+  setPcbPreviewEnabled(checked: boolean): void {
+    const current = this.params();
+    this.state.patchParams({
+      pcbPreview: {
+        ...current.pcbPreview,
+        enabled: checked,
+      },
+    });
+  }
+
+  setPcbPreviewNumber<K extends Exclude<keyof PCBPreview, 'enabled'>>(
+    key: K,
+    rawValue: string,
+  ): void {
+    if (!rawValue) {
+      return;
+    }
+    const parsed = parseFloat(rawValue);
+    if (!Number.isNaN(parsed)) {
+      const current = this.params();
+      this.state.patchParams({
+        pcbPreview: {
+          ...current.pcbPreview,
           [key]: parsed,
         },
       });

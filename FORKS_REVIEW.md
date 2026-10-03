@@ -31,7 +31,7 @@ All 29 forks were fetched and audited at the git ref level.
 | **P1 (Feat)** | **PCB Standoff Root Fillet / Chamfer**            | `536338958` (`main`)                        | **COMPLETED**   | Rotational extrusion reinforcement (closes #18, `b9d173a`)                                 |
 | **P1 (Feat)** | **Snap-Fit Enclosure Lids**                       | `536338958` (`main`)                        | **COMPLETED**   | Standalone `snapfit.ts` with wall safety clamp (closes #47, `844e8db`)                     |
 | **P1 (Feat)** | **Cable Clamp Strain-Relief**                     | `maraid` (`main`)                           | **COMPLETED**   | Standalone `clamp.ts` with grip ridges, top strap export (`f458bff`, `af490e1`, `db236c0`) |
-| **P2 (Feat)** | **PCB 3D Preview & Collision Detection**          | `536338958` (`main`)                        | **Outstanding** | Viewport PCB mesh & CSG intersection clash detection                                       |
+| **P2 (Feat)** | **PCB 3D Preview & Collision Detection**          | `536338958` (`main`)                        | **COMPLETED**   | Viewport PCB mesh & CSG intersection clash detection (`2c4e26e`, `00cdce1`, `b1e4350`)    |
 | **P2 (Feat)** | **OLED / LCD Retaining Socket**                   | `JeshwanthNG` (`Lcd_Mount`)                 | **Outstanding** | Socket pocket perimeter option for display mounts                                          |
 | **P2 (UX)**   | **3D Dimension Leader-Line Overlay**              | `nedimat` (`main`)                          | **Outstanding** | Port `project3DTo2D` from React to Angular canvas overlay                                  |
 | **P3 (Feat)** | **Ventilation Slots & Weatherproof Louvers**      | `536338958` / `tyeth-ai-assisted`           | **Outstanding** | Simple slots (`536338958`) vs angled louvers (`tyeth`)                                     |
@@ -188,6 +188,18 @@ All 29 forks were fetched and audited at the git ref level.
 
 ---
 
+### 3.9 Parametric PCB 3D Preview & Real-Time Collision Detection (Commits `2c4e26e`, `00cdce1`, `b1e4350`)
+
+- **Feature**: Parametric translucent PCB board and component zone preview with live CSG overlap clash detection against enclosure base walls, internal partitions, and ceiling height (`src/app/core/enclosure/pcbpreview.ts`).
+- **Mathematical & Clearance Invariants**:
+  - `pcbRestZ(params)`: Accurately calculates PCB bottom face elevation resting atop base standoffs (`floor + maxHeight`) or directly on the cavity floor if no bottom standoffs exist.
+  - Viewport 3D Rendering: Visualized using translucent green materials (`[0.15, 0.6, 0.28, 0.85]`) when clearing, dynamically switching to warning red (`[0.9, 0.15, 0.15, 0.85]`) on collision.
+  - Erosion Buffer: Incorporates a 0.3mm erosion offset (`SHRINK = 0.3`) on the test solid to prevent false-positive collision reports on exact surface-to-surface contact.
+  - Collision Alert UI: Real-time notification banner displayed at the top of the 3D viewport reporting exact overlap volume (`X mm³`) and vertical ceiling breaches.
+  - Performance Guard: CSG boolean overlap calculation and rendering are strictly skipped when `pcbPreview.enabled` is false, eliminating overhead during standard parameter adjustments.
+
+---
+
 ## 4. Deep-Dive Scrutiny of Outstanding Candidates
 
 ---
@@ -206,7 +218,7 @@ All 29 forks were fetched and audited at the git ref level.
 
 ---
 
-### Candidate 2: PCB 3D Preview & Collision Detection (Source: `536338958`)
+### Candidate 2: PCB 3D Preview & Collision Detection (Source: `536338958`) - **ADOPTED & COMPLETED**
 
 - **File**: `src/app/core/enclosure/pcbpreview.ts` (124 lines + 160 lines tests).
 - **Functionality**:
@@ -217,6 +229,7 @@ All 29 forks were fetched and audited at the git ref level.
   - **Pros**: Outstanding UX for designers verifying board fit before 3D printing a multi-hour enclosure.
   - **Cons**: `measureVolume(intersect(pcb, enclosure))` is an extra CSG operation; should only be evaluated when PCB Preview is enabled.
   - **Recommendation**: **Adopt**. Guard the volume calculation behind an active toggle so it doesn't incur overhead during regular parameter dragging.
+- **Status**: **Completed** (Commits `2c4e26e`, `00cdce1`, `b1e4350`). Dedicated PCB Preview tab in sidebar, live translucent 3D rendering, and collision alert notification banner.
 
 ---
 
@@ -310,7 +323,7 @@ graph TD
   end
 
   subgraph Phase 3: UX & Architecture
-    P3A["PCB 3D Preview & Collision Detection (pcbpreview.ts)"]:::pending
+    P3A["PCB 3D Preview & Collision Detection (pcbpreview.ts)"]:::completed
     P3B["3D Dimension Annotations Viewport Overlay"]:::pending
     P3C["Consolidate derived geometry into dimensions.ts"]:::pending
     P3D["Weatherproof Outdoor Louver Panels (Discuss/Defer)"]:::pending
@@ -325,7 +338,7 @@ graph TD
 1. **Select Next Phase 2 Feature**:
    - **Ventilation Slots** (`ventilation.ts` from `536338958`): Clean, low-complexity parametric heat ventilation cutouts.
    - **OLED / LCD Retaining Socket** (`pcbmount.ts` from `JeshwanthNG`): Display cradle for DIY ESP32 / Arduino projects.
-2. **Phase 3 Preview & Clearance**:
-   - Port PCB 3D dummy volume preview and overlap boolean collision check (`pcbpreview.ts` from `536338958`).
-3. **Phase 3 Viewport Dimensions**:
+2. **Phase 3 Viewport Dimensions**:
    - Port 3D bounding box coordinate projection math to an Angular overlay for live dimension callouts.
+3. **Phase 3 Architecture**:
+   - Centralize derived geometry formulas into `dimensions.ts`.

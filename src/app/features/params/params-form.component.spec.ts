@@ -38,6 +38,37 @@ describe('ParamsFormComponent', () => {
     expect(state.params().waterProof).toBeFalse();
     expect(state.params().lidScrews).toBeFalse();
     expect(state.params().snapFit.enabled).toBeFalse();
+    expect(state.params().pcbPreview.enabled).toBeFalse();
+  });
+
+  it('updates PCB preview settings', () => {
+    component.setPcbPreviewEnabled(true);
+    expect(state.params().pcbPreview.enabled).toBeTrue();
+
+    component.setPcbPreviewNumber('width', '72.5');
+    expect(state.params().pcbPreview.width).toBe(72.5);
+
+    component.setPcbPreviewNumber('length', '48.2');
+    expect(state.params().pcbPreview.length).toBe(48.2);
+
+    component.setPcbPreviewNumber('thickness', '2.0');
+    expect(state.params().pcbPreview.thickness).toBe(2.0);
+
+    component.setPcbPreviewNumber('componentHeight', '12');
+    expect(state.params().pcbPreview.componentHeight).toBe(12);
+
+    component.setPcbPreviewNumber('x', '5');
+    expect(state.params().pcbPreview.x).toBe(5);
+
+    component.setPcbPreviewNumber('y', '-3.5');
+    expect(state.params().pcbPreview.y).toBe(-3.5);
+
+    // Invalid numbers or empty string should be ignored
+    component.setPcbPreviewNumber('width', '');
+    expect(state.params().pcbPreview.width).toBe(72.5);
+
+    component.setPcbPreviewNumber('width', 'invalid');
+    expect(state.params().pcbPreview.width).toBe(72.5);
   });
 
   it('supports dynamic cable clamp CRUD operations', () => {

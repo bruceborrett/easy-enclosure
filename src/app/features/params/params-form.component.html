@@ -605,8 +605,99 @@
 
   <div class="accordian" [class.active]="activeTab() === 5">
     <p class="accordian-header" (click)="setActiveTab(5)">
-      Internal Walls
+      PCB Preview
       <span class="accordian-icon">{{ activeTab() === 5 ? '-' : '+' }}</span>
+    </p>
+    <div class="accordian-body">
+      <div class="input-group checkbox-group input-group-full">
+        <label>Enable PCB Preview</label>
+        <input
+          type="checkbox"
+          [checked]="params().pcbPreview.enabled"
+          (change)="setPcbPreviewEnabled($any($event.target).checked)"
+        />
+      </div>
+      <div class="input-group">
+        <label>Width (mm)</label>
+        <input
+          type="number"
+          min="1"
+          step="0.1"
+          [value]="params().pcbPreview.width"
+          (keydown.enter)="$any($event.target).blur()"
+          (blur)="setPcbPreviewNumber('width', $any($event.target).value)"
+        />
+        <small class="hint">Board dimension along X (left/right)</small>
+      </div>
+      <div class="input-group">
+        <label>Length (mm)</label>
+        <input
+          type="number"
+          min="1"
+          step="0.1"
+          [value]="params().pcbPreview.length"
+          (keydown.enter)="$any($event.target).blur()"
+          (blur)="setPcbPreviewNumber('length', $any($event.target).value)"
+        />
+        <small class="hint">Board dimension along Y (front/back)</small>
+      </div>
+      <div class="input-group">
+        <label>Thickness (mm)</label>
+        <input
+          type="number"
+          min="0.1"
+          step="0.1"
+          [value]="params().pcbPreview.thickness"
+          (keydown.enter)="$any($event.target).blur()"
+          (blur)="setPcbPreviewNumber('thickness', $any($event.target).value)"
+        />
+        <small class="hint">Thickness of the PCB board</small>
+      </div>
+      <div class="input-group">
+        <label>Component Height (mm)</label>
+        <input
+          type="number"
+          min="0"
+          step="0.1"
+          [value]="params().pcbPreview.componentHeight"
+          (keydown.enter)="$any($event.target).blur()"
+          (blur)="setPcbPreviewNumber('componentHeight', $any($event.target).value)"
+        />
+        <small class="hint">Height of components above the board</small>
+      </div>
+      <div class="input-group">
+        <label>Offset X (mm)</label>
+        <input
+          type="number"
+          step="0.1"
+          [value]="params().pcbPreview.x"
+          (keydown.enter)="$any($event.target).blur()"
+          (blur)="setPcbPreviewNumber('x', $any($event.target).value)"
+        />
+        <small class="hint">Offset from enclosure center along X</small>
+      </div>
+      <div class="input-group">
+        <label>Offset Y (mm)</label>
+        <input
+          type="number"
+          step="0.1"
+          [value]="params().pcbPreview.y"
+          (keydown.enter)="$any($event.target).blur()"
+          (blur)="setPcbPreviewNumber('y', $any($event.target).value)"
+        />
+        <small class="hint">Offset from enclosure center along Y</small>
+      </div>
+      <p class="input-group-full hint">
+        The PCB rests automatically on top of bottom standoffs (or the enclosure floor if none exist).
+        Green indicates clearance; red indicates collision with walls, internal partitions, or lid.
+      </p>
+    </div>
+  </div>
+
+  <div class="accordian" [class.active]="activeTab() === 6">
+    <p class="accordian-header" (click)="setActiveTab(6)">
+      Internal Walls
+      <span class="accordian-icon">{{ activeTab() === 6 ? '-' : '+' }}</span>
     </p>
     <div class="accordian-body">
       @for (wallItem of params().internalWalls; track $index) {
@@ -685,10 +776,10 @@
     </div>
   </div>
 
-  <div class="accordian" [class.active]="activeTab() === 6">
-    <p class="accordian-header" (click)="setActiveTab(6)">
+  <div class="accordian" [class.active]="activeTab() === 7">
+    <p class="accordian-header" (click)="setActiveTab(7)">
       Cable Clamps
-      <span class="accordian-icon">{{ activeTab() === 6 ? '-' : '+' }}</span>
+      <span class="accordian-icon">{{ activeTab() === 7 ? '-' : '+' }}</span>
     </p>
     <div class="accordian-body">
       @for (clamp of params().cableClamps; track $index) {
@@ -838,10 +929,10 @@
     </div>
   </div>
 
-  <div class="accordian" [class.active]="activeTab() === 7">
-    <p class="accordian-header" (click)="setActiveTab(7)">
+  <div class="accordian" [class.active]="activeTab() === 8">
+    <p class="accordian-header" (click)="setActiveTab(8)">
       Wall Mounts
-      <span class="accordian-icon">{{ activeTab() === 7 ? '-' : '+' }}</span>
+      <span class="accordian-icon">{{ activeTab() === 8 ? '-' : '+' }}</span>
     </p>
     <div class="accordian-body">
       <div class="input-group checkbox-group">
@@ -880,10 +971,10 @@
     </div>
   </div>
 
-  <div class="accordian" [class.active]="activeTab() === 8">
-    <p class="accordian-header" (click)="setActiveTab(8)">
+  <div class="accordian" [class.active]="activeTab() === 9">
+    <p class="accordian-header" (click)="setActiveTab(9)">
       DIN Rail Mounts
-      <span class="accordian-icon">{{ activeTab() === 8 ? '-' : '+' }}</span>
+      <span class="accordian-icon">{{ activeTab() === 9 ? '-' : '+' }}</span>
     </p>
     <div class="accordian-body">
       <div class="input-group checkbox-group">
@@ -935,10 +1026,10 @@
     </div>
   </div>
 
-  <div class="accordian" [class.active]="activeTab() === 9">
-    <p class="accordian-header" (click)="setActiveTab(9)">
+  <div class="accordian" [class.active]="activeTab() === 10">
+    <p class="accordian-header" (click)="setActiveTab(10)">
       Grid
-      <span class="accordian-icon">{{ activeTab() === 9 ? '-' : '+' }}</span>
+      <span class="accordian-icon">{{ activeTab() === 10 ? '-' : '+' }}</span>
     </p>
     <div class="accordian-body">
       <div class="input-group checkbox-group">
