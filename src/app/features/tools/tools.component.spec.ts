@@ -366,4 +366,71 @@ describe('ToolsComponent', () => {
     expect(fileNames).toContain('enclosure-base-');
     expect(closeSpy).toHaveBeenCalled();
   });
+
+  it('updates exportButtonTitle dynamically based on supported formats', () => {
+    expect(component.exportButtonTitle()).toBe('Export enclosure to STL or STEP');
+  });
+
+  it('exports with correct MIME type for STL and STEP blobs', async () => {
+    const saveSpy = spyOn(component as any, 'saveFile');
+
+    component.exportBase.set(true);
+    component.exportLid.set(false);
+    component.exportSeal.set(false);
+    component.exportPcbMounts.set(false);
+    component.exportDinRail.set(false);
+
+    component.setExportFormat('stl');
+    await component.exportSelected();
+    const stlBlob = saveSpy.calls.mostRecent().args[0] as Blob;
+    expect(stlBlob.type).toBe('model/stl');
+
+    component.setExportFormat('step');
+    await component.exportSelected();
+    const stepBlob = saveSpy.calls.mostRecent().args[0] as Blob;
+    expect(stepBlob.type).toBe('model/step');
+  });
+
+  it('seamlessly supports future formats registered in ExportFormatService', async () => {
+    const exportFormatService = TestBed.inject(
+      (await import('../../core/export/export-format.service')).ExportFormatService,
+    );
+    const saveSpy = spyOn(component as any, 'saveFile');
+
+    exportFormatService.registerFormat({
+      id: '3mf',
+      label: '3MF (Slicer)',
+      extension: '3mf',
+      mimeType: 'model/3mf',
+      serialize: () => 'mock-3mf-mesh-data',
+    });
+
+    try {
+      expect(component.supportedFormats().map((f) => f.id)).toContain('3mf');
+      expect(component.exportButtonTitle()).toContain('3MF');
+
+      component.setExportFormat('3mf');
+      expect(component.exportFormat()).toBe('3mf');
+
+      component.exportBase.set(true);
+      component.exportLid.set(false);
+      component.exportSeal.set(false);
+      component.exportPcbMounts.set(false);
+      component.exportDinRail.set(false);
+
+      expect(component.downloadButtonText()).toBe('Download 3MF');
+
+      await component.exportSelected();
+
+      expect(saveSpy).toHaveBeenCalledWith(
+        jasmine.any(Blob),
+        jasmine.stringMatching(/^enclosure-base-\d+\.3mf$/),
+      );
+      const savedBlob = saveSpy.calls.mostRecent().args[0] as Blob;
+      expect(savedBlob.type).toBe('model/3mf');
+      expect(await savedBlob.text()).toBe('mock-3mf-mesh-data');
+    } finally {
+      exportFormatService.resetFormats();
+    }
+  });
 });

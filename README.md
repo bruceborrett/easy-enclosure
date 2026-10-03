@@ -10,8 +10,17 @@ EasyEnclosure is an open-source 3D modeling software tailored specifically for d
 
 - User-Friendly Interface
 - Real-Time 3D Preview
-- Export to STL Format
+- Export to STL (Mesh) and STEP (Solid CAD) Formats
 - Save and load parameter presets as JSON
+
+## Export Formats
+
+EasyEnclosure supports multiple 3D exchange formats with single-file download and multi-part ZIP bundling:
+
+- **STL (Mesh)**: Triangulated surface mesh for 3D printing slicers (Cura, PrusaSlicer, Bambu Studio, OrcaSlicer).
+- **STEP (Solid CAD)**: Standard ISO-10303-21 (AP214) faceted boundary representation for CAD modeling and assembly interoperability (FreeCAD, Autodesk Fusion 360, SolidWorks, Onshape).
+
+Exports can include the complete enclosure assembly or selected components (base, lid, waterproof TPU seal, PCB mounting standoffs, and DIN rail clips). An extensible export registry (`ExportFormatService`) enables adding additional formats (such as 3MF or OBJ) in the future.
 
 ## Technology Stack
 

@@ -3,28 +3,32 @@ import {
   Component,
   computed,
   ElementRef,
-  ViewChild,
   inject,
   signal,
+  ViewChild,
 } from '@angular/core';
 import type { Geom3 } from '@jscad/modeling/src/geometries/types';
 import { union } from '@jscad/modeling/src/operations/booleans';
-import { serialize as serializeStl } from '@jscad/stl-serializer';
 import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
 
 import { base } from '../../core/enclosure/base';
 import { dinRailMount } from '../../core/enclosure/dinrailmount';
-import { serialize as serializeStep } from '../../core/export/step-serializer';
 import { internalWalls } from '../../core/enclosure/internalwalls';
 import { lid } from '../../core/enclosure/lid';
 import { pcbMountsOnBase, pcbMountsOnLid } from '../../core/enclosure/pcbmount';
 import { waterProofSeal } from '../../core/enclosure/waterproofseal';
+import {
+  type ExportFormatDefinition,
+  type ExportFormatId,
+  STL_FORMAT,
+} from '../../core/export/export-format';
+import { ExportFormatService } from '../../core/export/export-format.service';
 import type { Params } from '../../core/params';
 import { EnclosureStateService } from '../../core/state/enclosure-state.service';
 import { ActionButtonComponent } from '../../shared/action-button/action-button.component';
 
-export type ExportFormat = 'stl' | 'step';
+export type { ExportFormatId as ExportFormat };
 
 @Component({
   selector: 'app-tools',
@@ -40,13 +44,25 @@ export class ToolsComponent {
   exportDialog?: ElementRef<HTMLDialogElement>;
 
   private readonly state = inject(EnclosureStateService);
+  private readonly exportFormatService = inject(ExportFormatService);
 
+  readonly supportedFormats = this.exportFormatService.formats;
   readonly isExportModalOpen = signal(false);
   readonly isExporting = signal(false);
-  readonly exportFormat = signal<ExportFormat>('stl');
+  readonly exportFormat = signal<ExportFormatId>('stl');
 
-  setExportFormat(format: ExportFormat): void {
-    this.exportFormat.set(format);
+  readonly selectedFormat = computed<ExportFormatDefinition>(() => {
+    return (
+      this.exportFormatService.getFormat(this.exportFormat()) ??
+      this.supportedFormats()[0] ??
+      STL_FORMAT
+    );
+  });
+
+  setExportFormat(format: ExportFormatId): void {
+    if (this.exportFormatService.getFormat(format)) {
+      this.exportFormat.set(format);
+    }
   }
 
   readonly hasSeal = computed(() => this.state.params().waterProof);
@@ -89,8 +105,15 @@ export class ToolsComponent {
     if (this.selectedCount() === 0) {
       return 'Download';
     }
-    const fmt = this.exportFormat().toUpperCase();
+    const fmt = this.selectedFormat().extension.toUpperCase();
     return this.willExportZip() ? 'Download ZIP' : `Download ${fmt}`;
+  });
+
+  readonly exportButtonTitle = computed(() => {
+    const labels = this.supportedFormats()
+      .map((f) => f.extension.toUpperCase())
+      .join(' or ');
+    return `Export enclosure to ${labels}`;
   });
 
   openFilePicker(): void {
@@ -154,7 +177,7 @@ export class ToolsComponent {
     try {
       const tsStr = this.formattedTimestamp();
       const currentParams = this.state.params();
-      const ext = this.exportFormat();
+      const format = this.selectedFormat();
       const files: { name: string; blob: Blob }[] = [];
 
       if (this.exportBase()) {
@@ -172,8 +195,8 @@ export class ToolsComponent {
         const baseGeometry = baseParts.length > 1 ? union(baseParts) : baseParts[0];
         const baseName = `enclosure-base-${tsStr}`;
         files.push({
-          name: `${baseName}.${ext}`,
-          blob: this.geometryToBlob(baseGeometry, baseName),
+          name: `${baseName}.${format.extension}`,
+          blob: this.exportFormatService.serialize(format.id, baseGeometry, { name: baseName }),
         });
       }
 
@@ -182,16 +205,18 @@ export class ToolsComponent {
         const lidGeometry = lidMounts ? union([lid(currentParams), lidMounts]) : lid(currentParams);
         const lidName = `enclosure-lid-${tsStr}`;
         files.push({
-          name: `${lidName}.${ext}`,
-          blob: this.geometryToBlob(lidGeometry, lidName),
+          name: `${lidName}.${format.extension}`,
+          blob: this.exportFormatService.serialize(format.id, lidGeometry, { name: lidName }),
         });
       }
 
       if (this.hasSeal() && this.exportSeal()) {
         const sealName = `enclosure-waterproof-seal-${tsStr}`;
         files.push({
-          name: `${sealName}.${ext}`,
-          blob: this.geometryToBlob(waterProofSeal(currentParams), sealName),
+          name: `${sealName}.${format.extension}`,
+          blob: this.exportFormatService.serialize(format.id, waterProofSeal(currentParams), {
+            name: sealName,
+          }),
         });
       }
 
@@ -200,8 +225,10 @@ export class ToolsComponent {
         if (baseMounts) {
           const mountBaseName = `enclosure-pcb-mounts-base-${tsStr}`;
           files.push({
-            name: `${mountBaseName}.${ext}`,
-            blob: this.geometryToBlob(baseMounts, mountBaseName),
+            name: `${mountBaseName}.${format.extension}`,
+            blob: this.exportFormatService.serialize(format.id, baseMounts, {
+              name: mountBaseName,
+            }),
           });
         }
 
@@ -209,8 +236,10 @@ export class ToolsComponent {
         if (lidMounts) {
           const mountLidName = `enclosure-pcb-mounts-lid-${tsStr}`;
           files.push({
-            name: `${mountLidName}.${ext}`,
-            blob: this.geometryToBlob(lidMounts, mountLidName),
+            name: `${mountLidName}.${format.extension}`,
+            blob: this.exportFormatService.serialize(format.id, lidMounts, {
+              name: mountLidName,
+            }),
           });
         }
       }
@@ -218,8 +247,10 @@ export class ToolsComponent {
       if (this.hasDinRailMount() && this.exportDinRail()) {
         const dinRailName = `enclosure-din-rail-mount-${tsStr}`;
         files.push({
-          name: `${dinRailName}.${ext}`,
-          blob: this.geometryToBlob(dinRailMount(currentParams), dinRailName),
+          name: `${dinRailName}.${format.extension}`,
+          blob: this.exportFormatService.serialize(format.id, dinRailMount(currentParams), {
+            name: dinRailName,
+          }),
         });
       }
 
@@ -244,7 +275,10 @@ export class ToolsComponent {
     return this.exportSelected();
   }
 
-  exportDinRailMountsStl(): Promise<void> {
+  exportDinRailMountOnly(format?: ExportFormatId): Promise<void> {
+    if (format) {
+      this.setExportFormat(format);
+    }
     this.exportBase.set(false);
     this.exportLid.set(false);
     this.exportSeal.set(false);
@@ -253,7 +287,14 @@ export class ToolsComponent {
     return this.exportSelected();
   }
 
-  exportPcbMountsStl(): Promise<void> {
+  exportDinRailMountsStl(): Promise<void> {
+    return this.exportDinRailMountOnly();
+  }
+
+  exportPcbMountsOnly(format?: ExportFormatId): Promise<void> {
+    if (format) {
+      this.setExportFormat(format);
+    }
     this.exportBase.set(false);
     this.exportLid.set(false);
     this.exportSeal.set(false);
@@ -262,19 +303,18 @@ export class ToolsComponent {
     return this.exportSelected();
   }
 
+  exportPcbMountsStl(): Promise<void> {
+    return this.exportPcbMountsOnly();
+  }
+
   private geometryToBlob(geometry: Geom3, name = 'enclosure'): Blob {
-    if (this.exportFormat() === 'step') {
-      const rawData = serializeStep({ name }, geometry);
-      return new Blob([rawData], { type: 'application/octet-stream' });
-    }
-    const rawData = serializeStl({ binary: false }, geometry);
-    return new Blob([rawData], { type: 'application/octet-stream' });
+    return this.exportFormatService.serialize(this.exportFormat(), geometry, { name });
   }
 
   private exportGeometry(name: string, geometry: Geom3): void {
-    const ext = this.exportFormat();
-    const blob = this.geometryToBlob(geometry, name);
-    this.saveFile(blob, `${name}.${ext}`);
+    const format = this.selectedFormat();
+    const blob = this.exportFormatService.serialize(format.id, geometry, { name });
+    this.saveFile(blob, `${name}.${format.extension}`);
   }
 
   private saveFile(data: Blob, fileName: string): void {
