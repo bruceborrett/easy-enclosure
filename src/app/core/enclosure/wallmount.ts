@@ -5,6 +5,7 @@ import { cube, cuboid, cylinder } from '@jscad/modeling/src/primitives';
 import { degToRad } from '@jscad/modeling/src/utils';
 
 import { Params } from '../params';
+import { chamferSolidBottom } from './chamfer';
 
 const SCREWCLEARANCE = 2;
 const RIDGEWIDTH = 2;
@@ -56,12 +57,18 @@ export const flanges = (params: Params) => {
 
   const yPositions = wallMountCount === 2 ? [length / 2] : [cornerSpacing, length - cornerSpacing];
 
+  const ear =
+    params.baseBedChamfer > 0
+      ? chamferSolidBottom(flange(wallMountScrewDiameter), params.baseBedChamfer)
+      : flange(wallMountScrewDiameter);
+
   const left = yPositions.map((y) =>
-    translate([-RIDGEWIDTH, y, z], flange(wallMountScrewDiameter)),
+    translate([-RIDGEWIDTH, y, z], ear),
   );
   const right = yPositions.map((y) =>
-    translate([width + RIDGEWIDTH, y, z], mirrorX(flange(wallMountScrewDiameter))),
+    translate([width + RIDGEWIDTH, y, z], mirrorX(ear)),
   );
 
   return union(...left, ...right);
 };
+

@@ -31,6 +31,7 @@ All 29 forks were fetched and audited at the git ref level.
 | **P1 (Feat)** | **PCB Standoff Root Fillet / Chamfer**            | `536338958` (`main`)                        | **COMPLETED**   | Rotational extrusion reinforcement (closes #18, `b9d173a`)                                 |
 | **P1 (Feat)** | **Snap-Fit Enclosure Lids**                       | `536338958` (`main`)                        | **COMPLETED**   | Standalone `snapfit.ts` with wall safety clamp (closes #47, `844e8db`)                     |
 | **P1 (Feat)** | **Cable Clamp Strain-Relief**                     | `maraid` (`main`)                           | **COMPLETED**   | Standalone `clamp.ts` with grip ridges, top strap export (`f458bff`, `af490e1`, `db236c0`) |
+| **P1 (Feat)** | **Parametric Bed Chamfers & Lip Lead-In**         | `536338958` (`main`)                        | **COMPLETED**   | Anti-elephant-foot edge chamfers (`baseBedChamfer`, `lidBedChamfer`), continuous flange bevel, and 8-direction shear lead-in (`lidTopChamfer`) |
 | **P2 (Feat)** | **PCB 3D Preview & Collision Detection**          | `536338958` (`main`)                        | **COMPLETED**   | Viewport PCB mesh & CSG intersection clash detection (`2c4e26e`, `00cdce1`, `b1e4350`)    |
 | **P2 (Feat)** | **OLED / LCD Retaining Socket**                   | `JeshwanthNG` (`Lcd_Mount`)                 | **Outstanding** | Socket pocket perimeter option for display mounts                                          |
 | **P2 (UX)**   | **3D Dimension Leader-Line Overlay**              | `nedimat` (`main`)                          | **Outstanding** | Port `project3DTo2D` from React to Angular canvas overlay                                  |
@@ -47,7 +48,7 @@ All 29 forks were fetched and audited at the git ref level.
 
 | #   | Fork Name                                 | Default Branch | Unique Branches                                                                                   | Commits Ahead of Base | Status / Summary                                                                                                         |
 | :-- | :---------------------------------------- | :------------- | :------------------------------------------------------------------------------------------------ | :-------------------: | :----------------------------------------------------------------------------------------------------------------------- |
-| 1   | `536338958/easy-enclosure`                | `main`         | `main`                                                                                            |           6           | **Major Enhancements**: Critical bug fixes, snap-fit, PCB collision check, CSG 48-segment speedup, 183 unit tests, i18n. |
+| 1   | `536338958/easy-enclosure`                | `main`         | `main`                                                                                            |           6           | **Major Enhancements**: Critical bug fixes, snap-fit, top/bottom bed chamfers & lip lead-in, PCB collision check, CSG 48-segment speedup, 183 unit tests, i18n. |
 | 2   | `tyeth-ai-assisted/easy-enclosure`        | `main`         | `feature/step-export`, `feature/vent-panels`, `fix/hole-surface-dropdown-selection`, `gh-pages`   |          24           | **Major Enhancements**: STEP AP214 exporter with T-junction healing, parametric vent panels with louvres and fan duct.   |
 | 3   | `maraid/easy-enclosure`                   | `main`         | `main`                                                                                            |           9           | **Substantive**: Cable clamp module (`clamp.ts`), PCB perfboard visualizer, interactive 3D dragging experiment.          |
 | 4   | `JeshwanthNG/easy-enclosure`              | `main`         | `Lcd_Mount`, `Development`, `Add_Din_Rail_Mount`, `My_experiment`, `My_Experiement_Full_Redesign` |           3           | **Substantive**: OLED/LCD socket mount; experimental circular/oval shapes; alternative DIN rail.                         |
@@ -200,6 +201,19 @@ All 29 forks were fetched and audited at the git ref level.
 
 ---
 
+### 3.10 Parametric Bed Edge Chamfers & Lip Lead-In Chamfer
+
+- **Feature**: Parametric 45° bed edge chamfers for bottom and top enclosure perimeters (`baseBedChamfer`, `lidBedChamfer`), continuous wall mount tab bevels, and an 8-direction linear shear lead-in chamfer for the lid insert lip (`lidTopChamfer`) (`src/app/core/enclosure/chamfer.ts`).
+- **Mathematical & Structural Alignment Invariants**:
+  - `bottomChamferTool(l, w, c, r, s)`: Cuts a 45° planar chamfer along the bottom exterior edge of the base and the exterior top edge of the lid ($Z \in [0, c]$). Directly compensates for first-layer FDM 3D printer "elephant's foot" (bed squish of $0.2\text{--}0.5\text{ mm}$).
+  - `chamferSolidBottom(solid, c)`: Seamlessly extends the 45° bed chamfer across the bottom perimeter of wall mounting tabs so the bevel runs unbroken along both the enclosure body and mounting tabs.
+  - `topChamferTool(l, w, c, topZ, outline)`: Uses 8-direction linear shear projection to construct a watertight $360^\circ$ continuous lead-in bevel on the top rim of the lid insert lip. Unlike convex `hull()`, which bridges over concave cloverleaf screw post scallops ($\sim 2.5\text{ mm}$ recess) and breaks the chamfer into 4 disconnected segments, linear shear projection accurately tracks non-convex contours.
+  - Clamping safeguards: `lidTopChamferSize` clamps chamfer depth to $\min(\text{insertHeight} \times 0.9, \text{insertThickness} \times 0.8)$, ensuring the lip maintains printable top thickness and never punctures the cavity wall.
+- **Findings & Traps Avoided**:
+  - In v1.3.4 of the fork, an internal base rim chamfer (`baseRimChamfer`) was tested, but it collided with the waterproof gasket seal groove. Moving the lead-in to the lid insert lip (`lidTopChamfer`) completely eliminates seal interference.
+
+---
+
 ## 4. Deep-Dive Scrutiny of Outstanding Candidates
 
 ---
@@ -283,6 +297,39 @@ All 29 forks were fetched and audited at the git ref level.
 
 ---
 
+### Candidate 7: Parametric Bed Edge Chamfers & Lip Lead-In Chamfer (Source: `536338958`) - **ADOPTED & COMPLETED**
+
+- **Files**:
+  - Geometry utilities: `src/app/core/enclosure/chamfer.ts` (`bottomChamferTool`, `chamferSolidBottom`, `topChamferTool`)
+  - Integration: `src/app/core/enclosure/base.ts`, `lid.ts`, `wallmount.ts`
+  - Verification: `src/app/core/enclosure/chamfer.spec.ts`
+- **Functionality**:
+  1. **Base Bottom Edge Chamfer (`baseBedChamfer`)**:
+     - Cuts a 45° planar chamfer on the bottom exterior edge of the enclosure base ($Z \in [0, \text{baseBedChamfer}]$).
+     - Directly compensates for first-layer FDM 3D printer "elephant's foot" (bed squish that pushes the bottom layer outward by $0.2\text{--}0.5\text{ mm}$), eliminating scraping or deburring knife work.
+     - Clamped safely to $\max\left(0, \min\left(c, r \times 0.9, \frac{l}{2} - 0.5, \frac{w}{2} - 0.5\right)\right)$.
+  2. **Lid Top Outer Edge Chamfer (`lidBedChamfer`)**:
+     - The lid is modeled with its exterior roof facing the print bed at $Z = 0$ (standard FDM print orientation for flat lids).
+     - Applying `bottomChamferTool` cuts a 45° chamfer on the exterior top perimeter of the assembled lid.
+     - Provides symmetrical beveled top and bottom edges on the assembled enclosure and suppresses lid first-layer elephant's foot.
+  3. **Continuous Wall Mount Flange Chamfer (`chamferSolidBottom`)**:
+     - When `baseBedChamfer > 0` and wall mount tabs are enabled, the tab profiles are passed through `chamferSolidBottom(flange(...), baseBedChamfer)`.
+     - Maintains a continuous, unbroken 45° bevel along both the enclosure body and mounting tabs.
+  4. **Lid Insert Lip Lead-In Chamfer (`lidTopChamfer`)**:
+     - Cuts a 45° lead-in bevel on the top outer rim of the lid insert lip ($Z = \text{roof} + \text{insertHeight}$).
+     - Enables smooth, snag-free self-centering when pressing the lid into the base cavity.
+     - **Non-Convex 8-Direction Shear Invariant**: When lid screws are enabled, the insert lip is a concave cloverleaf with deep corner scallops ($\sim 2.5\text{ mm}$ recess, $12\text{ mm}$ arc). A convex `hull()` bridges over the scallops, causing the cutting tool to miss the corners entirely (chamfer breaks into 4 disconnected segments). `536338958` resolved this using 8-directional linear shear projection matrices (`topChamferTool`), ensuring a watertight $360^\circ$ continuous chamfer on arbitrary non-convex profiles.
+     - Safety clamp: $\min(\text{insertHeight} \times 0.9, \text{insertThickness} \times 0.8)$, ensuring the lip retains printable top thickness and never punctures the lip wall.
+  5. **Design Decision: 45° Chamfer vs True 3D Rounding (Fillet)**:
+     - 45° planar chamfers print cleanly on FDM printers without overhang droop or layer stepping. True fillets facing the print bed produce shallow initial angles ($< 20^\circ$ from horizontal) that droop and curl.
+     - In CSG (JSCAD), chamfering evaluates via simple 2D hulls or linear shear transforms in milliseconds. True 3D edge filleting requires Minkowski sums (combinatorial facet explosion, extreme BSP latency) or swept profile extrusions that fail on concave clover corners.
+- **Scrutiny**:
+  - **Pros**: Essential practical feature for 3D printing; eliminates elephant foot cleanup; facilitates lid insertion; elegant 8-direction shear math.
+  - **Traps Avoided**: In v1.3.4, an internal cavity rim chamfer (`baseRimChamfer`) was tried, but it collided with the waterproof gasket seal groove. Moving the lead-in to the lid insert lip (`lidTopChamfer`) completely eliminates seal interference.
+- **Status**: **Completed** (Dedicated Edge Chamfers sidebar tab, live 3D preview, and continuous wall mount flange chamfers).
+
+---
+
 ## 5. Features Reviewed and Rejected / Skipped
 
 1. **DIN Rail Mounts (`vZhurbenko`, `JeshwanthNG`)**:
@@ -320,6 +367,7 @@ graph TD
     P2E["Internal Cable Clamps (clamp.ts)"]:::completed
     P2F["Ventilation Slots (ventilation.ts)"]:::pending
     P2G["OLED/LCD Display Retaining Socket"]:::pending
+    P2H["Parametric Bed & Lip Chamfers (chamfer.ts)"]:::completed
   end
 
   subgraph Phase 3: UX & Architecture

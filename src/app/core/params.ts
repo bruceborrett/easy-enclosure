@@ -134,6 +134,9 @@ export type Params = {
   pcbMountFilletSize: number;
   snapFit: SnapFit;
   pcbPreview: PCBPreview;
+  baseBedChamfer: number;
+  lidBedChamfer: number;
+  lidTopChamfer: number;
 };
 
 export const DEFAULT_PARAMS: Params = {
@@ -283,6 +286,9 @@ export const DEFAULT_PARAMS: Params = {
     x: 0,
     y: 0,
   },
+  baseBedChamfer: 0.6,
+  lidBedChamfer: 0.6,
+  lidTopChamfer: 0.4,
 };
 
 export const cloneParams = (params: Params): Params => {

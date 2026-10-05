@@ -1028,8 +1028,56 @@
 
   <div class="accordian" [class.active]="activeTab() === 10">
     <p class="accordian-header" (click)="setActiveTab(10)">
-      Grid
+      Edge Chamfers
       <span class="accordian-icon">{{ activeTab() === 10 ? '-' : '+' }}</span>
+    </p>
+    <div class="accordian-body">
+      <div class="input-group">
+        <label>Base Bottom Chamfer</label>
+        <input
+          type="number"
+          min="0"
+          step="0.1"
+          [value]="params().baseBedChamfer"
+          (keydown.enter)="$any($event.target).blur()"
+          (blur)="setNumberParam('baseBedChamfer', $any($event.target).value)"
+        />
+        <small class="hint">45° bevel on base bed edge to prevent 1st-layer elephant foot (0 = off, mm)</small>
+      </div>
+      <div class="input-group">
+        <label>Lid Top Chamfer</label>
+        <input
+          type="number"
+          min="0"
+          step="0.1"
+          [value]="params().lidBedChamfer"
+          (keydown.enter)="$any($event.target).blur()"
+          (blur)="setNumberParam('lidBedChamfer', $any($event.target).value)"
+        />
+        <small class="hint">45° bevel on lid exterior bed edge; matches base &amp; suppresses elephant foot (0 = off, mm)</small>
+      </div>
+      <div class="input-group">
+        <label>Insert Lip Chamfer</label>
+        <input
+          type="number"
+          min="0"
+          step="0.1"
+          [value]="params().lidTopChamfer"
+          (keydown.enter)="$any($event.target).blur()"
+          (blur)="setNumberParam('lidTopChamfer', $any($event.target).value)"
+        />
+        <small class="hint">45° lead-in bevel on top of lid insert lip for smooth sliding/alignment (0 = off, mm)</small>
+      </div>
+      <p class="input-group-full hint">
+        Bed chamfers eliminate 1st-layer elephant foot squish on 3D printers and give the assembled enclosure matching beveled edges. When wall mounts are enabled, mounting tabs are continuously chamfered along their footprint.
+      </p>
+    </div>
+  </div>
+
+  <div class="accordian" [class.active]="activeTab() === 11">
+    <p class="accordian-header" (click)="setActiveTab(11)">
+      Grid
+      <span class="accordian-icon">{{ activeTab() === 11 ? '-' : '+' }}</span>
     </p>
     <div class="accordian-body">
       <div class="input-group checkbox-group">

@@ -77,8 +77,8 @@ describe('screws enclosure', () => {
     const baseModel = base(params);
     const [[, , zMin], [, , zMax]] = measureBoundingBox(baseModel);
 
-    expect(zMin).toBe(0);
-    expect(zMax).toBe(params.height);
+    expect(zMin).toBeCloseTo(0, 5);
+    expect(zMax).toBeCloseTo(params.height, 5);
   });
 
   it('aligns lid and base corner boss offsets for nut pockets', () => {
@@ -181,8 +181,8 @@ describe('screws enclosure', () => {
 
     const baseModel = base(params);
     const [[, , zMin], [, , zMax]] = measureBoundingBox(baseModel);
-    expect(zMin).toBe(0);
-    expect(zMax).toBe(30);
+    expect(zMin).toBeCloseTo(0, 5);
+    expect(zMax).toBeCloseTo(30, 5);
   });
 
   it('cuts screw clearance hole through the entire lid height including insert rim', () => {
@@ -193,7 +193,7 @@ describe('screws enclosure', () => {
 
     const lidModel = lid(params);
     const [[, , zMin], [, , zMax]] = measureBoundingBox(lidModel);
-    expect(zMin).toBe(0);
-    expect(zMax).toBe(params.roof + params.insertHeight);
+    expect(zMin).toBeCloseTo(0, 5);
+    expect(zMax).toBeCloseTo(params.roof + params.insertHeight, 5);
   });
 });

@@ -4,6 +4,7 @@ import { Params } from '../params';
 import { holes } from './holes';
 import { flanges } from './wallmount';
 import { clover, hollowRoundCube, roundedCube } from './utils';
+import { bottomChamferTool } from './chamfer';
 import { waterProofSealCutout } from './waterproofseal';
 import { getScrewOffset, nutPockets, screws } from './screws';
 import { baseSnapPockets } from './snapfit';
@@ -81,9 +82,12 @@ export const base = (params: Params) => {
     subtracts.push(snapPockets);
   }
 
-  if (subtracts.length > 0) {
-    return subtract(union(body), union(subtracts));
-  } else {
-    return union(body);
+  let result = subtracts.length > 0 ? subtract(union(body), union(subtracts)) : union(body);
+
+  if (params.baseBedChamfer > 0) {
+    result = subtract(result, bottomChamferTool(width, length, params.baseBedChamfer, cornerRadius));
   }
+
+  return result;
 };
+

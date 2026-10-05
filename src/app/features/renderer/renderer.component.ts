@@ -62,6 +62,8 @@ const lidDeps = [
   'insertClearance',
   'holes',
   'snapFit',
+  'lidBedChamfer',
+  'lidTopChamfer',
 ];
 const baseDeps = [
   'length',
@@ -90,6 +92,7 @@ const baseDeps = [
   'wallMountCount',
   'insertClearance',
   'snapFit',
+  'baseBedChamfer',
 ];
 const sealDeps = [
   'length',

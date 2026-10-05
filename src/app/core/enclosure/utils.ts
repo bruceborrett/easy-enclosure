@@ -93,3 +93,14 @@ export const cloverFrame2d = (l: number, w: number, t: number, r = 8, s = 48) =>
 export const cloverFrame = (l: number, w: number, h: number, t: number, r = 8, s = 48) => {
   return extrudeLinear({ height: h }, cloverFrame2d(l, w, t, r, s));
 };
+
+export {
+  bottomChamferTool,
+  chamferSolidBottom,
+  cloverOutline,
+  lidTopChamferSize,
+  roundedOutline,
+  topChamferTool,
+  type OutlineBuilder,
+} from './chamfer';
+

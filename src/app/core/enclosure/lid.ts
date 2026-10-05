@@ -1,5 +1,12 @@
 import { booleans, transforms } from '@jscad/modeling';
 import { cloverFrame, roundedCube, roundedFrame } from './utils';
+import {
+  bottomChamferTool,
+  cloverOutline,
+  lidTopChamferSize,
+  roundedOutline,
+  topChamferTool,
+} from './chamfer';
 
 import { Params } from '../params';
 import { getScrewOffset, lidScrewRecesses, screws } from './screws';
@@ -81,9 +88,27 @@ export const lid = (params: Params) => {
     entities.push(bumps);
   }
 
-  if (subtracts.length > 0) {
-    return subtract(union(entities), union(subtracts));
-  } else {
-    return union(entities);
+  let result = subtracts.length > 0 ? subtract(union(entities), union(subtracts)) : union(entities);
+
+  if (params.lidBedChamfer > 0) {
+    result = subtract(result, bottomChamferTool(width, length, params.lidBedChamfer, cornerRadius));
   }
+
+  const rimChamfer = lidTopChamferSize(params);
+  if (rimChamfer > 0) {
+    const rimInset = wall + insertClearance;
+    const rimTopZ = roof + insertHeight;
+    const rimRadius = params.lidScrews ? getScrewOffset(params) : cornerRadius;
+    const outline = params.lidScrews ? cloverOutline(rimRadius) : roundedOutline(cornerRadius);
+    result = subtract(
+      result,
+      translate(
+        [rimInset, rimInset, 0],
+        topChamferTool(width - rimInset * 2, length - rimInset * 2, rimChamfer, rimTopZ, outline),
+      ),
+    );
+  }
+
+  return result;
 };
+
