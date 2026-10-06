@@ -6,40 +6,29 @@ import { rotateX, rotateY, translate } from '@jscad/modeling/src/operations/tran
 import { degToRad } from '@jscad/modeling/src/utils';
 
 import type { Surface } from '.';
-import type { Params, PCBMount, PcbMountFilletStyle } from '../params';
+import type { Params, PCBMount } from '../params';
 
 export const MIN_MOUNT_FILLET = 0.2;
-export const MAX_MOUNT_FILLET = 3.0;
 
-export const calculateMountFilletSize = (
-  style: PcbMountFilletStyle,
-  requestedSize: number,
-  height: number,
-  outerDiameter: number,
-): number => {
-  if (style === 'none' || requestedSize <= 0) {
+export const calculateMountFilletSize = (outerDiameter: number, height: number): number => {
+  if (outerDiameter <= 0 || height <= 0) {
     return 0;
   }
-  const maxAllowed = Math.min(height * 0.45, outerDiameter * 0.75, MAX_MOUNT_FILLET);
-  if (maxAllowed < MIN_MOUNT_FILLET) {
+  const proportionalSize = outerDiameter / 3;
+  const maxAllowed = height * 0.45;
+  if (maxAllowed < MIN_MOUNT_FILLET || proportionalSize < MIN_MOUNT_FILLET) {
     return 0;
   }
-  return Math.min(Math.max(requestedSize, MIN_MOUNT_FILLET), maxAllowed);
+  return Math.min(proportionalSize, maxAllowed);
 };
 
-export const pcbMount = (mountParams: PCBMount, params?: Partial<Params>): Geom3 => {
+export const pcbMount = (mountParams: PCBMount, _params?: Partial<Params>): Geom3 => {
   const h = Math.max(0.5, mountParams.height);
   const ro = Math.max(mountParams.outerDiameter / 2, 0.5);
   const rawScrew = Math.max(0, mountParams.screwDiameter / 2);
   const ri = Math.min(rawScrew, ro - 0.2);
 
-  const rawStyle = mountParams.filletStyle;
-  const style: PcbMountFilletStyle =
-    rawStyle && rawStyle !== 'default' ? rawStyle : (params?.pcbMountFilletStyle ?? 'round');
-
-  const rawSize = mountParams.filletSize ?? params?.pcbMountFilletSize ?? 1.0;
-
-  const fillet = calculateMountFilletSize(style, rawSize, h, mountParams.outerDiameter);
+  const fillet = calculateMountFilletSize(mountParams.outerDiameter, h);
 
   const points: [number, number][] = [];
 
@@ -48,18 +37,14 @@ export const pcbMount = (mountParams: PCBMount, params?: Partial<Params>): Geom3
   if (fillet > 0) {
     points.push([ro + fillet, 0]);
 
-    if (style === 'chamfer') {
-      points.push([ro, fillet]);
-    } else {
-      const cx = ro + fillet;
-      const cy = fillet;
-      const steps = 8;
-      for (let i = 1; i < steps; i++) {
-        const theta = (3 * Math.PI) / 2 - (Math.PI / 2) * (i / steps);
-        points.push([cx + fillet * Math.cos(theta), cy + fillet * Math.sin(theta)]);
-      }
-      points.push([ro, fillet]);
+    const cx = ro + fillet;
+    const cy = fillet;
+    const steps = 8;
+    for (let i = 1; i < steps; i++) {
+      const theta = (3 * Math.PI) / 2 - (Math.PI / 2) * (i / steps);
+      points.push([cx + fillet * Math.cos(theta), cy + fillet * Math.sin(theta)]);
     }
+    points.push([ro, fillet]);
   } else {
     points.push([ro, 0]);
   }

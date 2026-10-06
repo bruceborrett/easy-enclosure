@@ -522,33 +522,6 @@
       <span class="accordian-icon">{{ activeTab() === 4 ? '-' : '+' }}</span>
     </p>
     <div class="accordian-body">
-      <div class="input-group">
-        <label>Root Support</label>
-        <select
-          [value]="params().pcbMountFilletStyle"
-          (change)="setStringParam('pcbMountFilletStyle', $any($event.target).value)"
-        >
-          <option value="round">Fillet (Concave Arc)</option>
-          <option value="chamfer">Chamfer (45° Flare)</option>
-          <option value="none">None (Straight Cylinder)</option>
-        </select>
-      </div>
-
-      @if (params().pcbMountFilletStyle !== 'none') {
-        <div class="input-group">
-          <label>Fillet Size</label>
-          <input
-            type="number"
-            min="0.2"
-            max="3"
-            step="0.1"
-            [value]="params().pcbMountFilletSize"
-            (keydown.enter)="$any($event.target).blur()"
-            (blur)="setNumberParam('pcbMountFilletSize', $any($event.target).value)"
-          />
-        </div>
-      }
-
       @for (mount of params().pcbMounts; track $index) {
         <div class="sub-params">
           <button class="remove-btn" type="button" (click)="removePcbMount($index)">X</button>
@@ -614,34 +587,6 @@
               (blur)="updatePcbMount($index, { screwDiameter: +$any($event.target).value })"
             />
           </div>
-          <div class="input-group">
-            <label>Root Support Override</label>
-            <select
-              [value]="mount.filletStyle || 'default'"
-              (change)="updatePcbMount($index, { filletStyle: $any($event.target).value })"
-            >
-              <option value="default">Default (Use Global)</option>
-              <option value="round">Fillet (Concave Arc)</option>
-              <option value="chamfer">Chamfer (45° Flare)</option>
-              <option value="none">None (Straight Cylinder)</option>
-            </select>
-          </div>
-          @if (
-            mount.filletStyle && mount.filletStyle !== 'default' && mount.filletStyle !== 'none'
-          ) {
-            <div class="input-group">
-              <label>Override Size</label>
-              <input
-                type="number"
-                min="0.2"
-                max="3"
-                step="0.1"
-                [value]="mount.filletSize ?? params().pcbMountFilletSize"
-                (keydown.enter)="$any($event.target).blur()"
-                (blur)="updatePcbMount($index, { filletSize: +$any($event.target).value })"
-              />
-            </div>
-          }
         </div>
       }
       <button type="button" class="add-btn" (click)="addPcbMount()">ADD NEW MOUNT</button>

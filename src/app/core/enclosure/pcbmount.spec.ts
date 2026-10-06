@@ -20,77 +20,54 @@ describe('pcbmount', () => {
   };
 
   describe('calculateMountFilletSize', () => {
-    it('returns 0 when style is none', () => {
-      expect(calculateMountFilletSize('none', 1.0, 8, 6)).toBe(0);
+    it('sizes fillet proportionally to mount diameter (outerDiameter / 3)', () => {
+      expect(calculateMountFilletSize(6, 8)).toBeCloseTo(2.0, 5);
+      expect(calculateMountFilletSize(4.5, 8)).toBeCloseTo(1.5, 5);
+      expect(calculateMountFilletSize(3.0, 8)).toBeCloseTo(1.0, 5);
     });
 
-    it('returns 0 when requested size is 0 or negative', () => {
-      expect(calculateMountFilletSize('round', 0, 8, 6)).toBe(0);
-      expect(calculateMountFilletSize('chamfer', -0.5, 8, 6)).toBe(0);
-    });
-
-    it('returns requested size when within valid limits', () => {
-      expect(calculateMountFilletSize('round', 1.0, 8, 6)).toBe(1.0);
-      expect(calculateMountFilletSize('chamfer', 0.8, 8, 6)).toBe(0.8);
+    it('returns 0 when outer diameter or height is 0 or negative', () => {
+      expect(calculateMountFilletSize(0, 8)).toBe(0);
+      expect(calculateMountFilletSize(-6, 8)).toBe(0);
+      expect(calculateMountFilletSize(6, 0)).toBe(0);
+      expect(calculateMountFilletSize(6, -2)).toBe(0);
     });
 
     it('clamps size to at most 45% of height', () => {
       // height = 2 => maxAllowed = 2 * 0.45 = 0.9
-      expect(calculateMountFilletSize('round', 1.5, 2.0, 6)).toBe(0.9);
+      expect(calculateMountFilletSize(6, 2.0)).toBeCloseTo(0.9, 5);
     });
 
-    it('clamps size to at most 75% of outer diameter and 3.0mm max', () => {
-      expect(calculateMountFilletSize('round', 5.0, 20, 6)).toBe(3.0);
-    });
-
-    it('returns 0 for microscopic standoffs where maxAllowed < MIN_MOUNT_FILLET', () => {
-      expect(calculateMountFilletSize('round', 1.0, 0.3, 2)).toBe(0);
+    it('returns 0 for microscopic standoffs where maxAllowed < MIN_MOUNT_FILLET or fillet < MIN_MOUNT_FILLET', () => {
+      expect(calculateMountFilletSize(6, 0.3)).toBe(0);
+      expect(calculateMountFilletSize(0.5, 8)).toBe(0);
     });
   });
 
   describe('pcbMount', () => {
-    it('creates straight cylindrical standoff when style is none', () => {
-      const mount = pcbMount(baseMountParams, {
-        pcbMountFilletStyle: 'none',
-        pcbMountFilletSize: 0,
-      });
+    it('creates smooth concave fillet sized proportionally (2mm on 6mm mount)', () => {
+      const mount = pcbMount(baseMountParams);
 
       const bbox = measureBoundingBox(mount);
-      expect(bbox[0][0]).toBeCloseTo(-3, 1);
-      expect(bbox[1][0]).toBeCloseTo(3, 1);
-      expect(bbox[0][1]).toBeCloseTo(-3, 1);
-      expect(bbox[1][1]).toBeCloseTo(3, 1);
+      // Outer radius 3 + fillet 2 = 5 => [-5, 5]
+      expect(bbox[0][0]).toBeCloseTo(-5, 1);
+      expect(bbox[1][0]).toBeCloseTo(5, 1);
+      expect(bbox[0][1]).toBeCloseTo(-5, 1);
+      expect(bbox[1][1]).toBeCloseTo(5, 1);
       expect(bbox[0][2]).toBeCloseTo(-4, 1);
       expect(bbox[1][2]).toBeCloseTo(4, 1);
     });
 
-    it('creates flared base footprint when style is chamfer', () => {
-      const mount = pcbMount(baseMountParams, {
-        pcbMountFilletStyle: 'chamfer',
-        pcbMountFilletSize: 1.0,
+    it('scales fillet with different mount diameters (e.g. 1.5mm on 4.5mm mount)', () => {
+      const mount = pcbMount({
+        ...baseMountParams,
+        outerDiameter: 4.5,
       });
 
       const bbox = measureBoundingBox(mount);
-      // Outer radius 3 + fillet 1 = 4 => [-4, 4]
-      expect(bbox[0][0]).toBeCloseTo(-4, 1);
-      expect(bbox[1][0]).toBeCloseTo(4, 1);
-      expect(bbox[0][1]).toBeCloseTo(-4, 1);
-      expect(bbox[1][1]).toBeCloseTo(4, 1);
-      expect(bbox[0][2]).toBeCloseTo(-4, 1);
-      expect(bbox[1][2]).toBeCloseTo(4, 1);
-    });
-
-    it('creates smooth concave radius when style is round', () => {
-      const mount = pcbMount(baseMountParams, {
-        pcbMountFilletStyle: 'round',
-        pcbMountFilletSize: 1.0,
-      });
-
-      const bbox = measureBoundingBox(mount);
-      expect(bbox[0][0]).toBeCloseTo(-4, 1);
-      expect(bbox[1][0]).toBeCloseTo(4, 1);
-      expect(bbox[0][2]).toBeCloseTo(-4, 1);
-      expect(bbox[1][2]).toBeCloseTo(4, 1);
+      // Outer radius 2.25 + fillet 1.5 = 3.75 => [-3.75, 3.75]
+      expect(bbox[0][0]).toBeCloseTo(-3.75, 1);
+      expect(bbox[1][0]).toBeCloseTo(3.75, 1);
     });
 
     it('supports solid standoffs with screwDiameter = 0', () => {
@@ -99,32 +76,12 @@ describe('pcbmount', () => {
         screwDiameter: 0,
       };
 
-      const mount = pcbMount(solidMount, {
-        pcbMountFilletStyle: 'round',
-        pcbMountFilletSize: 1.0,
-      });
+      const mount = pcbMount(solidMount);
 
       expect(mount).toBeDefined();
       const bbox = measureBoundingBox(mount);
-      expect(bbox[0][0]).toBeCloseTo(-4, 1);
-      expect(bbox[1][0]).toBeCloseTo(4, 1);
-    });
-
-    it('honors per-mount style override over global params', () => {
-      const mountWithOverride: PCBMount = {
-        ...baseMountParams,
-        filletStyle: 'none',
-      };
-
-      const mount = pcbMount(mountWithOverride, {
-        pcbMountFilletStyle: 'round',
-        pcbMountFilletSize: 1.0,
-      });
-
-      const bbox = measureBoundingBox(mount);
-      // With 'none' override, radius is 3 (not 4)
-      expect(bbox[0][0]).toBeCloseTo(-3, 1);
-      expect(bbox[1][0]).toBeCloseTo(3, 1);
+      expect(bbox[0][0]).toBeCloseTo(-5, 1);
+      expect(bbox[1][0]).toBeCloseTo(5, 1);
     });
   });
 

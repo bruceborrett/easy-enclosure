@@ -12,7 +12,7 @@ EasyEnclosure is an open-source 3D modeling software tailored specifically for d
 - Real-Time 3D Preview
 - Export to STL (Mesh) and STEP (Solid CAD) Formats
 - Parametric Snap-Fit Clippable Lids (screwless assembly)
-- High-strength PCB standoffs with parametric root fillets/chamfers
+- High-strength PCB standoffs with automatic proportional root fillets
 - Internal cable clamps with ribbed strain-relief grip and matching printable straps
 - Save and load parameter presets as JSON
 
@@ -156,13 +156,9 @@ When enabling screw head recesses (**Counterbore** or **Countersunk**), the rece
 
 ### PCB Mount Standoff Reinforcement
 
-Standard cylindrical standoffs printed vertically along the Z-axis in FDM 3D prints are vulnerable to shearing off at the first layer where they meet the enclosure floor or lid due to stress concentration under screw insertion torque. EasyEnclosure provides parametric root reinforcement:
+Standard cylindrical standoffs printed vertically along the Z-axis in FDM 3D prints are vulnerable to shearing off at the first layer where they meet the enclosure floor or lid due to stress concentration under screw insertion torque. EasyEnclosure automatically reinforces all PCB standoffs with built-in root fillets:
 
-- **Fillet (Concave Arc)** _(Default)_: A smooth circular transition ($360^\circ$ annular radius) that eliminates the sharp internal corner notch, providing maximum isotropic strength against both lateral shear and screw tightening torque while staying within standard circular PCB keep-out rings.
-- **Chamfer (45° Flare)**: A straight conical transition widening the base footprint.
-- **None**: Traditional straight cylindrical standoff.
-
-Root reinforcement can be configured globally in the PCB Mounts tab or overridden per standoff for tight component clearance constraints.
+- **Automatic Proportional Root Fillet**: A smooth circular transition ($360^\circ$ annular concave radius) that eliminates the sharp internal corner notch, providing maximum isotropic strength against both lateral shear and screw tightening torque while staying within standard circular PCB keep-out rings. The fillet is automatically sized in proportion to the standoff outer diameter ($1/3$ of outer diameter; e.g. a $2.0\text{ mm}$ fillet on a $6.0\text{ mm}$ standoff, capped safely at $45\%$ of standoff height).
 
 ## Notes
 

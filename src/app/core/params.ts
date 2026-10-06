@@ -10,8 +10,6 @@ export type Hole = {
   y: number;
 };
 
-export type PcbMountFilletStyle = 'none' | 'round' | 'chamfer';
-
 export type PCBMount = {
   surface: Surface;
   x: number;
@@ -19,8 +17,6 @@ export type PCBMount = {
   height: number;
   outerDiameter: number;
   screwDiameter: number;
-  filletStyle?: 'default' | PcbMountFilletStyle;
-  filletSize?: number;
 };
 
 export type InternalWall = {
@@ -130,8 +126,6 @@ export type Params = {
   dinRailMountWidth: number;
   dinRailScrewDiameter: number;
   showDinRailMount: boolean;
-  pcbMountFilletStyle: PcbMountFilletStyle;
-  pcbMountFilletSize: number;
   snapFit: SnapFit;
   pcbPreview: PCBPreview;
   baseBedChamfer: number;
@@ -266,8 +260,6 @@ export const DEFAULT_PARAMS: Params = {
   dinRailMountWidth: 15,
   dinRailScrewDiameter: 3.98,
   showDinRailMount: true,
-  pcbMountFilletStyle: 'round',
-  pcbMountFilletSize: 1,
   snapFit: {
     enabled: false,
     preset: 4,

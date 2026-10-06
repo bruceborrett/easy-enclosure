@@ -1,6 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 
-import type { CableClamp, Hole, InternalWall, PCBMount, Params, PCBPreview, SnapFit } from '../../core/params';
+import type {
+  CableClamp,
+  Hole,
+  InternalWall,
+  PCBMount,
+  Params,
+  PCBPreview,
+  SnapFit,
+} from '../../core/params';
 import { DEFAULT_CABLE_CLAMP } from '../../core/params';
 import { EnclosureStateService } from '../../core/state/enclosure-state.service';
 
