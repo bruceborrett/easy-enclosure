@@ -114,6 +114,94 @@ label {
 
 .accordian.active {
   height: auto;
+  overflow: visible;
+}
+
+.help-tip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-left: 4px;
+  vertical-align: -1px;
+  cursor: help;
+  color: var(--text-secondary);
+  outline: none;
+}
+
+.help-tip:hover,
+.help-tip:focus-visible {
+  color: var(--ui-primary);
+}
+
+.help-tip:focus-visible .help-icon {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
+  border-radius: 999px;
+}
+
+.help-icon {
+  width: 12px;
+  height: 12px;
+  opacity: 0.75;
+  transition: opacity 140ms ease;
+}
+
+.help-tip:hover .help-icon {
+  opacity: 1;
+}
+
+.help-tooltip {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: -4px;
+  right: auto;
+  width: max-content;
+  max-width: 200px;
+  padding: 6px 9px;
+  background: #1f2f42;
+  color: #f1f5f9;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: normal;
+  text-transform: none;
+  border-radius: 6px;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.28);
+  pointer-events: none;
+  z-index: 50;
+  white-space: normal;
+  word-break: break-word;
+  transform: translateY(3px);
+  transition: opacity 140ms ease, transform 140ms ease, visibility 140ms ease;
+}
+
+.help-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 8px;
+  border-width: 4px 4px 0 4px;
+  border-style: solid;
+  border-color: #1f2f42 transparent transparent transparent;
+}
+
+.help-tip-right .help-tooltip {
+  left: auto;
+  right: -4px;
+}
+
+.help-tip-right .help-tooltip::after {
+  left: auto;
+  right: 8px;
+}
+
+.help-tip:hover .help-tooltip,
+.help-tip:focus-visible .help-tooltip {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .accordian-header {

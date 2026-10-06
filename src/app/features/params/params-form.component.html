@@ -610,7 +610,16 @@
     </p>
     <div class="accordian-body">
       <div class="input-group checkbox-group input-group-full">
-        <label>Enable PCB Preview</label>
+        <label>
+          Enable PCB Preview
+          <span class="help-tip" tabindex="0">
+            <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <circle cx="8" cy="8" r="6.75" />
+              <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
+            </svg>
+            <span class="help-tooltip" role="tooltip">Simulates PCB in 3D viewport. Green = clearance, red = collision with enclosure</span>
+          </span>
+        </label>
         <input
           type="checkbox"
           [checked]="params().pcbPreview.enabled"
@@ -618,7 +627,16 @@
         />
       </div>
       <div class="input-group">
-        <label>Width (mm)</label>
+        <label>
+          Width (mm)
+          <span class="help-tip" tabindex="0">
+            <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <circle cx="8" cy="8" r="6.75" />
+              <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
+            </svg>
+            <span class="help-tooltip" role="tooltip">Board dimension along X (left/right)</span>
+          </span>
+        </label>
         <input
           type="number"
           min="1"
@@ -627,10 +645,18 @@
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setPcbPreviewNumber('width', $any($event.target).value)"
         />
-        <small class="hint">Board dimension along X (left/right)</small>
       </div>
       <div class="input-group">
-        <label>Length (mm)</label>
+        <label>
+          Length (mm)
+          <span class="help-tip help-tip-right" tabindex="0">
+            <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <circle cx="8" cy="8" r="6.75" />
+              <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
+            </svg>
+            <span class="help-tooltip" role="tooltip">Board dimension along Y (front/back)</span>
+          </span>
+        </label>
         <input
           type="number"
           min="1"
@@ -639,10 +665,18 @@
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setPcbPreviewNumber('length', $any($event.target).value)"
         />
-        <small class="hint">Board dimension along Y (front/back)</small>
       </div>
       <div class="input-group">
-        <label>Thickness (mm)</label>
+        <label>
+          Thickness (mm)
+          <span class="help-tip" tabindex="0">
+            <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <circle cx="8" cy="8" r="6.75" />
+              <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
+            </svg>
+            <span class="help-tooltip" role="tooltip">Thickness of the PCB board</span>
+          </span>
+        </label>
         <input
           type="number"
           min="0.1"
@@ -651,10 +685,18 @@
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setPcbPreviewNumber('thickness', $any($event.target).value)"
         />
-        <small class="hint">Thickness of the PCB board</small>
       </div>
       <div class="input-group">
-        <label>Component Height (mm)</label>
+        <label>
+          Component Height (mm)
+          <span class="help-tip help-tip-right" tabindex="0">
+            <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <circle cx="8" cy="8" r="6.75" />
+              <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
+            </svg>
+            <span class="help-tooltip" role="tooltip">Height of components above the board</span>
+          </span>
+        </label>
         <input
           type="number"
           min="0"
@@ -663,10 +705,18 @@
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setPcbPreviewNumber('componentHeight', $any($event.target).value)"
         />
-        <small class="hint">Height of components above the board</small>
       </div>
       <div class="input-group">
-        <label>Offset X (mm)</label>
+        <label>
+          Offset X (mm)
+          <span class="help-tip" tabindex="0">
+            <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <circle cx="8" cy="8" r="6.75" />
+              <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
+            </svg>
+            <span class="help-tooltip" role="tooltip">Offset from enclosure center along X</span>
+          </span>
+        </label>
         <input
           type="number"
           step="0.1"
@@ -674,10 +724,18 @@
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setPcbPreviewNumber('x', $any($event.target).value)"
         />
-        <small class="hint">Offset from enclosure center along X</small>
       </div>
       <div class="input-group">
-        <label>Offset Y (mm)</label>
+        <label>
+          Offset Y (mm)
+          <span class="help-tip help-tip-right" tabindex="0">
+            <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <circle cx="8" cy="8" r="6.75" />
+              <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
+            </svg>
+            <span class="help-tooltip" role="tooltip">Offset from enclosure center along Y</span>
+          </span>
+        </label>
         <input
           type="number"
           step="0.1"
@@ -685,12 +743,7 @@
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setPcbPreviewNumber('y', $any($event.target).value)"
         />
-        <small class="hint">Offset from enclosure center along Y</small>
       </div>
-      <p class="input-group-full hint">
-        The PCB rests automatically on top of bottom standoffs (or the enclosure floor if none exist).
-        Green indicates clearance; red indicates collision with walls, internal partitions, or lid.
-      </p>
     </div>
   </div>
 
@@ -1033,7 +1086,16 @@
     </p>
     <div class="accordian-body">
       <div class="input-group">
-        <label>Base Bottom Chamfer</label>
+        <label>
+          Base Bottom
+          <span class="help-tip" tabindex="0">
+            <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <circle cx="8" cy="8" r="6.75" />
+              <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
+            </svg>
+            <span class="help-tooltip" role="tooltip">45° bevel on base bed edge to prevent 1st-layer elephant foot (0 = off, mm)</span>
+          </span>
+        </label>
         <input
           type="number"
           min="0"
@@ -1042,10 +1104,18 @@
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setNumberParam('baseBedChamfer', $any($event.target).value)"
         />
-        <small class="hint">45° bevel on base bed edge to prevent 1st-layer elephant foot (0 = off, mm)</small>
       </div>
       <div class="input-group">
-        <label>Lid Top Chamfer</label>
+        <label>
+          Lid Top
+          <span class="help-tip help-tip-right" tabindex="0">
+            <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <circle cx="8" cy="8" r="6.75" />
+              <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
+            </svg>
+            <span class="help-tooltip" role="tooltip">45° bevel on lid exterior bed edge; matches base &amp; suppresses elephant foot (0 = off, mm)</span>
+          </span>
+        </label>
         <input
           type="number"
           min="0"
@@ -1054,10 +1124,18 @@
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setNumberParam('lidBedChamfer', $any($event.target).value)"
         />
-        <small class="hint">45° bevel on lid exterior bed edge; matches base &amp; suppresses elephant foot (0 = off, mm)</small>
       </div>
       <div class="input-group">
-        <label>Insert Lip Chamfer</label>
+        <label>
+          Insert Lip
+          <span class="help-tip" tabindex="0">
+            <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <circle cx="8" cy="8" r="6.75" />
+              <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
+            </svg>
+            <span class="help-tooltip" role="tooltip">45° lead-in bevel on top of lid insert lip for smooth sliding/alignment (0 = off, mm)</span>
+          </span>
+        </label>
         <input
           type="number"
           min="0"
@@ -1066,11 +1144,7 @@
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setNumberParam('lidTopChamfer', $any($event.target).value)"
         />
-        <small class="hint">45° lead-in bevel on top of lid insert lip for smooth sliding/alignment (0 = off, mm)</small>
       </div>
-      <p class="input-group-full hint">
-        Bed chamfers eliminate 1st-layer elephant foot squish on 3D printers and give the assembled enclosure matching beveled edges. When wall mounts are enabled, mounting tabs are continuously chamfered along their footprint.
-      </p>
     </div>
   </div>
 

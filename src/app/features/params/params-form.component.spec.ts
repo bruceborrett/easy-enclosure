@@ -203,4 +203,15 @@ describe('ParamsFormComponent', () => {
     component.setSnapFitNumber('clearance', '');
     expect(state.params().snapFit.clearance).toBe(0.12);
   });
+
+  it('updates edge chamfer parameters', () => {
+    component.setNumberParam('baseBedChamfer', '0.8');
+    expect(state.params().baseBedChamfer).toBe(0.8);
+
+    component.setNumberParam('lidBedChamfer', '0.5');
+    expect(state.params().lidBedChamfer).toBe(0.5);
+
+    component.setNumberParam('lidTopChamfer', '0.3');
+    expect(state.params().lidTopChamfer).toBe(0.3);
+  });
 });
