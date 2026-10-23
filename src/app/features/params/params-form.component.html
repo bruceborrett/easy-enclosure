@@ -437,6 +437,7 @@
               <option value="circle">Circle</option>
               <option value="square">Square</option>
               <option value="rectangle">Rectangle</option>
+              <option value="double-d">Double D</option>
             </select>
           </div>
 
@@ -498,7 +499,7 @@
             </div>
           }
 
-          @if (hole.shape === 'circle') {
+          @if (hole.shape === 'circle' || hole.shape === 'double-d') {
             <div class="input-group">
               <label>Diameter</label>
               <input
@@ -506,6 +507,29 @@
                 [value]="hole.diameter"
                 (keydown.enter)="$any($event.target).blur()"
                 (blur)="updateHole($index, { diameter: +$any($event.target).value })"
+              />
+            </div>
+          }
+
+          @if (hole.shape === 'double-d') {
+            <div class="input-group">
+              <label>Flat Width</label>
+              <input
+                type="number"
+                [value]="hole.flatWidth ?? (hole.diameter ? hole.diameter * 0.9 : 11)"
+                (keydown.enter)="$any($event.target).blur()"
+                (blur)="updateHole($index, { flatWidth: +$any($event.target).value })"
+              />
+            </div>
+
+            <div class="input-group">
+              <label>Rotation</label>
+              <input
+                type="number"
+                step="1"
+                [value]="hole.rotation ?? 0"
+                (keydown.enter)="$any($event.target).blur()"
+                (blur)="updateHole($index, { rotation: +$any($event.target).value })"
               />
             </div>
           }

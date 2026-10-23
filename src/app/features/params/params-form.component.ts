@@ -69,6 +69,8 @@ export class ParamsFormComponent {
       diameter: 12.5,
       width: 10,
       length: 10,
+      flatWidth: 11,
+      rotation: 0,
       y: current.width / 2,
       x: 6,
     };
@@ -83,7 +85,19 @@ export class ParamsFormComponent {
   updateHole(index: number, patch: Partial<Hole>): void {
     const current = this.params();
     this.state.patchParams({
-      holes: current.holes.map((item, i) => (i === index ? { ...item, ...patch } : item)),
+      holes: current.holes.map((item, i) => {
+        if (i !== index) return item;
+        const updated = { ...item, ...patch };
+        if (patch.shape === 'double-d') {
+          if (updated.flatWidth === undefined) {
+            updated.flatWidth = updated.diameter ? Number((updated.diameter * 0.9).toFixed(1)) : 11;
+          }
+          if (updated.rotation === undefined) {
+            updated.rotation = 0;
+          }
+        }
+        return updated;
+      }),
     });
   }
 

@@ -1,7 +1,7 @@
 import { rotate, translate } from '@jscad/modeling/src/operations/transforms';
 import { degToRad } from '@jscad/modeling/src/utils';
 import { cuboid, cylinder } from '@jscad/modeling/src/primitives';
-import { union } from '@jscad/modeling/src/operations/booleans';
+import { intersect, union } from '@jscad/modeling/src/operations/booleans';
 
 import { Params } from '../params';
 import { Geom3 } from '@jscad/modeling/src/geometries/types';
@@ -123,6 +123,27 @@ export const holes = (
             ),
           ),
         );
+      } else if (hole.shape === 'double-d') {
+        const diameter = Math.max(0.1, hole.diameter);
+        const radius = diameter / 2;
+        const flatW =
+          hole.flatWidth !== undefined && hole.flatWidth > 0
+            ? Math.min(hole.flatWidth, diameter)
+            : diameter * 0.9;
+        let cutter = cylinder({
+          radius,
+          height: holeDepth,
+        });
+        if (flatW < diameter) {
+          const flatBox = cuboid({
+            size: [diameter * 2, flatW, holeDepth + 2],
+          });
+          cutter = intersect(cutter, flatBox);
+        }
+        if (hole.rotation) {
+          cutter = rotate([0, 0, degToRad(hole.rotation)], cutter);
+        }
+        result.push(translate([x, y, z], rotate(rot, cutter)));
       }
     });
   });

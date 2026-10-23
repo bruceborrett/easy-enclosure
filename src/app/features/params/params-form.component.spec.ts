@@ -101,6 +101,27 @@ describe('ParamsFormComponent', () => {
     expect(state.params().holes.length).toBe(initialCount);
   });
 
+  it('supports double-d hole shape, flat width, and rotation', () => {
+    const initialCount = state.params().holes.length;
+
+    component.addHole();
+    component.updateHole(initialCount, {
+      shape: 'double-d',
+      diameter: 13,
+      flatWidth: 11.8,
+      rotation: 90,
+    });
+
+    const hole = state.params().holes[initialCount];
+    expect(hole.shape).toBe('double-d');
+    expect(hole.diameter).toBe(13);
+    expect(hole.flatWidth).toBe(11.8);
+    expect(hole.rotation).toBe(90);
+
+    component.removeHole(initialCount);
+    expect(state.params().holes.length).toBe(initialCount);
+  });
+
   it('supports pcb mount surface updates', () => {
     const initialCount = state.params().pcbMounts.length;
 

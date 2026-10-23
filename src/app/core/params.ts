@@ -1,13 +1,17 @@
 import type { Surface } from './enclosure';
 
+export type HoleShape = 'circle' | 'square' | 'rectangle' | 'double-d';
+
 export type Hole = {
-  shape: 'circle' | 'square' | 'rectangle';
+  shape: HoleShape;
   diameter: number;
   width: number;
   length: number;
   surface: Surface;
   x: number;
   y: number;
+  flatWidth?: number;
+  rotation?: number;
 };
 
 export type PCBMount = {
@@ -157,6 +161,8 @@ export const DEFAULT_PARAMS: Params = {
       diameter: 12.5,
       width: 10,
       length: 10,
+      flatWidth: 11,
+      rotation: 0,
       x: 0,
       y: 0,
     },
@@ -166,6 +172,8 @@ export const DEFAULT_PARAMS: Params = {
       diameter: 10,
       width: 12,
       length: 10,
+      flatWidth: 11,
+      rotation: 0,
       x: 0,
       y: 0,
     },
@@ -175,6 +183,8 @@ export const DEFAULT_PARAMS: Params = {
       width: 40,
       length: 6,
       diameter: 10,
+      flatWidth: 11,
+      rotation: 0,
       x: 0,
       y: 0,
     },
@@ -184,6 +194,8 @@ export const DEFAULT_PARAMS: Params = {
       width: 12.5,
       length: 10,
       diameter: 10,
+      flatWidth: 11,
+      rotation: 0,
       x: 0,
       y: 0,
     },
@@ -193,6 +205,8 @@ export const DEFAULT_PARAMS: Params = {
       width: 30,
       length: 10,
       diameter: 10,
+      flatWidth: 11,
+      rotation: 0,
       x: 0,
       y: 0,
     },
