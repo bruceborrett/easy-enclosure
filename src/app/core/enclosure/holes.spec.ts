@@ -1,6 +1,7 @@
 import measureBoundingBox from '@jscad/modeling/src/measurements/measureBoundingBox';
 import { DEFAULT_PARAMS, cloneParams } from '../params';
 import { holes } from './holes';
+import { base } from './base';
 
 describe('holes', () => {
   it('creates top hole cutters that span the full lid thickness', () => {
@@ -117,5 +118,50 @@ describe('holes', () => {
 
     expect(xMax - xMin).toBeCloseTo(13, 1);
     expect(yMax - yMin).toBeCloseTo(13, 1);
+  });
+
+  it('creates bottom hole cutters that cleanly span the entire floor thickness', () => {
+    const params = cloneParams(DEFAULT_PARAMS);
+    params.floor = 3;
+    params.holes = [
+      {
+        shape: 'circle',
+        surface: 'bottom',
+        diameter: 10,
+        width: 10,
+        length: 10,
+        x: 0,
+        y: 0,
+      },
+    ];
+
+    const bottomHole = holes(params, ['bottom']);
+    const [[, , zMin], [, , zMax]] = measureBoundingBox(bottomHole);
+
+    expect(zMin).toBeLessThan(0);
+    expect(zMax).toBeGreaterThan(params.floor);
+  });
+
+  it('cuts completely through side walls without leaving coplanar membranes', () => {
+    const params = cloneParams(DEFAULT_PARAMS);
+    const b = base(params);
+    const { toPolygons } = require('@jscad/modeling').geometries.geom3;
+    const polys = toPolygons(b);
+
+    const frontMembranes = polys.filter((poly: any) =>
+      poly.vertices.every(
+        (v: number[]) =>
+          Math.abs(v[1] - 75.92) < 0.01 && v[0] >= 44 && v[0] <= 56 && v[2] >= 9 && v[2] <= 21,
+      ),
+    );
+    const leftMembranes = polys.filter((poly: any) =>
+      poly.vertices.every(
+        (v: number[]) =>
+          Math.abs(v[0] - 95.92) < 0.01 && v[1] >= 34 && v[1] <= 46 && v[2] >= 9 && v[2] <= 21,
+      ),
+    );
+
+    expect(frontMembranes.length).toBe(0);
+    expect(leftMembranes.length).toBe(0);
   });
 });

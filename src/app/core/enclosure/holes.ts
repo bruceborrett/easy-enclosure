@@ -9,6 +9,7 @@ import { Vec3 } from '@jscad/modeling/src/maths/types';
 import { Surface, SURFACES } from '.';
 
 const TOP_HOLE_DEPTH_TOLERANCE = 0.2;
+const HOLE_DEPTH_OVERCUT = 1;
 
 export const holes = (
   params: Params,
@@ -19,6 +20,7 @@ export const holes = (
     width,
     height,
     roof,
+    floor,
     wall,
     insertHeight,
     insertThickness,
@@ -43,7 +45,7 @@ export const holes = (
       let rot: Vec3;
 
       const totalWallThickness = insertThickness + insertClearance * 2 + wall * 2;
-      let holeDepth = totalWallThickness;
+      let holeDepth = totalWallThickness + HOLE_DEPTH_OVERCUT * 2;
 
       if (surface === 'front') {
         y = length - totalWallThickness / 2;
@@ -80,6 +82,9 @@ export const holes = (
         if (surface === 'top') {
           holeDepth = roof + insertHeight + TOP_HOLE_DEPTH_TOLERANCE;
           z = holeDepth / 2;
+        } else if (surface === 'bottom') {
+          holeDepth = floor + HOLE_DEPTH_OVERCUT * 2;
+          z = floor / 2;
         }
         rot = [0, 0, 0];
       } else {
