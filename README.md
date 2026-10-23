@@ -4,7 +4,7 @@
 
 EasyEnclosure is an open-source 3D modeling software tailored specifically for designing 3D-printable enclosures. It aims to provide an intuitive interface and a set of user-friendly controls that allow even those with little or no 3D modeling experience to create custom enclosures for their electronic projects, prototypes, or DIY gadgets.
 
-### **[Try it online now](https://bruceborrett.github.io/easy-enclosure/)**
+### **[Try it online now](https://easyenclosure.org)**
 
 ## Key Features
 
