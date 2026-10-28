@@ -174,7 +174,10 @@ label {
   white-space: normal;
   word-break: break-word;
   transform: translateY(3px);
-  transition: opacity 140ms ease, transform 140ms ease, visibility 140ms ease;
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease,
+    visibility 140ms ease;
 }
 
 .help-tooltip::after {
@@ -264,6 +267,43 @@ label {
   border-radius: 999px;
   color: #eef7ff;
   cursor: pointer;
+}
+
+.unit-selector-container {
+  display: flex;
+  margin: 2px 0 10px;
+  padding: 3px;
+  border: 1px solid var(--surface-border);
+  border-radius: 10px;
+  background-color: var(--surface-strong);
+  gap: 4px;
+}
+
+.unit-toggle-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 140ms ease;
+}
+
+.unit-toggle-btn:hover {
+  color: var(--text-primary);
+  background: rgba(148, 163, 184, 0.15);
+}
+
+.unit-toggle-btn.active {
+  background: var(--ui-primary, #0284c7);
+  color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .simple-reset-btn {

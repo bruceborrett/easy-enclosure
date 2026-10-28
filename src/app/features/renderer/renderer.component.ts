@@ -38,6 +38,7 @@ import {
 } from '../../core/enclosure/pcbpreview';
 import { waterProofSeal } from '../../core/enclosure/waterproofseal';
 import type { Params } from '../../core/params';
+import { toMetricParams } from '../../core/units';
 import { EnclosureStateService } from '../../core/state/enclosure-state.service';
 
 const SPACING = 20;
@@ -121,6 +122,8 @@ const mountDeps = [
   'roof',
   'length',
   'width',
+  'cornerRadius',
+  'baseBedChamfer',
   'insertThickness',
   'insertClearance',
 ];
@@ -707,7 +710,7 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    const { width, length, height, roof, insertHeight } = this.state.params();
+    const { width, length, height, roof, insertHeight } = toMetricParams(this.state.params());
     const [originX, originY, originZ] = this.baseOrigin;
     const [lidX, lidY, lidZ] = this.lidOrigin;
 
@@ -862,6 +865,7 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
   }
 
   private async renderModel(params: Params, diff: string[]): Promise<void> {
+    const metricParams = toMetricParams(params);
     const {
       width,
       length,
@@ -870,7 +874,7 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
       internalWalls: internalWallParams,
       dinRailMount: dinMountEnabled,
       showDinRailMount,
-    } = params;
+    } = metricParams;
 
     let lidPos: Vec3 = [0, 0, 0];
     let basePos: Vec3 = [0, 0, 0];
@@ -881,7 +885,7 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
     if (this.checkDeps(diff, lidDeps)) {
       lidPos = waterProof ? [width / 2 + SPACING, -length / 2, 0] : [SPACING / 2, -length / 2, 0];
       this.lidOrigin = lidPos;
-      this.lidModel = translate(lidPos, lid(params));
+      this.lidModel = translate(lidPos, lid(metricParams));
     }
 
     if (this.checkDeps(diff, baseDeps)) {
@@ -889,21 +893,21 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
         ? [-width / 2, -length / 2, 0]
         : [-(width + SPACING / 2), -length / 2, 0];
       this.baseOrigin = basePos;
-      this.baseModelLocal = base(params);
+      this.baseModelLocal = base(metricParams);
       this.baseModel = translate(basePos, this.baseModelLocal);
     }
 
     if (this.checkDeps(diff, sealDeps) && waterProof) {
       sealPos = [-width - width / 2 - SPACING, -length / 2, 0];
       this.sealOrigin = sealPos;
-      this.sealModel = translate(sealPos, waterProofSeal(params));
+      this.sealModel = translate(sealPos, waterProofSeal(metricParams));
     } else if (this.checkDeps(diff, sealDeps) && !waterProof) {
       this.sealModel = null;
     }
 
     if (this.checkDeps(diff, dinRailDeps) && dinMountEnabled && showDinRailMount) {
       const lidX = waterProof ? width / 2 + SPACING : SPACING / 2;
-      const rawDin = dinRailMountsPair(params);
+      const rawDin = dinRailMountsPair(metricParams);
       const dinBounds = measureBoundingBox(rawDin) as [Vec3Tuple, Vec3Tuple];
       const minX = dinBounds[0][0];
       dinRailPos = [lidX + width + SPACING - minX, 0, 0];
@@ -923,8 +927,8 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
         : [SPACING / 2, -length / 2, 0];
 
       const mountParts: Geom3[] = [];
-      const baseMounts = pcbMountsOnBase(params);
-      const lidMounts = pcbMountsOnLid(params);
+      const baseMounts = pcbMountsOnBase(metricParams);
+      const lidMounts = pcbMountsOnLid(metricParams);
 
       if (baseMounts) {
         mountParts.push(translate(baseMountsPos, baseMounts));
@@ -942,24 +946,24 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
       mountsPos = waterProof
         ? [-width / 2, -length / 2, 0]
         : [-(width + SPACING / 2), -length / 2, 0];
-      this.internalWallsModel = translate(mountsPos, internalWalls(params));
+      this.internalWallsModel = translate(mountsPos, internalWalls(metricParams));
     }
 
-    if (this.checkDeps(diff, cableClampDeps) && (params.cableClamps?.length ?? 0) > 0) {
+    if (this.checkDeps(diff, cableClampDeps) && (metricParams.cableClamps?.length ?? 0) > 0) {
       const clampsPos: Vec3 = waterProof
         ? [-width / 2, -length / 2, 0]
         : [-(width + SPACING / 2), -length / 2, 0];
-      const rawClamps = cableClamps(params);
+      const rawClamps = cableClamps(metricParams);
       this.cableClampsModel = rawClamps ? translate(clampsPos, rawClamps) : null;
     } else if (this.checkDeps(diff, cableClampDeps)) {
       this.cableClampsModel = null;
     }
 
     const result: Geom3[] = [];
-    if (this.lidModel && params.showLid) {
+    if (this.lidModel && metricParams.showLid) {
       result.push(this.lidModel);
     }
-    if (this.baseModel && params.showBase) {
+    if (this.baseModel && metricParams.showBase) {
       result.push(this.baseModel);
     }
     if (this.sealModel && waterProof) {
@@ -974,7 +978,7 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
     if (this.internalWallsModel && internalWallParams.length > 0) {
       result.push(this.internalWallsModel);
     }
-    if (this.cableClampsModel && (params.cableClamps?.length ?? 0) > 0) {
+    if (this.cableClampsModel && (metricParams.cableClamps?.length ?? 0) > 0) {
       result.push(this.cableClampsModel);
     }
 
@@ -993,11 +997,11 @@ export class RendererComponent implements AfterViewInit, OnDestroy {
 
     const modelEntities = entitiesFromSolids({}, this.model) as Entity[];
     const modelBounds = measureBoundingBox(this.model) as [Vec3Tuple, Vec3Tuple];
-    const gridEntity = this.buildGridEntity(params, modelBounds);
+    const gridEntity = this.buildGridEntity(metricParams, modelBounds);
     const entities: Entity[] = gridEntity ? [gridEntity, ...modelEntities] : modelEntities;
 
-    const pcbEntities = this.buildPcbEntities(params);
-    if (pcbEntities.length > 0 && params.showBase) {
+    const pcbEntities = this.buildPcbEntities(metricParams);
+    if (pcbEntities.length > 0 && metricParams.showBase) {
       entities.push(...pcbEntities);
     }
 

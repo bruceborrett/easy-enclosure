@@ -122,15 +122,17 @@ describe('ParamsFormComponent', () => {
     expect(state.params().holes.length).toBe(initialCount);
   });
 
-  it('supports pcb mount surface updates', () => {
+  it('supports pcb mount surface updates and chamfer toggling', () => {
     const initialCount = state.params().pcbMounts.length;
 
     component.addPcbMount();
     expect(state.params().pcbMounts.length).toBe(initialCount + 1);
     expect(state.params().pcbMounts[initialCount].surface).toBe('bottom');
+    expect(state.params().pcbMounts[initialCount].chamfer).toBeTrue();
 
-    component.updatePcbMount(initialCount, { surface: 'left' });
+    component.updatePcbMount(initialCount, { surface: 'left', chamfer: false });
     expect(state.params().pcbMounts[initialCount].surface).toBe('left');
+    expect(state.params().pcbMounts[initialCount].chamfer).toBeFalse();
 
     component.removePcbMount(initialCount);
     expect(state.params().pcbMounts.length).toBe(initialCount);
@@ -223,5 +225,71 @@ describe('ParamsFormComponent', () => {
 
     component.setNumberParam('lidTopChamfer', '0.3');
     expect(state.params().lidTopChamfer).toBe(0.3);
+  });
+
+  it('switches measurement system via UI controls and updates units and placeholders', () => {
+    const fixture = TestBed.createComponent(ParamsFormComponent);
+    const testComponent = fixture.componentInstance;
+    testComponent.setActiveTab(1);
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(testComponent.isImperial()).toBeFalse();
+    expect(testComponent.unit()).toBe('mm');
+
+    const buttons = compiled.querySelectorAll<HTMLButtonElement>('.unit-toggle-btn');
+    expect(buttons.length).toBe(2);
+    expect(buttons[0].textContent).toContain('Metric (mm)');
+    expect(buttons[1].textContent).toContain('Imperial (in)');
+    expect(buttons[0].classList.contains('active')).toBeTrue();
+    expect(buttons[1].classList.contains('active')).toBeFalse();
+
+    buttons[1].click();
+    fixture.detectChanges();
+
+    expect(testComponent.isImperial()).toBeTrue();
+    expect(testComponent.unit()).toBe('in');
+    expect(state.params().measurementSystem).toBe('imperial');
+    expect(state.params().length).toBe(3.1496);
+    expect(buttons[0].classList.contains('active')).toBeFalse();
+    expect(buttons[1].classList.contains('active')).toBeTrue();
+
+    // Check placeholder on length input
+    const lengthInput = compiled.querySelector<HTMLInputElement>('input[placeholder="in"]');
+    expect(lengthInput).toBeTruthy();
+
+    // Click back to metric
+    buttons[0].click();
+    fixture.detectChanges();
+
+    expect(testComponent.isImperial()).toBeFalse();
+    expect(testComponent.unit()).toBe('mm');
+    expect(state.params().measurementSystem).toBe('metric');
+    expect(state.params().length).toBe(80);
+  });
+
+  it('adds items with appropriate units when imperial is active', () => {
+    component.setMeasurementSystem('imperial');
+    expect(component.isImperial()).toBeTrue();
+
+    const initialHoles = state.params().holes.length;
+    component.addHole();
+    const addedHole = state.params().holes[initialHoles];
+    expect(addedHole.diameter).toBeCloseTo(0.4921, 3);
+
+    const initialMounts = state.params().pcbMounts.length;
+    component.addPcbMount();
+    const addedMount = state.params().pcbMounts[initialMounts];
+    expect(addedMount.height).toBeCloseTo(0.1969, 3);
+
+    const initialWalls = state.params().internalWalls.length;
+    component.addInternalWall();
+    const addedWall = state.params().internalWalls[initialWalls];
+    expect(addedWall.height).toBeCloseTo(0.3937, 3);
+
+    const initialClamps = state.params().cableClamps.length;
+    component.addCableClamp();
+    const addedClamp = state.params().cableClamps[initialClamps];
+    expect(addedClamp.length).toBeCloseTo(0.5906, 3);
   });
 });

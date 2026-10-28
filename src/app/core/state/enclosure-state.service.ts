@@ -1,5 +1,6 @@
 import { Injectable, computed, signal } from '@angular/core';
-import { DEFAULT_PARAMS, Params, cloneParams } from '../params';
+import { DEFAULT_PARAMS, type MeasurementSystem, type Params, cloneParams } from '../params';
+import { convertParams } from '../units';
 
 @Injectable({ providedIn: 'root' })
 export class EnclosureStateService {
@@ -18,7 +19,31 @@ export class EnclosureStateService {
     this.params.set(cloneParams(next));
   }
 
+  setMeasurementSystem(system: MeasurementSystem): void {
+    const current = this.params();
+    if ((current.measurementSystem ?? 'metric') === system) {
+      return;
+    }
+    const converted = convertParams(current, system);
+    this.params.set(converted);
+  }
+
   patchParams(patch: Partial<Params>): void {
+    if (
+      patch.measurementSystem !== undefined &&
+      patch.measurementSystem !== (this.params().measurementSystem ?? 'metric')
+    ) {
+      this.setMeasurementSystem(patch.measurementSystem);
+      const { measurementSystem: _, ...rest } = patch;
+      if (Object.keys(rest).length > 0) {
+        this.params.update((current) => ({
+          ...current,
+          ...rest,
+        }));
+      }
+      return;
+    }
+
     this.params.update((current) => ({
       ...current,
       ...patch,
@@ -26,6 +51,11 @@ export class EnclosureStateService {
   }
 
   updateParam<K extends keyof Params>(key: K, value: Params[K]): void {
+    if (key === 'measurementSystem') {
+      this.setMeasurementSystem(value as MeasurementSystem);
+      return;
+    }
+
     this.params.update((current) => ({
       ...current,
       [key]: value,

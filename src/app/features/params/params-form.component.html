@@ -9,71 +9,106 @@
       <span class="accordian-icon">{{ activeTab() === 1 ? '-' : '+' }}</span>
     </p>
     <div class="accordian-body">
+      <div class="unit-selector-container" role="group" aria-label="Measurement system">
+        <button
+          type="button"
+          class="unit-toggle-btn"
+          [class.active]="!isImperial()"
+          [attr.aria-pressed]="!isImperial()"
+          (click)="setMeasurementSystem('metric')"
+        >
+          Metric (mm)
+        </button>
+        <button
+          type="button"
+          class="unit-toggle-btn"
+          [class.active]="isImperial()"
+          [attr.aria-pressed]="isImperial()"
+          (click)="setMeasurementSystem('imperial')"
+        >
+          Imperial (in)
+        </button>
+      </div>
+
       <div class="input-group">
-        <label>Length</label>
+        <label>Length ({{ unit() }})</label>
         <input
           type="number"
-          min="1"
+          min="0.01"
+          step="any"
+          [placeholder]="unit()"
           [value]="params().length"
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setNumberParam('length', $any($event.target).value)"
         />
       </div>
       <div class="input-group">
-        <label>Width</label>
+        <label>Width ({{ unit() }})</label>
         <input
           type="number"
-          min="1"
+          min="0.01"
+          step="any"
+          [placeholder]="unit()"
           [value]="params().width"
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setNumberParam('width', $any($event.target).value)"
         />
       </div>
       <div class="input-group">
-        <label>Height</label>
+        <label>Height ({{ unit() }})</label>
         <input
           type="number"
-          min="1"
+          min="0.01"
+          step="any"
+          [placeholder]="unit()"
           [value]="params().height"
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setNumberParam('height', $any($event.target).value)"
         />
       </div>
       <div class="input-group">
-        <label>Floor Thickness</label>
+        <label>Floor Thickness ({{ unit() }})</label>
         <input
           type="number"
-          min="1"
+          min="0.01"
+          step="any"
+          [placeholder]="unit()"
           [value]="params().floor"
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setNumberParam('floor', $any($event.target).value)"
         />
       </div>
       <div class="input-group">
-        <label>Wall Thickness</label>
+        <label>Wall Thickness ({{ unit() }})</label>
         <input
           type="number"
-          min="1"
+          min="0.01"
+          step="any"
+          [placeholder]="unit()"
           [value]="params().wall"
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setNumberParam('wall', $any($event.target).value)"
         />
       </div>
       <div class="input-group">
-        <label>Lid Thickness</label>
+        <label>Lid Thickness ({{ unit() }})</label>
         <input
           type="number"
-          min="1"
+          min="0.01"
+          step="any"
+          [placeholder]="unit()"
           [value]="params().roof"
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setNumberParam('roof', $any($event.target).value)"
         />
       </div>
       <div class="input-group">
-        <label>Corner Radius</label>
+        <label>Corner Radius ({{ unit() }})</label>
         <input
           type="number"
-          min="1"
+          min="0"
+          step="any"
+          [placeholder]="unit()"
           [value]="params().cornerRadius"
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setNumberParam('cornerRadius', $any($event.target).value)"
@@ -90,33 +125,36 @@
     <div class="accordian-body">
       <div class="sub-section-title">Insert Rim</div>
       <div class="input-group">
-        <label>Insert Thickness</label>
+        <label>Insert Thickness ({{ unit() }})</label>
         <input
           type="number"
-          min="1"
-          step="0.01"
+          min="0.01"
+          step="any"
+          [placeholder]="unit()"
           [value]="params().insertThickness"
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setNumberParam('insertThickness', $any($event.target).value)"
         />
       </div>
       <div class="input-group">
-        <label>Insert Height</label>
+        <label>Insert Height ({{ unit() }})</label>
         <input
           type="number"
-          min="1"
-          step="0.01"
+          min="0.01"
+          step="any"
+          [placeholder]="unit()"
           [value]="params().insertHeight"
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setNumberParam('insertHeight', $any($event.target).value)"
         />
       </div>
       <div class="input-group">
-        <label>Insert Clearance</label>
+        <label>Insert Clearance ({{ unit() }})</label>
         <input
           type="number"
-          min="0.01"
-          step="0.01"
+          min="0"
+          step="any"
+          [placeholder]="unit()"
           [value]="params().insertClearance"
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setNumberParam('insertClearance', $any($event.target).value)"
@@ -150,11 +188,22 @@
           <label>
             Corner Offset
             <span class="help-tip help-tip-right" tabindex="0">
-              <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <svg
+                class="help-icon"
+                viewBox="0 0 16 16"
+                width="12"
+                height="12"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                aria-hidden="true"
+              >
                 <circle cx="8" cy="8" r="6.75" />
                 <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
               </svg>
-              <span class="help-tooltip" role="tooltip">Distance from wall corners along the rim (%)</span>
+              <span class="help-tooltip" role="tooltip"
+                >Distance from wall corners along the rim (%)</span
+              >
             </span>
           </label>
           <input
@@ -170,20 +219,31 @@
 
         <div class="input-group">
           <label>
-            Bead Width
+            Bead Width ({{ unit() }})
             <span class="help-tip" tabindex="0">
-              <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <svg
+                class="help-icon"
+                viewBox="0 0 16 16"
+                width="12"
+                height="12"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                aria-hidden="true"
+              >
                 <circle cx="8" cy="8" r="6.75" />
                 <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
               </svg>
-              <span class="help-tooltip" role="tooltip">Length of snap bead along the rim (mm)</span>
+              <span class="help-tooltip" role="tooltip"
+                >Length of snap bead along the rim ({{ unit() }})</span
+              >
             </span>
           </label>
           <input
             type="number"
-            min="2"
-            max="30"
-            step="0.5"
+            min="0.01"
+            step="any"
+            [placeholder]="unit()"
             [value]="params().snapFit.width"
             (keydown.enter)="$any($event.target).blur()"
             (blur)="setSnapFitNumber('width', $any($event.target).value)"
@@ -192,20 +252,31 @@
 
         <div class="input-group">
           <label>
-            Engagement Depth
+            Engagement Depth ({{ unit() }})
             <span class="help-tip help-tip-right" tabindex="0">
-              <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <svg
+                class="help-icon"
+                viewBox="0 0 16 16"
+                width="12"
+                height="12"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                aria-hidden="true"
+              >
                 <circle cx="8" cy="8" r="6.75" />
                 <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
               </svg>
-              <span class="help-tooltip" role="tooltip">Bead protrusion depth into wall pocket (mm)</span>
+              <span class="help-tooltip" role="tooltip"
+                >Bead protrusion depth into wall pocket ({{ unit() }})</span
+              >
             </span>
           </label>
           <input
             type="number"
-            min="0.2"
-            max="2"
-            step="0.1"
+            min="0.01"
+            step="any"
+            [placeholder]="unit()"
             [value]="params().snapFit.depth"
             (keydown.enter)="$any($event.target).blur()"
             (blur)="setSnapFitNumber('depth', $any($event.target).value)"
@@ -214,20 +285,31 @@
 
         <div class="input-group">
           <label>
-            Bead Height
+            Bead Height ({{ unit() }})
             <span class="help-tip" tabindex="0">
-              <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <svg
+                class="help-icon"
+                viewBox="0 0 16 16"
+                width="12"
+                height="12"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                aria-hidden="true"
+              >
                 <circle cx="8" cy="8" r="6.75" />
                 <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
               </svg>
-              <span class="help-tooltip" role="tooltip">Vertical height of the bead profile (mm)</span>
+              <span class="help-tooltip" role="tooltip"
+                >Vertical height of the bead profile ({{ unit() }})</span
+              >
             </span>
           </label>
           <input
             type="number"
-            min="0.4"
-            max="4"
-            step="0.1"
+            min="0.01"
+            step="any"
+            [placeholder]="unit()"
             [value]="params().snapFit.height"
             (keydown.enter)="$any($event.target).blur()"
             (blur)="setSnapFitNumber('height', $any($event.target).value)"
@@ -236,20 +318,31 @@
 
         <div class="input-group">
           <label>
-            Pocket Clearance
+            Pocket Clearance ({{ unit() }})
             <span class="help-tip help-tip-right" tabindex="0">
-              <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <svg
+                class="help-icon"
+                viewBox="0 0 16 16"
+                width="12"
+                height="12"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                aria-hidden="true"
+              >
                 <circle cx="8" cy="8" r="6.75" />
                 <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
               </svg>
-              <span class="help-tooltip" role="tooltip">Fit tolerance gap around the bead (mm)</span>
+              <span class="help-tooltip" role="tooltip"
+                >Fit tolerance gap around the bead ({{ unit() }})</span
+              >
             </span>
           </label>
           <input
             type="number"
             min="0"
-            max="0.5"
-            step="0.05"
+            step="any"
+            [placeholder]="unit()"
             [value]="params().snapFit.clearance"
             (keydown.enter)="$any($event.target).blur()"
             (blur)="setSnapFitNumber('clearance', $any($event.target).value)"
@@ -269,11 +362,12 @@
 
       @if (params().lidScrews) {
         <div class="input-group">
-          <label>Lid Hole Diameter</label>
+          <label>Lid Hole Diameter ({{ unit() }})</label>
           <input
             type="number"
-            min="1"
-            step="0.01"
+            min="0.01"
+            step="any"
+            [placeholder]="unit()"
             [value]="params().lidScrewDiameter"
             (keydown.enter)="$any($event.target).blur()"
             (blur)="setNumberParam('lidScrewDiameter', $any($event.target).value)"
@@ -281,11 +375,12 @@
         </div>
 
         <div class="input-group">
-          <label>Base Hole Diameter</label>
+          <label>Base Hole Diameter ({{ unit() }})</label>
           <input
             type="number"
-            min="1"
-            step="0.01"
+            min="0.01"
+            step="any"
+            [placeholder]="unit()"
             [value]="params().baseLidScrewDiameter"
             (keydown.enter)="$any($event.target).blur()"
             (blur)="setNumberParam('baseLidScrewDiameter', $any($event.target).value)"
@@ -309,11 +404,12 @@
           params().lidScrewRecessType === 'countersunk'
         ) {
           <div class="input-group">
-            <label>Recess Diameter</label>
+            <label>Recess Diameter ({{ unit() }})</label>
             <input
               type="number"
-              min="1"
-              step="0.1"
+              min="0.01"
+              step="any"
+              [placeholder]="unit()"
               [value]="params().lidScrewRecessDiameter"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="setNumberParam('lidScrewRecessDiameter', $any($event.target).value)"
@@ -323,11 +419,12 @@
 
         @if (params().lidScrewRecessType === 'counterbore') {
           <div class="input-group">
-            <label>Recess Depth</label>
+            <label>Recess Depth ({{ unit() }})</label>
             <input
               type="number"
-              min="0.5"
-              step="0.1"
+              min="0.01"
+              step="any"
+              [placeholder]="unit()"
               [value]="params().lidScrewRecessDepth"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="setNumberParam('lidScrewRecessDepth', $any($event.target).value)"
@@ -349,12 +446,13 @@
 
         @if (params().lidScrewHoleType === 'blind') {
           <div class="input-group">
-            <label>Base Hole Depth</label>
+            <label>Base Hole Depth ({{ unit() }})</label>
             <input
               type="number"
-              min="1"
+              min="0.01"
               [max]="params().height"
-              step="0.5"
+              step="any"
+              [placeholder]="unit()"
               [value]="params().lidScrewHoleDepth"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="setNumberParam('lidScrewHoleDepth', $any($event.target).value)"
@@ -364,11 +462,12 @@
 
         @if (params().lidScrewHoleType === 'nut-pocket') {
           <div class="input-group">
-            <label>Nut Width (Flats)</label>
+            <label>Nut Width (Flats) ({{ unit() }})</label>
             <input
               type="number"
-              min="1"
-              step="0.1"
+              min="0.01"
+              step="any"
+              [placeholder]="unit()"
               [value]="params().lidScrewNutWidth"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="setNumberParam('lidScrewNutWidth', $any($event.target).value)"
@@ -376,11 +475,12 @@
           </div>
 
           <div class="input-group">
-            <label>Nut Depth</label>
+            <label>Nut Depth ({{ unit() }})</label>
             <input
               type="number"
-              min="0.5"
-              step="0.1"
+              min="0.01"
+              step="any"
+              [placeholder]="unit()"
               [value]="params().lidScrewNutDepth"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="setNumberParam('lidScrewNutDepth', $any($event.target).value)"
@@ -401,11 +501,12 @@
 
       @if (params().waterProof) {
         <div class="input-group">
-          <label>Seal Thickness</label>
+          <label>Seal Thickness ({{ unit() }})</label>
           <input
             type="number"
-            min="1"
-            step="0.01"
+            min="0.01"
+            step="any"
+            [placeholder]="unit()"
             [value]="params().sealThickness"
             (keydown.enter)="$any($event.target).blur()"
             (blur)="setNumberParam('sealThickness', $any($event.target).value)"
@@ -456,9 +557,11 @@
           </div>
 
           <div class="input-group">
-            <label>X</label>
+            <label>X ({{ unit() }})</label>
             <input
               type="number"
+              step="any"
+              [placeholder]="unit()"
               [value]="hole.x"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="updateHole($index, { x: +$any($event.target).value })"
@@ -466,9 +569,11 @@
           </div>
 
           <div class="input-group">
-            <label>Y</label>
+            <label>Y ({{ unit() }})</label>
             <input
               type="number"
+              step="any"
+              [placeholder]="unit()"
               [value]="hole.y"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="updateHole($index, { y: +$any($event.target).value })"
@@ -477,9 +582,12 @@
 
           @if (hole.shape === 'rectangle' || hole.shape === 'square') {
             <div class="input-group">
-              <label>Width</label>
+              <label>Width ({{ unit() }})</label>
               <input
                 type="number"
+                min="0.01"
+                step="any"
+                [placeholder]="unit()"
                 [value]="hole.width"
                 (keydown.enter)="$any($event.target).blur()"
                 (blur)="updateHole($index, { width: +$any($event.target).value })"
@@ -489,9 +597,12 @@
 
           @if (hole.shape === 'rectangle') {
             <div class="input-group">
-              <label>Length</label>
+              <label>Length ({{ unit() }})</label>
               <input
                 type="number"
+                min="0.01"
+                step="any"
+                [placeholder]="unit()"
                 [value]="hole.length"
                 (keydown.enter)="$any($event.target).blur()"
                 (blur)="updateHole($index, { length: +$any($event.target).value })"
@@ -501,9 +612,12 @@
 
           @if (hole.shape === 'circle' || hole.shape === 'double-d') {
             <div class="input-group">
-              <label>Diameter</label>
+              <label>Diameter ({{ unit() }})</label>
               <input
                 type="number"
+                min="0.01"
+                step="any"
+                [placeholder]="unit()"
                 [value]="hole.diameter"
                 (keydown.enter)="$any($event.target).blur()"
                 (blur)="updateHole($index, { diameter: +$any($event.target).value })"
@@ -513,9 +627,12 @@
 
           @if (hole.shape === 'double-d') {
             <div class="input-group">
-              <label>Flat Width</label>
+              <label>Flat Width ({{ unit() }})</label>
               <input
                 type="number"
+                min="0.01"
+                step="any"
+                [placeholder]="unit()"
                 [value]="hole.flatWidth ?? (hole.diameter ? hole.diameter * 0.9 : 11)"
                 (keydown.enter)="$any($event.target).blur()"
                 (blur)="updateHole($index, { flatWidth: +$any($event.target).value })"
@@ -523,7 +640,7 @@
             </div>
 
             <div class="input-group">
-              <label>Rotation</label>
+              <label>Rotation (°)</label>
               <input
                 type="number"
                 step="1"
@@ -567,48 +684,89 @@
             </select>
           </div>
           <div class="input-group">
-            <label>X</label>
+            <label>X ({{ unit() }})</label>
             <input
               type="number"
+              step="any"
+              [placeholder]="unit()"
               [value]="mount.x"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="updatePcbMount($index, { x: +$any($event.target).value })"
             />
           </div>
           <div class="input-group">
-            <label>Y</label>
+            <label>Y ({{ unit() }})</label>
             <input
               type="number"
+              step="any"
+              [placeholder]="unit()"
               [value]="mount.y"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="updatePcbMount($index, { y: +$any($event.target).value })"
             />
           </div>
           <div class="input-group">
-            <label>Height</label>
+            <label>Height ({{ unit() }})</label>
             <input
               type="number"
+              min="0"
+              step="any"
+              [placeholder]="unit()"
               [value]="mount.height"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="updatePcbMount($index, { height: +$any($event.target).value })"
             />
           </div>
           <div class="input-group">
-            <label>Outer Diameter</label>
+            <label>Outer Diameter ({{ unit() }})</label>
             <input
               type="number"
+              min="0.01"
+              step="any"
+              [placeholder]="unit()"
               [value]="mount.outerDiameter"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="updatePcbMount($index, { outerDiameter: +$any($event.target).value })"
             />
           </div>
           <div class="input-group">
-            <label>Screw Diameter</label>
+            <label>Screw Diameter ({{ unit() }})</label>
             <input
               type="number"
+              min="0.01"
+              step="any"
+              [placeholder]="unit()"
               [value]="mount.screwDiameter"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="updatePcbMount($index, { screwDiameter: +$any($event.target).value })"
+            />
+          </div>
+          <div class="input-group checkbox-group">
+            <label>
+              Chamfer
+              <span class="help-tip" tabindex="0">
+                <svg
+                  class="help-icon"
+                  viewBox="0 0 16 16"
+                  width="12"
+                  height="12"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  aria-hidden="true"
+                >
+                  <circle cx="8" cy="8" r="6.75" />
+                  <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
+                </svg>
+                <span class="help-tooltip" role="tooltip"
+                  >Root fillet at standoff base for layer strength</span
+                >
+              </span>
+            </label>
+            <input
+              type="checkbox"
+              [checked]="mount.chamfer !== false"
+              (change)="updatePcbMount($index, { chamfer: $any($event.target).checked })"
             />
           </div>
         </div>
@@ -627,11 +785,22 @@
         <label>
           Enable PCB Preview
           <span class="help-tip" tabindex="0">
-            <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <svg
+              class="help-icon"
+              viewBox="0 0 16 16"
+              width="12"
+              height="12"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              aria-hidden="true"
+            >
               <circle cx="8" cy="8" r="6.75" />
               <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
             </svg>
-            <span class="help-tooltip" role="tooltip">Simulates PCB in 3D viewport. Green = clearance, red = collision with enclosure</span>
+            <span class="help-tooltip" role="tooltip"
+              >Simulates PCB in 3D viewport. Green = clearance, red = collision with enclosure</span
+            >
           </span>
         </label>
         <input
@@ -642,19 +811,31 @@
       </div>
       <div class="input-group">
         <label>
-          Width
+          Width ({{ unit() }})
           <span class="help-tip" tabindex="0">
-            <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <svg
+              class="help-icon"
+              viewBox="0 0 16 16"
+              width="12"
+              height="12"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              aria-hidden="true"
+            >
               <circle cx="8" cy="8" r="6.75" />
               <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
             </svg>
-            <span class="help-tooltip" role="tooltip">Board dimension along X (left/right, mm)</span>
+            <span class="help-tooltip" role="tooltip"
+              >Board dimension along X (left/right, {{ unit() }})</span
+            >
           </span>
         </label>
         <input
           type="number"
-          min="1"
-          step="0.1"
+          min="0.01"
+          step="any"
+          [placeholder]="unit()"
           [value]="params().pcbPreview.width"
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setPcbPreviewNumber('width', $any($event.target).value)"
@@ -662,19 +843,31 @@
       </div>
       <div class="input-group">
         <label>
-          Length
+          Length ({{ unit() }})
           <span class="help-tip help-tip-right" tabindex="0">
-            <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <svg
+              class="help-icon"
+              viewBox="0 0 16 16"
+              width="12"
+              height="12"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              aria-hidden="true"
+            >
               <circle cx="8" cy="8" r="6.75" />
               <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
             </svg>
-            <span class="help-tooltip" role="tooltip">Board dimension along Y (front/back, mm)</span>
+            <span class="help-tooltip" role="tooltip"
+              >Board dimension along Y (front/back, {{ unit() }})</span
+            >
           </span>
         </label>
         <input
           type="number"
-          min="1"
-          step="0.1"
+          min="0.01"
+          step="any"
+          [placeholder]="unit()"
           [value]="params().pcbPreview.length"
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setPcbPreviewNumber('length', $any($event.target).value)"
@@ -682,19 +875,31 @@
       </div>
       <div class="input-group">
         <label>
-          Thickness
+          Thickness ({{ unit() }})
           <span class="help-tip" tabindex="0">
-            <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <svg
+              class="help-icon"
+              viewBox="0 0 16 16"
+              width="12"
+              height="12"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              aria-hidden="true"
+            >
               <circle cx="8" cy="8" r="6.75" />
               <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
             </svg>
-            <span class="help-tooltip" role="tooltip">Thickness of the PCB board (mm)</span>
+            <span class="help-tooltip" role="tooltip"
+              >Thickness of the PCB board ({{ unit() }})</span
+            >
           </span>
         </label>
         <input
           type="number"
-          min="0.1"
-          step="0.1"
+          min="0.01"
+          step="any"
+          [placeholder]="unit()"
           [value]="params().pcbPreview.thickness"
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setPcbPreviewNumber('thickness', $any($event.target).value)"
@@ -702,19 +907,31 @@
       </div>
       <div class="input-group">
         <label>
-          Component Height
+          Component Height ({{ unit() }})
           <span class="help-tip help-tip-right" tabindex="0">
-            <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <svg
+              class="help-icon"
+              viewBox="0 0 16 16"
+              width="12"
+              height="12"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              aria-hidden="true"
+            >
               <circle cx="8" cy="8" r="6.75" />
               <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
             </svg>
-            <span class="help-tooltip" role="tooltip">Height of components above the board (mm)</span>
+            <span class="help-tooltip" role="tooltip"
+              >Height of components above the board ({{ unit() }})</span
+            >
           </span>
         </label>
         <input
           type="number"
           min="0"
-          step="0.1"
+          step="any"
+          [placeholder]="unit()"
           [value]="params().pcbPreview.componentHeight"
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setPcbPreviewNumber('componentHeight', $any($event.target).value)"
@@ -722,18 +939,30 @@
       </div>
       <div class="input-group">
         <label>
-          Offset X
+          Offset X ({{ unit() }})
           <span class="help-tip" tabindex="0">
-            <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <svg
+              class="help-icon"
+              viewBox="0 0 16 16"
+              width="12"
+              height="12"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              aria-hidden="true"
+            >
               <circle cx="8" cy="8" r="6.75" />
               <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
             </svg>
-            <span class="help-tooltip" role="tooltip">Offset from enclosure center along X (mm)</span>
+            <span class="help-tooltip" role="tooltip"
+              >Offset from enclosure center along X ({{ unit() }})</span
+            >
           </span>
         </label>
         <input
           type="number"
-          step="0.1"
+          step="any"
+          [placeholder]="unit()"
           [value]="params().pcbPreview.x"
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setPcbPreviewNumber('x', $any($event.target).value)"
@@ -741,18 +970,30 @@
       </div>
       <div class="input-group">
         <label>
-          Offset Y
+          Offset Y ({{ unit() }})
           <span class="help-tip help-tip-right" tabindex="0">
-            <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <svg
+              class="help-icon"
+              viewBox="0 0 16 16"
+              width="12"
+              height="12"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              aria-hidden="true"
+            >
               <circle cx="8" cy="8" r="6.75" />
               <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
             </svg>
-            <span class="help-tooltip" role="tooltip">Offset from enclosure center along Y (mm)</span>
+            <span class="help-tooltip" role="tooltip"
+              >Offset from enclosure center along Y ({{ unit() }})</span
+            >
           </span>
         </label>
         <input
           type="number"
-          step="0.1"
+          step="any"
+          [placeholder]="unit()"
           [value]="params().pcbPreview.y"
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setPcbPreviewNumber('y', $any($event.target).value)"
@@ -775,58 +1016,65 @@
           </p>
 
           <div class="input-group">
-            <label>X</label>
+            <label>X ({{ unit() }})</label>
             <input
               type="number"
+              step="any"
+              [placeholder]="unit()"
               [value]="wallItem.x"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="updateInternalWall($index, { x: +$any($event.target).value })"
             />
           </div>
           <div class="input-group">
-            <label>Y</label>
+            <label>Y ({{ unit() }})</label>
             <input
               type="number"
+              step="any"
+              [placeholder]="unit()"
               [value]="wallItem.y"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="updateInternalWall($index, { y: +$any($event.target).value })"
             />
           </div>
           <div class="input-group">
-            <label>Height</label>
+            <label>Height ({{ unit() }})</label>
             <input
               type="number"
-              min="0.1"
-              step="0.1"
+              min="0.01"
+              step="any"
+              [placeholder]="unit()"
               [value]="wallItem.height"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="updateInternalWall($index, { height: +$any($event.target).value })"
             />
           </div>
           <div class="input-group">
-            <label>Length</label>
+            <label>Length ({{ unit() }})</label>
             <input
               type="number"
-              min="0.1"
-              step="0.1"
+              min="0.01"
+              step="any"
+              [placeholder]="unit()"
               [value]="wallItem.length"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="updateInternalWall($index, { length: +$any($event.target).value })"
             />
           </div>
           <div class="input-group">
-            <label>Thickness</label>
+            <label>Thickness ({{ unit() }})</label>
             <input
               type="number"
-              min="0.1"
-              step="0.1"
+              min="0.01"
+              step="any"
+              [placeholder]="unit()"
               [value]="wallItem.thickness"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="updateInternalWall($index, { thickness: +$any($event.target).value })"
             />
           </div>
           <div class="input-group">
-            <label>Rotation</label>
+            <label>Rotation (°)</label>
             <input
               type="number"
               step="1"
@@ -867,113 +1115,125 @@
             </select>
           </div>
           <div class="input-group">
-            <label>X</label>
+            <label>X ({{ unit() }})</label>
             <input
               type="number"
+              step="any"
+              [placeholder]="unit()"
               [value]="clamp.x"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="updateCableClamp($index, { x: +$any($event.target).value })"
             />
           </div>
           <div class="input-group">
-            <label>Y</label>
+            <label>Y ({{ unit() }})</label>
             <input
               type="number"
+              step="any"
+              [placeholder]="unit()"
               [value]="clamp.y"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="updateCableClamp($index, { y: +$any($event.target).value })"
             />
           </div>
           <div class="input-group">
-            <label>Post Distance (Span)</label>
+            <label>Post Distance (Span) ({{ unit() }})</label>
             <input
               type="number"
-              min="5"
-              step="0.5"
+              min="0.01"
+              step="any"
+              [placeholder]="unit()"
               [value]="clamp.length"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="updateCableClamp($index, { length: +$any($event.target).value })"
             />
           </div>
           <div class="input-group">
-            <label>Post Height</label>
+            <label>Post Height ({{ unit() }})</label>
             <input
               type="number"
-              min="1"
-              step="0.5"
+              min="0.01"
+              step="any"
+              [placeholder]="unit()"
               [value]="clamp.mountHeight"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="updateCableClamp($index, { mountHeight: +$any($event.target).value })"
             />
           </div>
           <div class="input-group">
-            <label>Saddle Height</label>
+            <label>Saddle Height ({{ unit() }})</label>
             <input
               type="number"
-              min="0.5"
-              step="0.5"
+              min="0.01"
+              step="any"
+              [placeholder]="unit()"
               [value]="clamp.wallHeight"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="updateCableClamp($index, { wallHeight: +$any($event.target).value })"
             />
           </div>
           <div class="input-group">
-            <label>Clamp Depth (Thickness)</label>
+            <label>Clamp Depth (Thickness) ({{ unit() }})</label>
             <input
               type="number"
-              min="1"
-              step="0.5"
+              min="0.01"
+              step="any"
+              [placeholder]="unit()"
               [value]="clamp.wallThickness"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="updateCableClamp($index, { wallThickness: +$any($event.target).value })"
             />
           </div>
           <div class="input-group">
-            <label>Post Outer Diameter</label>
+            <label>Post Outer Diameter ({{ unit() }})</label>
             <input
               type="number"
-              min="2"
-              step="0.5"
+              min="0.01"
+              step="any"
+              [placeholder]="unit()"
               [value]="clamp.mountOuterDiameter"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="updateCableClamp($index, { mountOuterDiameter: +$any($event.target).value })"
             />
           </div>
           <div class="input-group">
-            <label>Base Screw Diameter (Pilot)</label>
+            <label>Base Screw Diameter (Pilot) ({{ unit() }})</label>
             <input
               type="number"
-              min="0.5"
-              step="0.1"
+              min="0.01"
+              step="any"
+              [placeholder]="unit()"
               [value]="clamp.mountScrewDiameter"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="updateCableClamp($index, { mountScrewDiameter: +$any($event.target).value })"
             />
           </div>
           <div class="input-group">
-            <label>Top Strap Thickness</label>
+            <label>Top Strap Thickness ({{ unit() }})</label>
             <input
               type="number"
-              min="0.5"
-              step="0.5"
+              min="0.01"
+              step="any"
+              [placeholder]="unit()"
               [value]="clamp.topHeight"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="updateCableClamp($index, { topHeight: +$any($event.target).value })"
             />
           </div>
           <div class="input-group">
-            <label>Top Screw Diameter (Clearance)</label>
+            <label>Top Screw Diameter (Clearance) ({{ unit() }})</label>
             <input
               type="number"
-              min="0.5"
-              step="0.1"
+              min="0.01"
+              step="any"
+              [placeholder]="unit()"
               [value]="clamp.topScrewDiameter"
               (keydown.enter)="$any($event.target).blur()"
               (blur)="updateCableClamp($index, { topScrewDiameter: +$any($event.target).value })"
             />
           </div>
           <div class="input-group">
-            <label>Rotation</label>
+            <label>Rotation (°)</label>
             <input
               type="number"
               step="1"
@@ -1024,11 +1284,12 @@
         </div>
 
         <div class="input-group">
-          <label>Screw Diameter</label>
+          <label>Screw Diameter ({{ unit() }})</label>
           <input
             type="number"
-            min="1"
-            step="0.01"
+            min="0.01"
+            step="any"
+            [placeholder]="unit()"
             [value]="params().wallMountScrewDiameter"
             (keydown.enter)="$any($event.target).blur()"
             (blur)="setNumberParam('wallMountScrewDiameter', $any($event.target).value)"
@@ -1066,12 +1327,12 @@
         </div>
 
         <div class="input-group">
-          <label>Mount Width</label>
+          <label>Mount Width ({{ unit() }})</label>
           <input
             type="number"
-            min="10"
-            max="50"
-            step="1"
+            min="0.01"
+            step="any"
+            [placeholder]="unit()"
             [value]="params().dinRailMountWidth"
             (keydown.enter)="$any($event.target).blur()"
             (blur)="setNumberParam('dinRailMountWidth', $any($event.target).value)"
@@ -1079,11 +1340,12 @@
         </div>
 
         <div class="input-group">
-          <label>Screw Diameter</label>
+          <label>Screw Diameter ({{ unit() }})</label>
           <input
             type="number"
-            min="1"
-            step="0.01"
+            min="0.01"
+            step="any"
+            [placeholder]="unit()"
             [value]="params().dinRailScrewDiameter"
             (keydown.enter)="$any($event.target).blur()"
             (blur)="setNumberParam('dinRailScrewDiameter', $any($event.target).value)"
@@ -1101,19 +1363,32 @@
     <div class="accordian-body">
       <div class="input-group">
         <label>
-          Base Bottom
+          Base Bottom ({{ unit() }})
           <span class="help-tip" tabindex="0">
-            <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <svg
+              class="help-icon"
+              viewBox="0 0 16 16"
+              width="12"
+              height="12"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              aria-hidden="true"
+            >
               <circle cx="8" cy="8" r="6.75" />
               <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
             </svg>
-            <span class="help-tooltip" role="tooltip">45° bevel on base bed edge to prevent 1st-layer elephant foot (0 = off, mm)</span>
+            <span class="help-tooltip" role="tooltip"
+              >45° bevel on base bed edge to prevent 1st-layer elephant foot (0 = off,
+              {{ unit() }})</span
+            >
           </span>
         </label>
         <input
           type="number"
           min="0"
-          step="0.1"
+          step="any"
+          [placeholder]="unit()"
           [value]="params().baseBedChamfer"
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setNumberParam('baseBedChamfer', $any($event.target).value)"
@@ -1121,19 +1396,32 @@
       </div>
       <div class="input-group">
         <label>
-          Lid Top
+          Lid Top ({{ unit() }})
           <span class="help-tip help-tip-right" tabindex="0">
-            <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <svg
+              class="help-icon"
+              viewBox="0 0 16 16"
+              width="12"
+              height="12"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              aria-hidden="true"
+            >
               <circle cx="8" cy="8" r="6.75" />
               <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
             </svg>
-            <span class="help-tooltip" role="tooltip">45° bevel on lid exterior bed edge; matches base &amp; suppresses elephant foot (0 = off, mm)</span>
+            <span class="help-tooltip" role="tooltip"
+              >45° bevel on lid exterior bed edge; matches base &amp; suppresses elephant foot (0 =
+              off, {{ unit() }})</span
+            >
           </span>
         </label>
         <input
           type="number"
           min="0"
-          step="0.1"
+          step="any"
+          [placeholder]="unit()"
           [value]="params().lidBedChamfer"
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setNumberParam('lidBedChamfer', $any($event.target).value)"
@@ -1141,19 +1429,32 @@
       </div>
       <div class="input-group">
         <label>
-          Insert Lip
+          Insert Lip ({{ unit() }})
           <span class="help-tip" tabindex="0">
-            <svg class="help-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <svg
+              class="help-icon"
+              viewBox="0 0 16 16"
+              width="12"
+              height="12"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              aria-hidden="true"
+            >
               <circle cx="8" cy="8" r="6.75" />
               <path d="M8 7v4.5M8 4.75v.5" stroke-linecap="round" />
             </svg>
-            <span class="help-tooltip" role="tooltip">45° lead-in bevel on top of lid insert lip for smooth sliding/alignment (0 = off, mm)</span>
+            <span class="help-tooltip" role="tooltip"
+              >45° lead-in bevel on top of lid insert lip for smooth sliding/alignment (0 = off,
+              {{ unit() }})</span
+            >
           </span>
         </label>
         <input
           type="number"
           min="0"
-          step="0.1"
+          step="any"
+          [placeholder]="unit()"
           [value]="params().lidTopChamfer"
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setNumberParam('lidTopChamfer', $any($event.target).value)"
@@ -1177,11 +1478,12 @@
         />
       </div>
       <div class="input-group input-group-full">
-        <label>Grid Spacing</label>
+        <label>Grid Spacing ({{ unit() }})</label>
         <input
           type="number"
-          min="1"
-          step="1"
+          min="0.01"
+          step="any"
+          [placeholder]="unit()"
           [value]="params().gridSpacing"
           (keydown.enter)="$any($event.target).blur()"
           (blur)="setNumberParam('gridSpacing', $any($event.target).value)"

@@ -27,6 +27,7 @@ import {
 import { ExportFormatService } from '../../core/export/export-format.service';
 import type { Params } from '../../core/params';
 import { EnclosureStateService } from '../../core/state/enclosure-state.service';
+import { toMetricParams } from '../../core/units';
 import { ActionButtonComponent } from '../../shared/action-button/action-button.component';
 
 export type { ExportFormatId as ExportFormat };
@@ -167,6 +168,7 @@ export class ToolsComponent {
       const merged: Params = {
         ...current,
         ...data,
+        measurementSystem: data.measurementSystem ?? 'metric',
         snapFit: {
           ...current.snapFit,
           ...(data.snapFit ?? {}),
@@ -192,7 +194,7 @@ export class ToolsComponent {
     this.isExporting.set(true);
     try {
       const tsStr = this.formattedTimestamp();
-      const currentParams = this.state.params();
+      const currentParams = toMetricParams(this.state.params());
       const format = this.selectedFormat();
       const files: { name: string; blob: Blob }[] = [];
 

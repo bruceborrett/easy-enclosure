@@ -57,6 +57,7 @@ export class SidebarComponent {
   });
 
   formatMm(value: number): string {
-    return `${value.toFixed(2)} mm`;
+    const isImperial = this.state.params().measurementSystem === 'imperial';
+    return `${value.toFixed(2)} ${isImperial ? 'in' : 'mm'}`;
   }
 }

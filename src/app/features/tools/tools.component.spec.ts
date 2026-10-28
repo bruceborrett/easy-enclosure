@@ -28,7 +28,8 @@ describe('ToolsComponent', () => {
     expect(component.isExportModalOpen()).toBeFalse();
   });
 
-  it('saves params as json file', () => {
+  it('saves params as json file including measurement system', async () => {
+    state.setMeasurementSystem('imperial');
     const saveSpy = spyOn(component as any, 'saveFile');
 
     component.saveParamsFile();
@@ -37,6 +38,80 @@ describe('ToolsComponent', () => {
       jasmine.any(Blob),
       jasmine.stringMatching(/^enclosure-\d+\.json$/),
     );
+
+    const savedBlob = saveSpy.calls.mostRecent().args[0] as Blob;
+    const text = await savedBlob.text();
+    const parsed = JSON.parse(text);
+    expect(parsed.measurementSystem).toBe('imperial');
+    expect(parsed.length).toBe(3.1496);
+  });
+
+  it('loads params from json preserving imperial measurement system', () => {
+    const originalFileReader = globalThis.FileReader;
+
+    class MockFileReader {
+      result: string | ArrayBuffer | null = null;
+      onload: ((this: FileReader, ev: ProgressEvent<FileReader>) => unknown) | null = null;
+
+      readAsText(): void {
+        this.result = '{"measurementSystem": "imperial", "length": 4.5, "waterProof": false}';
+        if (this.onload) {
+          this.onload.call(
+            this as unknown as FileReader,
+            new ProgressEvent('load') as ProgressEvent<FileReader>,
+          );
+        }
+      }
+    }
+
+    (globalThis as { FileReader: typeof FileReader }).FileReader =
+      MockFileReader as unknown as typeof FileReader;
+    (window as Window & { FileReader: typeof FileReader }).FileReader =
+      MockFileReader as unknown as typeof FileReader;
+
+    try {
+      const input = document.createElement('input');
+      const file = new File(['mock'], 'params.json', { type: 'application/json' });
+      const fileList = {
+        0: file,
+        length: 1,
+        item: (index: number) => (index === 0 ? file : null),
+      } as unknown as FileList;
+      Object.defineProperty(input, 'files', { value: fileList });
+
+      component.loadParamsFile({ target: input } as unknown as Event);
+
+      expect(state.params().measurementSystem).toBe('imperial');
+      expect(state.params().length).toBe(4.5);
+      expect(state.params().waterProof).toBeFalse();
+    } finally {
+      (globalThis as { FileReader: typeof FileReader }).FileReader = originalFileReader;
+      (window as Window & { FileReader: typeof FileReader }).FileReader = originalFileReader;
+    }
+  });
+
+  it('exports geometry in consistent metric internal units when state is in imperial', async () => {
+    state.setMeasurementSystem('imperial');
+    expect(state.params().measurementSystem).toBe('imperial');
+    expect(state.params().length).toBe(3.1496);
+
+    const serializeSpy = spyOn(
+      (component as any).exportFormatService,
+      'serialize',
+    ).and.callThrough();
+    const saveSpy = spyOn(component as any, 'saveFile');
+
+    component.exportLid.set(false);
+    component.exportSeal.set(false);
+    component.exportPcbMounts.set(false);
+    component.exportDinRail.set(false);
+    component.exportCableClamps.set(false);
+
+    await component.exportSelected();
+
+    expect(serializeSpy).toHaveBeenCalled();
+    const geometry = serializeSpy.calls.mostRecent().args[1] as any;
+    expect(geometry).toBeTruthy();
   });
 
   it('loads params from json and merges with current settings', () => {

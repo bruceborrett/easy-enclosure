@@ -58,6 +58,22 @@ describe('pcbmount', () => {
       expect(bbox[1][2]).toBeCloseTo(4, 1);
     });
 
+    it('disables root fillet when chamfer is false', () => {
+      const mount = pcbMount({
+        ...baseMountParams,
+        chamfer: false,
+      });
+
+      const bbox = measureBoundingBox(mount);
+      // Without chamfer, outer radius remains 3 => [-3, 3]
+      expect(bbox[0][0]).toBeCloseTo(-3, 1);
+      expect(bbox[1][0]).toBeCloseTo(3, 1);
+      expect(bbox[0][1]).toBeCloseTo(-3, 1);
+      expect(bbox[1][1]).toBeCloseTo(3, 1);
+      expect(bbox[0][2]).toBeCloseTo(-4, 1);
+      expect(bbox[1][2]).toBeCloseTo(4, 1);
+    });
+
     it('scales fillet with different mount diameters (e.g. 1.5mm on 4.5mm mount)', () => {
       const mount = pcbMount({
         ...baseMountParams,
@@ -118,17 +134,50 @@ describe('pcbmount', () => {
       expect(bbox[1][2]).toBeCloseTo(10, 1);
     });
 
-    it('places lid mounts on the lid roof', () => {
+    it('clips base mounts so chamfers do not protrude outside the enclosure boundary or rounded corners', () => {
+      const params = cloneParams(DEFAULT_PARAMS);
+      params.width = 60;
+      params.length = 100;
+      params.height = 30;
+      params.cornerRadius = 8;
+      params.floor = 2;
+      params.pcbMounts = [
+        {
+          surface: 'bottom',
+          x: 26, // bottomX = 30 - 26 = 4. Without clipping: 4 - 5 = -1
+          y: 46, // bottomY = 50 - 46 = 4. Without clipping: 4 - 5 = -1
+          height: 8,
+          outerDiameter: 6,
+          screwDiameter: 3,
+          chamfer: true,
+        },
+      ];
+
+      const baseMount = pcbMountsOnBase(params);
+      expect(baseMount).not.toBeNull();
+      const bbox = measureBoundingBox(baseMount!);
+      // Bounding box must not be negative in X or Y; corner radius clips it within [0, 60] x [0, 100]
+      expect(bbox[0][0]).toBeGreaterThanOrEqual(0);
+      expect(bbox[0][1]).toBeGreaterThanOrEqual(0);
+      expect(bbox[1][0]).toBeLessThanOrEqual(params.width);
+      expect(bbox[1][1]).toBeLessThanOrEqual(params.length);
+    });
+
+    it('clips lid mounts on the lid roof within enclosure bounds', () => {
       const params = cloneParams(DEFAULT_PARAMS);
       params.roof = 2.5;
+      params.width = 60;
+      params.length = 100;
+      params.cornerRadius = 8;
       params.pcbMounts = [
         {
           surface: 'top',
-          x: 0,
-          y: 0,
+          x: 26,
+          y: 46,
           height: 6,
           outerDiameter: 6,
           screwDiameter: 3,
+          chamfer: true,
         },
       ];
 
@@ -138,6 +187,9 @@ describe('pcbmount', () => {
       // Roof is 2.5, height is 6, so z spans [2.5, 8.5]
       expect(bbox[0][2]).toBeCloseTo(2.5, 1);
       expect(bbox[1][2]).toBeCloseTo(8.5, 1);
+      // Chamfer must not poke outside the lid boundary
+      expect(bbox[0][0]).toBeGreaterThanOrEqual(0);
+      expect(bbox[0][1]).toBeGreaterThanOrEqual(0);
     });
 
     it('unions both base and lid mounts in pcbMounts()', () => {

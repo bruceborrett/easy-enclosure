@@ -57,4 +57,34 @@ describe('EnclosureStateService', () => {
     expect(service.params().length).toBe(80);
     expect(service.loading()).toBeFalse();
   });
+
+  it('switches measurement system and converts parameters', () => {
+    expect(service.params().measurementSystem).toBe('metric');
+    expect(service.params().length).toBe(80);
+
+    service.setMeasurementSystem('imperial');
+    expect(service.params().measurementSystem).toBe('imperial');
+    expect(service.params().length).toBe(3.1496);
+
+    service.setMeasurementSystem('metric');
+    expect(service.params().measurementSystem).toBe('metric');
+    expect(service.params().length).toBe(80);
+  });
+
+  it('does not re-convert if setting the currently active measurement system', () => {
+    service.setMeasurementSystem('imperial');
+    const length = service.params().length;
+    service.setMeasurementSystem('imperial');
+    expect(service.params().length).toBe(length);
+  });
+
+  it('routes updateParam and patchParams with measurementSystem through conversion', () => {
+    service.updateParam('measurementSystem', 'imperial');
+    expect(service.params().measurementSystem).toBe('imperial');
+    expect(service.params().length).toBe(3.1496);
+
+    service.patchParams({ measurementSystem: 'metric' });
+    expect(service.params().measurementSystem).toBe('metric');
+    expect(service.params().length).toBe(80);
+  });
 });

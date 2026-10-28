@@ -1,5 +1,7 @@
 import type { Surface } from './enclosure';
 
+export type MeasurementSystem = 'metric' | 'imperial';
+
 export type HoleShape = 'circle' | 'square' | 'rectangle' | 'double-d';
 
 export type Hole = {
@@ -21,6 +23,7 @@ export type PCBMount = {
   height: number;
   outerDiameter: number;
   screwDiameter: number;
+  chamfer?: boolean;
 };
 
 export type InternalWall = {
@@ -92,6 +95,7 @@ export const DEFAULT_CABLE_CLAMP: CableClamp = {
 };
 
 export type Params = {
+  measurementSystem?: MeasurementSystem;
   length: number;
   width: number;
   height: number;
@@ -138,6 +142,7 @@ export type Params = {
 };
 
 export const DEFAULT_PARAMS: Params = {
+  measurementSystem: 'metric',
   length: 80,
   width: 100,
   height: 30,
@@ -219,6 +224,7 @@ export const DEFAULT_PARAMS: Params = {
       height: 5,
       outerDiameter: 6,
       screwDiameter: 2,
+      chamfer: true,
     },
     {
       surface: 'bottom',
@@ -227,6 +233,7 @@ export const DEFAULT_PARAMS: Params = {
       height: 5,
       outerDiameter: 6,
       screwDiameter: 2,
+      chamfer: true,
     },
     {
       surface: 'bottom',
@@ -235,6 +242,7 @@ export const DEFAULT_PARAMS: Params = {
       height: 5,
       outerDiameter: 6,
       screwDiameter: 2,
+      chamfer: true,
     },
     {
       surface: 'bottom',
@@ -243,6 +251,7 @@ export const DEFAULT_PARAMS: Params = {
       height: 5,
       outerDiameter: 6,
       screwDiameter: 2,
+      chamfer: true,
     },
   ],
   internalWalls: [

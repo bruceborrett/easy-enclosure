@@ -4,6 +4,7 @@ import type {
   CableClamp,
   Hole,
   InternalWall,
+  MeasurementSystem,
   PCBMount,
   Params,
   PCBPreview,
@@ -11,6 +12,7 @@ import type {
 } from '../../core/params';
 import { DEFAULT_CABLE_CLAMP } from '../../core/params';
 import { EnclosureStateService } from '../../core/state/enclosure-state.service';
+import { mmToInches } from '../../core/units';
 
 type Surface = 'top' | 'bottom' | 'left' | 'right' | 'front' | 'back';
 
@@ -38,6 +40,22 @@ export class ParamsFormComponent {
     return this.state.params();
   }
 
+  measurementSystem(): MeasurementSystem {
+    return this.params().measurementSystem ?? 'metric';
+  }
+
+  isImperial(): boolean {
+    return this.measurementSystem() === 'imperial';
+  }
+
+  unit(): string {
+    return this.isImperial() ? 'in' : 'mm';
+  }
+
+  setMeasurementSystem(system: MeasurementSystem): void {
+    this.state.setMeasurementSystem(system);
+  }
+
   setActiveTab(tab: number): void {
     this.activeTab.set(this.activeTab() === tab ? null : tab);
   }
@@ -63,16 +81,17 @@ export class ParamsFormComponent {
 
   addHole(): void {
     const current = this.params();
+    const isImp = current.measurementSystem === 'imperial';
     const next: Hole = {
       shape: 'circle',
       surface: 'front',
-      diameter: 12.5,
-      width: 10,
-      length: 10,
-      flatWidth: 11,
+      diameter: isImp ? mmToInches(12.5) : 12.5,
+      width: isImp ? mmToInches(10) : 10,
+      length: isImp ? mmToInches(10) : 10,
+      flatWidth: isImp ? mmToInches(11) : 11,
       rotation: 0,
-      y: current.width / 2,
-      x: 6,
+      y: Number((current.width / 2).toFixed(isImp ? 4 : 2)),
+      x: isImp ? mmToInches(6) : 6,
     };
     this.state.patchParams({ holes: [...current.holes, next] });
   }
@@ -84,13 +103,17 @@ export class ParamsFormComponent {
 
   updateHole(index: number, patch: Partial<Hole>): void {
     const current = this.params();
+    const isImp = current.measurementSystem === 'imperial';
     this.state.patchParams({
       holes: current.holes.map((item, i) => {
         if (i !== index) return item;
         const updated = { ...item, ...patch };
         if (patch.shape === 'double-d') {
           if (updated.flatWidth === undefined) {
-            updated.flatWidth = updated.diameter ? Number((updated.diameter * 0.9).toFixed(1)) : 11;
+            const defaultFlat = isImp ? mmToInches(11) : 11;
+            updated.flatWidth = updated.diameter
+              ? Number((updated.diameter * 0.9).toFixed(isImp ? 4 : 1))
+              : defaultFlat;
           }
           if (updated.rotation === undefined) {
             updated.rotation = 0;
@@ -103,13 +126,15 @@ export class ParamsFormComponent {
 
   addPcbMount(): void {
     const current = this.params();
+    const isImp = current.measurementSystem === 'imperial';
     const next: PCBMount = {
       surface: 'bottom',
       x: 0,
       y: 0,
-      height: 5,
-      outerDiameter: 6,
-      screwDiameter: 2,
+      height: isImp ? mmToInches(5) : 5,
+      outerDiameter: isImp ? mmToInches(6) : 6,
+      screwDiameter: isImp ? mmToInches(2) : 2,
+      chamfer: true,
     };
     this.state.patchParams({ pcbMounts: [...current.pcbMounts, next] });
   }
@@ -128,12 +153,13 @@ export class ParamsFormComponent {
 
   addInternalWall(): void {
     const current = this.params();
+    const isImp = current.measurementSystem === 'imperial';
     const next: InternalWall = {
       x: 0,
       y: 0,
-      height: 10,
-      length: 25,
-      thickness: 2,
+      height: isImp ? mmToInches(10) : 10,
+      length: isImp ? mmToInches(25) : 25,
+      thickness: isImp ? mmToInches(2) : 2,
       rotation: 0,
     };
     this.state.patchParams({ internalWalls: [...current.internalWalls, next] });
@@ -155,9 +181,21 @@ export class ParamsFormComponent {
 
   addCableClamp(): void {
     const current = this.params();
-    const next: CableClamp = {
-      ...DEFAULT_CABLE_CLAMP,
-    };
+    const isImp = current.measurementSystem === 'imperial';
+    const baseClamp = DEFAULT_CABLE_CLAMP;
+    const next: CableClamp = isImp
+      ? {
+          ...baseClamp,
+          length: mmToInches(baseClamp.length),
+          wallHeight: mmToInches(baseClamp.wallHeight),
+          wallThickness: mmToInches(baseClamp.wallThickness),
+          mountScrewDiameter: mmToInches(baseClamp.mountScrewDiameter),
+          mountOuterDiameter: mmToInches(baseClamp.mountOuterDiameter),
+          mountHeight: mmToInches(baseClamp.mountHeight),
+          topHeight: mmToInches(baseClamp.topHeight),
+          topScrewDiameter: mmToInches(baseClamp.topScrewDiameter),
+        }
+      : { ...baseClamp };
     this.state.patchParams({ cableClamps: [...(current.cableClamps ?? []), next] });
   }
 

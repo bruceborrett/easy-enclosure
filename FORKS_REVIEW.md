@@ -33,8 +33,12 @@ All 29 forks were fetched and audited at the git ref level.
 | **P1 (Feat)** | **Cable Clamp Strain-Relief**                     | `maraid` (`main`)                           | **COMPLETED**   | Standalone `clamp.ts` with grip ridges, top strap export (`f458bff`, `af490e1`, `db236c0`) |
 | **P1 (Feat)** | **Parametric Bed Chamfers & Lip Lead-In**         | `536338958` (`main`)                        | **COMPLETED**   | Anti-elephant-foot edge chamfers (`baseBedChamfer`, `lidBedChamfer`), continuous flange bevel, and 8-direction shear lead-in (`lidTopChamfer`) |
 | **P2 (Feat)** | **PCB 3D Preview & Collision Detection**          | `536338958` (`main`)                        | **COMPLETED**   | Viewport PCB mesh & CSG intersection clash detection (`2c4e26e`, `00cdce1`, `b1e4350`)    |
+| **P2 (Arch)** | **Incremental CSG Updaters & Shell Cache**        | `maraid` (`main`)                           | **Outstanding** | Component-level geometry & shell boolean cache in `renderer.update.ts` (closes #48)        |
+| **P2 (UX)**   | **3D Mesh Raycasting & Viewport Feature Selection**| `maraid` (`main`)                          | **Outstanding** | Möller–Trumbore raycasting to select & highlight features in 3D canvas (closes #48)         |
 | **P2 (Feat)** | **OLED / LCD Retaining Socket**                   | `JeshwanthNG` (`Lcd_Mount`)                 | **Outstanding** | Socket pocket perimeter option for display mounts                                          |
 | **P2 (UX)**   | **3D Dimension Leader-Line Overlay**              | `nedimat` (`main`)                          | **Outstanding** | Port `project3DTo2D` from React to Angular canvas overlay                                  |
+| **P3 (UX)**   | **Interactive 3D Direct-Manipulation Dragging**   | `maraid` (`main`)                           | **Outstanding** | In-canvas drag & drop for holes, standoffs, walls, clamps with axis lock & 0.5mm snap (#48) |
+| **P3 (UX)**   | **Camera Polar Clamping & Render Throttling**     | `maraid` (`main`)                           | **Outstanding** | Prevents gimbal inversion over poles; 60 FPS render queue throttle (#48)                   |
 | **P3 (Feat)** | **Ventilation Slots & Weatherproof Louvers**      | `536338958` / `tyeth-ai-assisted`           | **Outstanding** | Simple slots (`536338958`) vs angled louvers (`tyeth`)                                     |
 | **P3 (Arch)** | Centralized `dimensions.ts` & Specs               | `536338958` (`main`)                        | **Outstanding** | Consolidates duplicated geometry math into shared helpers                                  |
 | **Reject**    | DIN Rail Mounts                                   | `vZhurbenko`, `JeshwanthNG`                 | **Rejected**    | Already implemented in `dinrailmount.ts`                                                   |
@@ -50,7 +54,7 @@ All 29 forks were fetched and audited at the git ref level.
 | :-- | :---------------------------------------- | :------------- | :------------------------------------------------------------------------------------------------ | :-------------------: | :----------------------------------------------------------------------------------------------------------------------- |
 | 1   | `536338958/easy-enclosure`                | `main`         | `main`                                                                                            |           6           | **Major Enhancements**: Critical bug fixes, snap-fit, top/bottom bed chamfers & lip lead-in, PCB collision check, CSG 48-segment speedup, 183 unit tests, i18n. |
 | 2   | `tyeth-ai-assisted/easy-enclosure`        | `main`         | `feature/step-export`, `feature/vent-panels`, `fix/hole-surface-dropdown-selection`, `gh-pages`   |          24           | **Major Enhancements**: STEP AP214 exporter with T-junction healing, parametric vent panels with louvres and fan duct.   |
-| 3   | `maraid/easy-enclosure`                   | `main`         | `main`                                                                                            |           9           | **Substantive**: Cable clamp module (`clamp.ts`), PCB perfboard visualizer, interactive 3D dragging experiment.          |
+| 3   | `maraid/easy-enclosure`                   | `main`         | `main`                                                                                            |           9           | **Substantive**: Cable clamp module (`clamp.ts`, merged); rendering engine upgrade with incremental CSG object updaters, 2-tier geometry/shell cache, 3D raycasting mesh picking, in-viewport dragging, and camera polar clamping (#48). |
 | 4   | `JeshwanthNG/easy-enclosure`              | `main`         | `Lcd_Mount`, `Development`, `Add_Din_Rail_Mount`, `My_experiment`, `My_Experiement_Full_Redesign` |           3           | **Substantive**: OLED/LCD socket mount; experimental circular/oval shapes; alternative DIN rail.                         |
 | 5   | `nedimat/easy-enclosure`                  | `main`         | `main`                                                                                            |          20           | **Substantive (Legacy React)**: 3D dimension overlay with arrows & labels; Vite/Vitest migration.                        |
 | 6   | `vZhurbenko/easy-enclosure`               | `main`         | `worktree-din-rail-mount`, `feature/issue-20-grid-scale-reference`                                |           1           | **Superseded/Merged**: Grid reference merged (`ceaa481`); DIN rail superseded by `dinrailmount.ts`.                      |
@@ -330,6 +334,41 @@ All 29 forks were fetched and audited at the git ref level.
 
 ---
 
+### Candidate 8: Modular Incremental CSG Rendering Pipeline & 3D Direct Manipulation (Source: `maraid`, Issue #48)
+
+- **Files**: `src/app/features/renderer/renderer.update.ts` (~980 lines), `src/app/features/renderer/renderer.component.ts` (~1,300 lines).
+- **Core Systems**:
+  1. **Incremental Component-Level Geometry Pipeline (`ObjectUpdater`)**:
+     - Decomposes CSG evaluation into per-feature updater classes inheriting from `BaseComponentUpdater<T>` (`BaseUpdater`, `LidUpdater`, `HoleUpdater`, `MountUpdater`, `InternalWallUpdater`, `CableClampUpdater`, `PcbUpdater`, `SealCutoutUpdater`, etc.).
+     - **Two-Tier Geometry Caching**:
+       - *Local geometry cache (`ensureGeometry`)*: Hashes feature intrinsic properties (`JSON.stringify(args)`). Moving an object never recomputes its raw mesh.
+       - *Placement transform cache (`getPlaced`)*: Uses a placement engine (`Placer`) to position solids across enclosure surfaces (`bottom`, `top`, `front`, `back`, `left`, `right`, `plane`) and origins (`base`, `lid`, `seal`, `clampTops`), caching transformed solids separately.
+     - **Shell Boolean Subtraction Cache (`combineShells` / `shellCache`)**:
+       - Collects subtractive cuts per shell origin (`base`, `lid`).
+       - Hashes target and cut keys (`combinedKey`).
+       - If no cuts or shell parameters changed, the slow CSG subtraction pass (`subtract(target, ...cuts)`) is skipped entirely.
+  2. **3D Mesh Raycasting & Viewport Feature Selection**:
+     - Projects screen clicks to a 3D ray (`screenPointToRay`) and evaluates ray-triangle intersections using the Möller–Trumbore algorithm (`rayTriangleIntersection`).
+     - Disambiguates coincident surface hits to favor subtractive cutouts over the host shell, allowing direct clicks on holes to select them.
+     - Viewport hover highlight: Highlights candidate features in orange (`[1, 0.62, 0, 1]`) with polygon offset to prevent z-fighting.
+  3. **Direct-Manipulation 3D Viewport Dragging**:
+     - Allows in-canvas dragging for holes, PCB standoffs, internal partitions, cable clamps, and the PCB.
+     - Screen-space axis projection: Detects motion direction, locking to the dominant axis after a 4px gesture threshold (`dragLockThreshold = 4`).
+     - Snaps to a 0.5 mm grid (`STEP = 0.5`) and commits changes directly to `EnclosureStateService`.
+  4. **Render Loop Throttling & Camera Polar Clamping**:
+     - Limits CSG rebuild frequency to 16 ms / 60 FPS (`flushRender`) using dirty parameter diffing (`diffParams`).
+     - Clamps OrbitControls polar angle to $[0.1, \pi - 0.1]$ radians (`clampCameraPolarAngle`), eliminating camera gimbal inversion when orbiting over poles.
+- **Scrutiny & Upstream Compatibility Traps**:
+  - **Upstream Feature Regression Trap**: The fork branched off commit `036c83e` (August 2026). Upstream `main` has since introduced snap-fit clippable lids ([`snapfit.ts`](src/app/core/enclosure/snapfit.ts)), parametric bed and lip chamfers ([`chamfer.ts`](src/app/core/enclosure/chamfer.ts)), DIN rail mounts ([`dinrailmount.ts`](src/app/core/enclosure/dinrailmount.ts)), PCB 3D preview / collision detection ([`pcbpreview.ts`](src/app/core/enclosure/pcbpreview.ts)), lid screw head recesses, and blind hole depths. A direct merge would silently wipe out all of these features. Every updater class must be ported to invoke `main`'s modern geometry generators.
+  - **Angular Coding Standards Violation**: The fork uses raw `setTimeout` for render debouncing and wheel handling. Upstream policy strictly forbids `setTimeout` in Angular components; all timer logic must be converted to RxJS operators or Signals.
+  - **Coordinate Math Redundancy**: `Placer` duplicates coordinate calculations that Candidate 6 proposes centralizing in `dimensions.ts`.
+- **Recommendation**: **Adopt in Phase 3 as modular sub-features**:
+  - *Phase 3.1 (Arch/Perf)*: Port `ObjectUpdater` and `combineShells` cache to `main`, wiring in all modern features (chamfers, snap-fit, DIN rails, recesses, collision).
+  - *Phase 3.2 (UX)*: Add 3D raycasting, orange hover highlights, and two-way sidebar selection sync.
+  - *Phase 3.3 (UX)*: Add axis-locked viewport drag-and-drop, implementing timer logic via RxJS.
+
+---
+
 ## 5. Features Reviewed and Rejected / Skipped
 
 1. **DIN Rail Mounts (`vZhurbenko`, `JeshwanthNG`)**:
@@ -375,6 +414,9 @@ graph TD
     P3B["3D Dimension Annotations Viewport Overlay"]:::pending
     P3C["Consolidate derived geometry into dimensions.ts"]:::pending
     P3D["Weatherproof Outdoor Louver Panels (Discuss/Defer)"]:::pending
+    P3E["Incremental CSG Object Updaters & Shell Cache (#48)"]:::pending
+    P3F["3D Mesh Raycasting & Viewport Selection (#48)"]:::pending
+    P3G["Interactive 3D Direct-Manipulation Dragging (#48)"]:::pending
   end
 
   Phase 1 --> Phase 2
@@ -390,3 +432,7 @@ graph TD
    - Port 3D bounding box coordinate projection math to an Angular overlay for live dimension callouts.
 3. **Phase 3 Architecture**:
    - Centralize derived geometry formulas into `dimensions.ts`.
+4. **Phase 3 Rendering Engine Modernization (Issue #48)**:
+   - Port `maraid`'s `ObjectUpdater` and `combineShells` cache to modernize CSG rebuilding without regressing upstream geometry (snap-fit, chamfers, DIN rails, PCB clash detection).
+   - Add Möller–Trumbore 3D mesh raycasting, feature selection, and orange hover highlight in the viewport.
+   - Implement axis-locked 3D direct-manipulation drag-and-drop, replacing raw `setTimeout` calls with RxJS-based schedulers.

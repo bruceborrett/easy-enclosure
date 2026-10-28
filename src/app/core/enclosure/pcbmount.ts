@@ -1,12 +1,16 @@
 import { geom2 } from '@jscad/modeling/src/geometries';
 import type { Geom3 } from '@jscad/modeling/src/geometries/types';
-import { union } from '@jscad/modeling/src/operations/booleans';
+import measureBoundingBox from '@jscad/modeling/src/measurements/measureBoundingBox';
+import { intersect, subtract, union } from '@jscad/modeling/src/operations/booleans';
 import { extrudeRotate } from '@jscad/modeling/src/operations/extrusions';
 import { rotateX, rotateY, translate } from '@jscad/modeling/src/operations/transforms';
 import { degToRad } from '@jscad/modeling/src/utils';
 
 import type { Surface } from '.';
 import type { Params, PCBMount } from '../params';
+import { bottomChamferTool, roundedCube } from './utils';
+
+type Vec3Tuple = [number, number, number];
 
 export const MIN_MOUNT_FILLET = 0.2;
 
@@ -28,7 +32,10 @@ export const pcbMount = (mountParams: PCBMount, _params?: Partial<Params>): Geom
   const rawScrew = Math.max(0, mountParams.screwDiameter / 2);
   const ri = Math.min(rawScrew, ro - 0.2);
 
-  const fillet = calculateMountFilletSize(mountParams.outerDiameter, h);
+  const hasChamfer =
+    mountParams.chamfer !== false &&
+    (mountParams as { filletStyle?: string }).filletStyle !== 'none';
+  const fillet = hasChamfer ? calculateMountFilletSize(mountParams.outerDiameter, h) : 0;
 
   const points: [number, number][] = [];
 
@@ -118,12 +125,76 @@ const buildMountUnion = (mounts: Geom3[]): Geom3 | null => {
   return mounts.length === 1 ? mounts[0] : union(mounts);
 };
 
+const isInsideBaseBounds = (bbox: [Vec3Tuple, Vec3Tuple], params: Params): boolean => {
+  const [min, max] = bbox;
+  const r = params.cornerRadius;
+  const bedChamfer = params.baseBedChamfer > 0 ? params.baseBedChamfer : 0;
+  return (
+    min[0] >= r &&
+    max[0] <= params.width - r &&
+    min[1] >= r &&
+    max[1] <= params.length - r &&
+    min[2] >= bedChamfer &&
+    max[2] <= params.height
+  );
+};
+
+const clipBaseMounts = (mounts: Geom3, params: Params): Geom3 | null => {
+  const bbox = measureBoundingBox(mounts) as [Vec3Tuple, Vec3Tuple];
+  if (isInsideBaseBounds(bbox, params)) {
+    return mounts;
+  }
+
+  const floorZ = params.lidScrews
+    ? params.floor
+    : params.waterProof
+      ? params.wall * 2 + params.insertClearance * 2 + params.insertThickness
+      : params.wall;
+  const maxBottomZ = params.pcbMounts
+    .filter((m) => (m.surface ?? 'bottom') === 'bottom')
+    .reduce((acc, m) => Math.max(acc, floorZ + m.height), params.height);
+
+  let envelope = roundedCube(params.width, params.length, maxBottomZ, params.cornerRadius);
+  if (params.baseBedChamfer > 0) {
+    envelope = subtract(
+      envelope,
+      bottomChamferTool(params.width, params.length, params.baseBedChamfer, params.cornerRadius),
+    );
+  }
+
+  const clipped = intersect(envelope, mounts);
+  return clipped.polygons.length > 0 ? clipped : null;
+};
+
+const isInsideLidBounds = (bbox: [Vec3Tuple, Vec3Tuple], params: Params): boolean => {
+  const [min, max] = bbox;
+  const r = params.cornerRadius;
+  return min[0] >= r && max[0] <= params.width - r && min[1] >= r && max[1] <= params.length - r;
+};
+
+const clipLidMounts = (mounts: Geom3, params: Params): Geom3 | null => {
+  const bbox = measureBoundingBox(mounts) as [Vec3Tuple, Vec3Tuple];
+  if (isInsideLidBounds(bbox, params)) {
+    return mounts;
+  }
+
+  const maxZ = Math.max(bbox[1][2] + 1, params.roof + 10);
+  const envelope = roundedCube(params.width, params.length, maxZ, params.cornerRadius);
+  const clipped = intersect(envelope, mounts);
+  return clipped.polygons.length > 0 ? clipped : null;
+};
+
 export const pcbMountsOnBase = (params: Params): Geom3 | null => {
   const mounts = params.pcbMounts
     .filter((mount) => (mount.surface ?? 'bottom') !== 'top')
     .map((mount) => placeBaseMount(mount, params));
 
-  return buildMountUnion(mounts);
+  const united = buildMountUnion(mounts);
+  if (!united) {
+    return null;
+  }
+
+  return clipBaseMounts(united, params);
 };
 
 export const pcbMountsOnLid = (params: Params): Geom3 | null => {
@@ -131,7 +202,12 @@ export const pcbMountsOnLid = (params: Params): Geom3 | null => {
     .filter((mount) => (mount.surface ?? 'bottom') === 'top')
     .map((mount) => placeLidMount(mount, params));
 
-  return buildMountUnion(mounts);
+  const united = buildMountUnion(mounts);
+  if (!united) {
+    return null;
+  }
+
+  return clipLidMounts(united, params);
 };
 
 export const pcbMounts = (params: Params): Geom3 | null => {
